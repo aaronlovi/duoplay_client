@@ -9,7 +9,7 @@ class TicTacToeGameState {
   final TicTacToeCellState winner;
   final int? lastMoveIndex;
   final int numberOfX;
-  final int numberOfY;
+  final int numberOfO;
 
   TicTacToeGameState._(
     this.board,
@@ -17,7 +17,7 @@ class TicTacToeGameState {
     this.winner,
     this.lastMoveIndex,
     this.numberOfX,
-    this.numberOfY,
+    this.numberOfO,
   );
 
   factory TicTacToeGameState.initial() {
@@ -32,7 +32,7 @@ class TicTacToeGameState {
   }
 
   bool get isDraw =>
-      numberOfX + numberOfY == numSquares && winner == TicTacToeCellState.empty;
+      numberOfX + numberOfO == numSquares && winner == TicTacToeCellState.empty;
   bool get hasWinner => winner != TicTacToeCellState.empty;
   bool get isGameOver => isDraw || hasWinner;
 
@@ -49,11 +49,11 @@ class TicTacToeGameState {
       return Result.failure(ResultErrorCode.invalidMove);
     }
 
-    if (player == TicTacToeCellState.x && numberOfX != numberOfY) {
+    if (player == TicTacToeCellState.x && numberOfX != numberOfO) {
       return Result.failure(ResultErrorCode.invalidMove);
     }
 
-    if (player == TicTacToeCellState.o && numberOfX <= numberOfY) {
+    if (player == TicTacToeCellState.o && numberOfX <= numberOfO) {
       return Result.failure(ResultErrorCode.invalidMove);
     }
 
@@ -62,9 +62,10 @@ class TicTacToeGameState {
 
     final newNumberOfX =
         player == TicTacToeCellState.x ? numberOfX + 1 : numberOfX;
-    final newNumberOfY =
-        player == TicTacToeCellState.o ? numberOfY + 1 : numberOfY;
-    final TicTacToeCellState newWinner = getWinner();
+    final newNumberOfO =
+        player == TicTacToeCellState.o ? numberOfO + 1 : numberOfO;
+    final TicTacToeCellState newWinner =
+        winner == TicTacToeCellState.empty ? getWinner(newBoard) : winner;
     final TicTacToeCellState nextPlayersTurn =
         player == TicTacToeCellState.x
             ? TicTacToeCellState.o
@@ -77,12 +78,12 @@ class TicTacToeGameState {
         newWinner,
         index,
         newNumberOfX,
-        newNumberOfY,
+        newNumberOfO,
       ),
     );
   }
 
-  TicTacToeCellState getWinner() {
+  TicTacToeCellState getWinner(List<TicTacToeCellState> board) {
     const winningCombinations = [
       [0, 1, 2], // Top row
       [3, 4, 5], // Middle row
@@ -109,5 +110,10 @@ class TicTacToeGameState {
     }
 
     return TicTacToeCellState.empty;
+  }
+
+  @override
+  String toString() {
+    return 'TicTacToeGameState[curPlayer:${currentPlayer.toShortString()},winner:${winner.toShortString()},lastMoveIndex:$lastMoveIndex,numX:$numberOfX,numO:$numberOfO]';
   }
 }

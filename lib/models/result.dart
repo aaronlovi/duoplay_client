@@ -5,6 +5,7 @@ enum ResultErrorCode {
   unknown, // Generic error
   invalidMove,
   gameOver,
+  invalidTime,
 }
 
 class Result<T> {

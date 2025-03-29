@@ -1,3 +1,5 @@
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_error_handling.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:flutter/material.dart';
@@ -45,13 +47,13 @@ class TicTacToeScreenState extends State<TicTacToeScreen> {
                   setState(() {
                     for (var item in output) {
                       if (item is TicTacToeErrorOutput) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              item.results.errorParameters.join(', '),
-                            ),
-                          ),
+                        String errorMessage = ticTacToeErrorCodeToString(
+                          item.results.errorCode,
+                          item.results.errorParameters,
                         );
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(errorMessage)));
                       }
                       // Handle other outputs like TicTacToeNewBoardOutput or TicTacToeGameOverOutput
                     }
@@ -63,10 +65,7 @@ class TicTacToeScreenState extends State<TicTacToeScreen> {
                   ),
                   child: Center(
                     child: Text(
-                      fsm.gameState.board[index]
-                          .toString()
-                          .split('.')
-                          .last, // Display X, O, or empty
+                      fsm.gameState.board[index].toShortString(),
                       style: const TextStyle(fontSize: 32),
                     ),
                   ),
