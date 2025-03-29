@@ -10,11 +10,13 @@ class MockGameService implements GameServiceContract {
         name: "Tic-Tac-Toe",
         description:
             "A classic two-player game where players take turns marking spaces in a 3×3 grid.",
+        route: '/tic-tac-toe',
       ),
       Game(
         name: "Connect 4",
         description:
             "A two-player connection game where players take turns dropping colored discs into a grid.",
+        route: '/connect-4',
       ),
     ];
   }
