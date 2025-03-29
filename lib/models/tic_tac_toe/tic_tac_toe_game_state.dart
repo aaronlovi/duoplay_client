@@ -1,5 +1,6 @@
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_constants.dart';
 
 class TicTacToeGameState {
   static final int numSquares = 9;
@@ -36,25 +37,24 @@ class TicTacToeGameState {
   bool get hasWinner => winner != TicTacToeCellState.empty;
   bool get isGameOver => isDraw || hasWinner;
 
-  Result<TicTacToeGameState> makeMove(int index, TicTacToeCellState player) {
-    if (index < 0 || index >= TicTacToeGameState.numSquares) {
-      return Result.failure(ResultErrorCode.invalidMove);
+  GenericResult<TicTacToeGameState> makeMove(
+    int index,
+    TicTacToeCellState player,
+  ) {
+    Result res = isLegalPositionReadyForMove();
+    if (res.isFailure) {
+      return GenericResult.failure(
+        res.errorCode,
+        errorParameters: res.errorParameters,
+      );
     }
 
-    if (winner != TicTacToeCellState.empty) {
-      return Result.failure(ResultErrorCode.gameOver);
+    if (index < 0 || index >= TicTacToeGameState.numSquares) {
+      return GenericResult.failure(ResultErrorCode.invalidMove);
     }
 
     if (board[index] != TicTacToeCellState.empty) {
-      return Result.failure(ResultErrorCode.invalidMove);
-    }
-
-    if (player == TicTacToeCellState.x && numberOfX != numberOfO) {
-      return Result.failure(ResultErrorCode.invalidMove);
-    }
-
-    if (player == TicTacToeCellState.o && numberOfX <= numberOfO) {
-      return Result.failure(ResultErrorCode.invalidMove);
+      return GenericResult.failure(ResultErrorCode.invalidMove);
     }
 
     final newBoard = List<TicTacToeCellState>.from(board);
@@ -71,7 +71,7 @@ class TicTacToeGameState {
             ? TicTacToeCellState.o
             : TicTacToeCellState.x;
 
-    return Result.success(
+    return GenericResult.success(
       TicTacToeGameState._(
         newBoard,
         nextPlayersTurn,
@@ -84,19 +84,8 @@ class TicTacToeGameState {
   }
 
   TicTacToeCellState getWinner(List<TicTacToeCellState> board) {
-    const winningCombinations = [
-      [0, 1, 2], // Top row
-      [3, 4, 5], // Middle row
-      [6, 7, 8], // Bottom row
-      [0, 3, 6], // Left column
-      [1, 4, 7], // Middle column
-      [2, 5, 8], // Right column
-      [0, 4, 8], // Diagonal top-left to bottom-right
-      [2, 4, 6], // Diagonal top-right to bottom-left
-    ];
-
     // Check each winning combination
-    for (var combination in winningCombinations) {
+    for (var combination in TicTacToeConstants.winningCombinations) {
       final a = combination[0];
       final b = combination[1];
       final c = combination[2];
@@ -110,6 +99,20 @@ class TicTacToeGameState {
     }
 
     return TicTacToeCellState.empty;
+  }
+
+  Result isLegalPositionReadyForMove() {
+    if (isGameOver) return Result.failure(ResultErrorCode.gameOver);
+
+    if (currentPlayer == TicTacToeCellState.x && numberOfX != numberOfO) {
+      return Result.failure(ResultErrorCode.invalidState);
+    }
+
+    if (currentPlayer == TicTacToeCellState.o && numberOfX != numberOfO + 1) {
+      return Result.failure(ResultErrorCode.invalidState);
+    }
+
+    return Result.success();
   }
 
   @override

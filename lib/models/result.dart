@@ -1,26 +1,59 @@
-import 'package:duoplay/models/unit.dart';
-
 enum ResultErrorCode {
   none,
   unknown, // Generic error
   invalidMove,
   gameOver,
   invalidTime,
+  invalidState,
 }
 
-class Result<T> {
+class Result {
   final bool isSuccess;
   final ResultErrorCode errorCode;
   final List<String> errorParameters;
-  final T? data;
 
-  Result.success(this.data)
+  Result.success()
     : isSuccess = true,
       errorCode = ResultErrorCode.none,
       errorParameters = const [];
 
   Result.failure(this.errorCode, {this.errorParameters = const []})
+    : isSuccess = false;
+
+  bool get isFailure => !isSuccess;
+
+  @override
+  String toString() =>
+      isSuccess
+          ? 'Result: Success'
+          : 'Result: Failure, ErrorCode: $errorCode, Parameters: $errorParameters';
+
+  static Result fromGenericFailure<T>(GenericResult<T> failure) =>
+      Result.failure(
+        failure.errorCode,
+        errorParameters: failure.errorParameters,
+      );
+}
+
+class GenericResult<T> {
+  final bool isSuccess;
+  final ResultErrorCode errorCode;
+  final List<String> errorParameters;
+  final T? data;
+
+  GenericResult.success(this.data)
+    : isSuccess = true,
+      errorCode = ResultErrorCode.none,
+      errorParameters = const [];
+
+  GenericResult.failure(this.errorCode, {this.errorParameters = const []})
     : isSuccess = false,
+      data = null;
+
+  GenericResult.fromFailureResult(Result res)
+    : isSuccess = false,
+      errorCode = res.errorCode,
+      errorParameters = res.errorParameters,
       data = null;
 
   bool get isFailure => !isSuccess;
@@ -30,9 +63,4 @@ class Result<T> {
       isSuccess
           ? 'Result: Success, Data: $data'
           : 'Result: Failure, ErrorCode: $errorCode, Parameters: $errorParameters';
-
-  static Result<Unit> fromFailure<T>(Result<T> failure) => Result<Unit>.failure(
-    failure.errorCode,
-    errorParameters: failure.errorParameters,
-  );
 }

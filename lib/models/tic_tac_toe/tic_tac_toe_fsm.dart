@@ -20,7 +20,7 @@ class TicTacToeFSM {
     final res = gameState.makeMove(index, player);
     if (res.isFailure) {
       log('Move failed: ${res.errorCode}, Parameters: ${res.errorParameters}');
-      output.add(TicTacToeErrorOutput(results: Result.fromFailure(res)));
+      output.add(TicTacToeErrorOutput(results: Result.fromGenericFailure(res)));
       return;
     }
 

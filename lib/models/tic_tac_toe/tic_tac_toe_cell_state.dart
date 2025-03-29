@@ -11,4 +11,15 @@ extension TicTacToeCellStateExtensions on TicTacToeCellState {
         return 'O';
     }
   }
+
+  TicTacToeCellState getOpponent() {
+    switch (this) {
+      case TicTacToeCellState.empty:
+        return TicTacToeCellState.empty;
+      case TicTacToeCellState.x:
+        return TicTacToeCellState.o;
+      case TicTacToeCellState.o:
+        return TicTacToeCellState.x;
+    }
+  }
 }

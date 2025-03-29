@@ -17,5 +17,7 @@ String ticTacToeErrorCodeToString(
       return errorParams.length == 2
           ? 'Cannot change time from ${errorParams[0]} => ${errorParams[1]}'
           : 'Invalid time';
+    case ResultErrorCode.invalidState:
+      return 'Game is in invalid state for this operation';
   }
 }
