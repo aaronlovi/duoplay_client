@@ -22,6 +22,7 @@ class GameListScreen extends StatelessWidget {
           return ListTile(
             title: Text(game.name),
             subtitle: Text(game.description),
+            onTap: () => Navigator.pushNamed(context, game.route),
           );
         },
       ),
