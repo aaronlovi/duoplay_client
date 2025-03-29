@@ -1,7 +1,7 @@
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/screens/connect_4_screen.dart';
 import 'package:duoplay/screens/game_list_screen.dart';
-import 'package:duoplay/screens/tic_tac_toe_screen.dart';
+import 'package:duoplay/screens/tic_tac_toe_game_screen.dart';
 import 'package:duoplay/services/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/tic-tac-toe':
-            (context) => TicTacToeScreen(fsm: GetIt.I<TicTacToeFSM>()),
+            (context) => TicTacToeGameScreen(fsm: GetIt.I<TicTacToeFSM>()),
         '/connect-4': (context) => const Connect4Screen(),
       },
     );

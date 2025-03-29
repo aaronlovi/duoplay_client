@@ -4,16 +4,16 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:flutter/material.dart';
 
-class TicTacToeScreen extends StatefulWidget {
+class TicTacToeGameScreen extends StatefulWidget {
   final TicTacToeFSM fsm;
 
-  const TicTacToeScreen({super.key, required this.fsm});
+  const TicTacToeGameScreen({super.key, required this.fsm});
 
   @override
-  TicTacToeScreenState createState() => TicTacToeScreenState();
+  TicTacToeGameScreenState createState() => TicTacToeGameScreenState();
 }
 
-class TicTacToeScreenState extends State<TicTacToeScreen> {
+class TicTacToeGameScreenState extends State<TicTacToeGameScreen> {
   late TicTacToeFSM fsm;
 
   @override
