@@ -31,9 +31,9 @@ class TicTacToeBasicEngine implements TicTacToeEngineContract {
         int numSquaresOccupiedByCurrentPlayer = 0;
         int numSquaresOccupiedByOpponent = 0;
         for (var index in combination) {
-          if (currentBoard[combination[index]] == playerToMove) {
+          if (currentBoard[index] == playerToMove) {
             ++numSquaresOccupiedByCurrentPlayer;
-          } else if (currentBoard[combination[index]] == otherPlayer) {
+          } else if (currentBoard[index] == otherPlayer) {
             ++numSquaresOccupiedByOpponent;
           }
         }
