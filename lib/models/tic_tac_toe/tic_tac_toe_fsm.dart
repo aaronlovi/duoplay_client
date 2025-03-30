@@ -22,36 +22,36 @@ class TTTFsmUpdateContext {
 
 class TicTacToeFSM {
   TicTacToeGameState gameState;
-  final TicTacToeOutputContainer _outputs;
+  final TTTOutputContainer _outputs;
   final TTTFsmUpdateContext _context;
 
   TicTacToeFSM(TTTGameConfiguration configuration)
     : gameState = TicTacToeGameState.initial(configuration),
-      _outputs = TicTacToeOutputContainer(outputs: <TTTOutputBase>[]),
+      _outputs = TTTOutputContainer(outputs: <TTTOutputBase>[]),
       _context = TTTFsmUpdateContext();
 
-  List<TicTacToeCellState> get board => gameState.board;
+  List<TTTCellState> get board => gameState.board;
   bool get isPlayerXEngine =>
-      gameState.configuration.enginePlayer == TicTacToeCellState.x;
+      gameState.configuration.enginePlayer == TTTCellState.x;
   bool get isPlayerOEngine =>
-      gameState.configuration.enginePlayer == TicTacToeCellState.o;
+      gameState.configuration.enginePlayer == TTTCellState.o;
   bool get isHumanPlayerToMove => gameState.isHumanPlayerToMove;
-  TicTacToeCellState get humanPlayer => gameState.humanPlayer;
-  TicTacToeCellState get enginePlayer => gameState.enginePlayer;
+  TTTCellState get humanPlayer => gameState.humanPlayer;
+  TTTCellState get enginePlayer => gameState.enginePlayer;
 
-  void update(TicTacToeInputBase inputs, TicTacToeOutputContainer outputs) {
+  void update(TTTInputBase inputs, TTTOutputContainer outputs) {
     _outputs.clear();
     _context.clear();
     outputs.clear();
     gameState.nowUtc = inputs.nowUtc;
 
-    if (inputs is TicTacToeGameConfigInput) {
+    if (inputs is TTTGameConfigInput) {
       _processGameConfiguration(inputs);
-    } else if (inputs is TicTacToePlayerMoveInput) {
+    } else if (inputs is TTTPlayerMoveInput) {
       _processPlayerMove(inputs);
-    } else if (inputs is TicTacToeEngineMoveInput) {
+    } else if (inputs is TTTEngineMoveInput) {
       _processEngineMove(inputs);
-    } else if (inputs is TicTacToeUpdateTime) {
+    } else if (inputs is TTTUpdateTime) {
       // Nothing to do here
     }
 
@@ -63,14 +63,14 @@ class TicTacToeFSM {
   }
 
   // Reset the game board with the new configuration
-  void _processGameConfiguration(TicTacToeGameConfigInput inputs) {
+  void _processGameConfiguration(TTTGameConfigInput inputs) {
     gameState.processNewGameConfiguration(inputs.configuration, inputs.nowUtc);
     _outputs.outputs.add(TTTStartGameOutput(inputs.configuration));
   }
 
-  void _processPlayerMove(TicTacToePlayerMoveInput inputs) {
+  void _processPlayerMove(TTTPlayerMoveInput inputs) {
     if (inputs.player == gameState.configuration.enginePlayer ||
-        inputs.player == TicTacToeCellState.empty) {
+        inputs.player == TTTCellState.empty) {
       _appendErrorOutput(ResultErrorCode.invalidMove);
       return;
     }
@@ -95,9 +95,9 @@ class TicTacToeFSM {
     }
   }
 
-  void _processEngineMove(TicTacToeEngineMoveInput inputs) {
+  void _processEngineMove(TTTEngineMoveInput inputs) {
     if (inputs.enginePlayer != gameState.configuration.enginePlayer ||
-        inputs.enginePlayer == TicTacToeCellState.empty) {
+        inputs.enginePlayer == TTTCellState.empty) {
       _appendErrorOutput(ResultErrorCode.invalidMove);
       return;
     }

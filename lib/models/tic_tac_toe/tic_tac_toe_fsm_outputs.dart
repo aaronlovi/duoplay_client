@@ -24,14 +24,14 @@ class TTTNewBoardOutput implements TTTOutputBase {
 }
 
 class TTTGameOverOutput implements TTTOutputBase {
-  TicTacToeCellState winner;
+  TTTCellState winner;
   bool isDraw;
 
   TTTGameOverOutput({required this.winner, required this.isDraw}) {
-    if (winner == TicTacToeCellState.empty && !isDraw) {
+    if (winner == TTTCellState.empty && !isDraw) {
       throw ArgumentError('Game has no winner and is not a draw');
     }
-    if (isDraw && winner != TicTacToeCellState.empty) {
+    if (isDraw && winner != TTTCellState.empty) {
       throw ArgumentError('Game is both a draw and has a winner');
     }
   }

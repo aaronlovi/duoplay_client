@@ -1,29 +1,26 @@
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 
-abstract class TicTacToeInputBase {
+abstract class TTTInputBase {
   final DateTime nowUtc;
 
-  TicTacToeInputBase({required this.nowUtc});
+  TTTInputBase({required this.nowUtc});
 }
 
-class TicTacToeGameConfigInput extends TicTacToeInputBase {
+class TTTGameConfigInput extends TTTInputBase {
   TTTGameConfiguration configuration;
 
-  TicTacToeGameConfigInput({
-    required super.nowUtc,
-    required this.configuration,
-  });
+  TTTGameConfigInput({required super.nowUtc, required this.configuration});
 
   @override
   String toString() => "TTTGameConfigInput[now:$nowUtc,config:$configuration]";
 }
 
-class TicTacToePlayerMoveInput extends TicTacToeInputBase {
+class TTTPlayerMoveInput extends TTTInputBase {
   int index;
-  TicTacToeCellState player;
+  TTTCellState player;
 
-  TicTacToePlayerMoveInput({
+  TTTPlayerMoveInput({
     required super.nowUtc,
     required this.index,
     required this.player,
@@ -34,11 +31,11 @@ class TicTacToePlayerMoveInput extends TicTacToeInputBase {
       "TTTPlayerMoveInput[now:$nowUtc,index:$index,player:$player]";
 }
 
-class TicTacToeEngineMoveInput extends TicTacToeInputBase {
+class TTTEngineMoveInput extends TTTInputBase {
   int index;
-  TicTacToeCellState enginePlayer;
+  TTTCellState enginePlayer;
 
-  TicTacToeEngineMoveInput({
+  TTTEngineMoveInput({
     required super.nowUtc,
     required this.index,
     required this.enginePlayer,
@@ -49,8 +46,8 @@ class TicTacToeEngineMoveInput extends TicTacToeInputBase {
       "TTTEngineMoveInput[now:$nowUtc,index:$index,enginePlayer:$enginePlayer]";
 }
 
-class TicTacToeUpdateTime extends TicTacToeInputBase {
-  TicTacToeUpdateTime({required super.nowUtc});
+class TTTUpdateTime extends TTTInputBase {
+  TTTUpdateTime({required super.nowUtc});
 
   @override
   String toString() => "TTTUpdateTime[now:$nowUtc]";

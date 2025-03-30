@@ -14,10 +14,8 @@ void setupLocator() {
   getIt.registerLazySingleton<TicTacToeFSM>(
     () => TicTacToeFSM(TTTGameConfiguration.defaults()),
   );
-  getIt.registerLazySingleton<TicTacToeEngineContract>(
-    () => TicTacToeBasicEngine(),
-  );
-  getIt.registerLazySingleton<TicTacToeGameContainer>(
-    () => TicTacToeGameContainer(fsm: getIt.get<TicTacToeFSM>()),
+  getIt.registerLazySingleton<TTTEngineContract>(() => TTTBasicEngine());
+  getIt.registerLazySingleton<TTTGameContainer>(
+    () => TTTGameContainer(fsm: getIt.get<TicTacToeFSM>()),
   );
 }

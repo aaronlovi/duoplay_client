@@ -1,25 +1,25 @@
-enum TicTacToeCellState { empty, x, o }
+enum TTTCellState { empty, x, o }
 
-extension TicTacToeCellStateExtensions on TicTacToeCellState {
+extension TTTCellStateExtensions on TTTCellState {
   String toShortString() {
     switch (this) {
-      case TicTacToeCellState.empty:
+      case TTTCellState.empty:
         return '';
-      case TicTacToeCellState.x:
+      case TTTCellState.x:
         return 'X';
-      case TicTacToeCellState.o:
+      case TTTCellState.o:
         return 'O';
     }
   }
 
-  TicTacToeCellState getOpponent() {
+  TTTCellState getOpponent() {
     switch (this) {
-      case TicTacToeCellState.empty:
-        return TicTacToeCellState.empty;
-      case TicTacToeCellState.x:
-        return TicTacToeCellState.o;
-      case TicTacToeCellState.o:
-        return TicTacToeCellState.x;
+      case TTTCellState.empty:
+        return TTTCellState.empty;
+      case TTTCellState.x:
+        return TTTCellState.o;
+      case TTTCellState.o:
+        return TTTCellState.x;
     }
   }
 }

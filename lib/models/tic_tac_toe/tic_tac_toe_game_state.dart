@@ -6,9 +6,9 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 class TicTacToeGameState {
   static final int numSquares = 9;
 
-  final List<TicTacToeCellState> board;
-  TicTacToeCellState currentPlayer;
-  TicTacToeCellState winner;
+  final List<TTTCellState> board;
+  TTTCellState currentPlayer;
+  TTTCellState winner;
   int numberOfX;
   int numberOfO;
   DateTime nowUtc;
@@ -30,9 +30,9 @@ class TicTacToeGameState {
     TTTGameConfiguration cfg, {
     DateTime? nowUtc,
   }) => TicTacToeGameState._(
-    List<TicTacToeCellState>.filled(numSquares, TicTacToeCellState.empty),
-    TicTacToeCellState.x,
-    TicTacToeCellState.empty,
+    List<TTTCellState>.filled(numSquares, TTTCellState.empty),
+    TTTCellState.x,
+    TTTCellState.empty,
     0,
     0,
     nowUtc ?? DateTime.now().toUtc(),
@@ -40,18 +40,18 @@ class TicTacToeGameState {
   );
 
   bool get isDraw =>
-      numberOfX + numberOfO == numSquares && winner == TicTacToeCellState.empty;
-  bool get hasWinner => winner != TicTacToeCellState.empty;
+      numberOfX + numberOfO == numSquares && winner == TTTCellState.empty;
+  bool get hasWinner => winner != TTTCellState.empty;
   bool get isGameOver => isDraw || hasWinner;
   bool get isHumanPlayerToMove =>
       currentPlayer != configuration.enginePlayer && !isGameOver;
-  TicTacToeCellState get humanPlayer =>
-      configuration.enginePlayer == TicTacToeCellState.x
-          ? TicTacToeCellState.o
-          : TicTacToeCellState.x;
-  TicTacToeCellState get enginePlayer => configuration.enginePlayer;
+  TTTCellState get humanPlayer =>
+      configuration.enginePlayer == TTTCellState.x
+          ? TTTCellState.o
+          : TTTCellState.x;
+  TTTCellState get enginePlayer => configuration.enginePlayer;
 
-  Result makeMove(int index, TicTacToeCellState player) {
+  Result makeMove(int index, TTTCellState player) {
     Result res = isLegalPositionReadyForMove();
     if (res.isFailure) {
       return Result.failure(
@@ -64,28 +64,24 @@ class TicTacToeGameState {
       return Result.failure(ResultErrorCode.invalidMove);
     }
 
-    if (board[index] != TicTacToeCellState.empty) {
+    if (board[index] != TTTCellState.empty) {
       return Result.failure(ResultErrorCode.invalidMove);
     }
 
-    final newBoard = List<TicTacToeCellState>.from(board);
+    final newBoard = List<TTTCellState>.from(board);
     newBoard[index] = player;
 
-    final newNumberOfX =
-        player == TicTacToeCellState.x ? numberOfX + 1 : numberOfX;
-    final newNumberOfO =
-        player == TicTacToeCellState.o ? numberOfO + 1 : numberOfO;
-    final TicTacToeCellState newWinner =
-        winner == TicTacToeCellState.empty ? getWinner(newBoard) : winner;
-    final TicTacToeCellState nextPlayersTurn =
-        player == TicTacToeCellState.x
-            ? TicTacToeCellState.o
-            : TicTacToeCellState.x;
+    final newNumberOfX = player == TTTCellState.x ? numberOfX + 1 : numberOfX;
+    final newNumberOfO = player == TTTCellState.o ? numberOfO + 1 : numberOfO;
+    final TTTCellState newWinner =
+        winner == TTTCellState.empty ? getWinner(newBoard) : winner;
+    final TTTCellState nextPlayersTurn =
+        player == TTTCellState.x ? TTTCellState.o : TTTCellState.x;
 
     bool newIsDraw =
         newNumberOfX + newNumberOfO == numSquares &&
-        newWinner == TicTacToeCellState.empty;
-    bool newHasWinner = newWinner != TicTacToeCellState.empty;
+        newWinner == TTTCellState.empty;
+    bool newHasWinner = newWinner != TTTCellState.empty;
     bool newIsEnginesTurn =
         configuration.enginePlayer == nextPlayersTurn &&
         !newIsDraw &&
@@ -98,7 +94,7 @@ class TicTacToeGameState {
     if (newIsEnginesTurn) {
       newEngineMoveTimeUtc = nowUtc.add(
         configuration.engineMoveWaitTime ??
-            TicTacToeConstants.defaultEngineMoveWaitTime,
+            TTTConstants.defaultEngineMoveWaitTime,
       );
     }
 
@@ -116,22 +112,22 @@ class TicTacToeGameState {
     return Result.success();
   }
 
-  TicTacToeCellState getWinner(List<TicTacToeCellState> board) {
+  TTTCellState getWinner(List<TTTCellState> board) {
     // Check each winning combination
-    for (var combination in TicTacToeConstants.winningCombinations) {
+    for (var combination in TTTConstants.winningCombinations) {
       final a = combination[0];
       final b = combination[1];
       final c = combination[2];
 
       // If all three cells in the combination are the same and not empty, we have a winner
-      if (board[a] != TicTacToeCellState.empty &&
+      if (board[a] != TTTCellState.empty &&
           board[a] == board[b] &&
           board[a] == board[c]) {
         return board[a]; // Return the winner (TicTacToeCellState.x or TicTacToeCellState.o)
       }
     }
 
-    return TicTacToeCellState.empty;
+    return TTTCellState.empty;
   }
 
   /// Checks if the game is over, and if the board is set with the expected
@@ -139,11 +135,11 @@ class TicTacToeGameState {
   Result isLegalPositionReadyForMove() {
     if (isGameOver) return Result.failure(ResultErrorCode.gameOver);
 
-    if (currentPlayer == TicTacToeCellState.x && numberOfX != numberOfO) {
+    if (currentPlayer == TTTCellState.x && numberOfX != numberOfO) {
       return Result.failure(ResultErrorCode.invalidState);
     }
 
-    if (currentPlayer == TicTacToeCellState.o && numberOfX != numberOfO + 1) {
+    if (currentPlayer == TTTCellState.o && numberOfX != numberOfO + 1) {
       return Result.failure(ResultErrorCode.invalidState);
     }
 
@@ -156,8 +152,8 @@ class TicTacToeGameState {
   }
 
   void setupNextGame() {
-    currentPlayer = TicTacToeCellState.x;
-    winner = TicTacToeCellState.empty;
+    currentPlayer = TTTCellState.x;
+    winner = TTTCellState.empty;
     numberOfX = 0;
     numberOfO = 0;
     configuration.changeSides();
@@ -167,19 +163,19 @@ class TicTacToeGameState {
         configuration.enginePlayer == currentPlayer
             ? nowUtc.add(
               configuration.engineMoveWaitTime ??
-                  TicTacToeConstants.defaultEngineMoveWaitTime,
+                  TTTConstants.defaultEngineMoveWaitTime,
             )
             : null;
   }
 
   void clearBoard() {
     for (int i = 0; i < board.length; ++i) {
-      board[i] = TicTacToeCellState.empty;
+      board[i] = TTTCellState.empty;
     }
   }
 
   @override
   String toString() {
-    return 'TicTacToeGameState[curPlayer:${currentPlayer.toShortString()},winner:${winner.toShortString()},numX:$numberOfX,numO:$numberOfO]';
+    return 'TTTGameState[curPlayer:${currentPlayer.toShortString()},winner:${winner.toShortString()},numX:$numberOfX,numO:$numberOfO]';
   }
 }

@@ -1,9 +1,6 @@
 import 'package:duoplay/models/result.dart';
 
-String ticTacToeErrorCodeToString(
-  ResultErrorCode code,
-  List<String> errorParams,
-) {
+String tttErrorCodeToString(ResultErrorCode code, List<String> errorParams) {
   switch (code) {
     case ResultErrorCode.none:
       return '';

@@ -6,7 +6,7 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_constants.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 
-class TicTacToeBasicEngine implements TicTacToeEngineContract {
+class TTTBasicEngine implements TTTEngineContract {
   final random = Random();
 
   @override
@@ -23,9 +23,9 @@ class TicTacToeBasicEngine implements TicTacToeEngineContract {
     final currentBoard = currentState.board;
 
     for (int i = 0; i < currentState.board.length; ++i) {
-      if (currentState.board[i] != TicTacToeCellState.empty) continue;
+      if (currentState.board[i] != TTTCellState.empty) continue;
 
-      for (var combination in TicTacToeConstants.winningCombinations) {
+      for (var combination in TTTConstants.winningCombinations) {
         if (!combination.contains(i)) continue;
 
         int numSquaresOccupiedByCurrentPlayer = 0;

@@ -10,23 +10,23 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
 import 'package:flutter/material.dart';
 
-class TicTacToeGameScreen extends StatefulWidget {
-  final TicTacToeGameContainer gameObject;
-  final TicTacToeEngineContract engine;
+class TTTGameScreen extends StatefulWidget {
+  final TTTGameContainer gameObject;
+  final TTTEngineContract engine;
 
-  const TicTacToeGameScreen({
+  const TTTGameScreen({
     super.key,
     required this.gameObject,
     required this.engine,
   });
 
   @override
-  TicTacToeGameScreenState createState() => TicTacToeGameScreenState();
+  TTTGameScreenState createState() => TTTGameScreenState();
 }
 
-class TicTacToeGameScreenState extends State<TicTacToeGameScreen> {
-  TicTacToeGameContainer get _gameObject => widget.gameObject;
-  TicTacToeEngineContract get _engine => widget.engine;
+class TTTGameScreenState extends State<TTTGameScreen> {
+  TTTGameContainer get _gameObject => widget.gameObject;
+  TTTEngineContract get _engine => widget.engine;
   bool get isPlayerXEngine => _gameObject.isPlayerXEngine;
   bool get isPlayerOEngine => _gameObject.isPlayerOEngine;
   bool get isHumanPlayerToMove => _gameObject.isHumanPlayerToMove;
@@ -73,12 +73,12 @@ class TicTacToeGameScreenState extends State<TicTacToeGameScreen> {
     // Handle the tap using the FSM
     if (!_gameObject.isHumanPlayerToMove) return;
 
-    final inp = TicTacToePlayerMoveInput(
+    final inp = TTTPlayerMoveInput(
       index: index,
       player: _gameObject.humanPlayer,
       nowUtc: DateTime.now().toUtc(),
     );
-    TicTacToeOutputContainer outputs = _gameObject.postInput(inp);
+    TTTOutputContainer outputs = _gameObject.postInput(inp);
     _processOutputs(outputs);
   }
 
@@ -93,11 +93,11 @@ class TicTacToeGameScreenState extends State<TicTacToeGameScreen> {
     ),
   );
 
-  void _processOutputs(TicTacToeOutputContainer outputs) {
+  void _processOutputs(TTTOutputContainer outputs) {
     setState(() {
       for (var item in outputs.outputs) {
         if (item is TTTErrorOutput) {
-          String errorMessage = ticTacToeErrorCodeToString(
+          String errorMessage = tttErrorCodeToString(
             item.results.errorCode,
             item.results.errorParameters,
           );
@@ -113,7 +113,7 @@ class TicTacToeGameScreenState extends State<TicTacToeGameScreen> {
         } else if (item is TTTDoEngineMoveOutput) {
           GenericResult<int> res = _engine.getNextMove(_gameObject.gameState);
           if (res.isFailure) {
-            String errorMessage = ticTacToeErrorCodeToString(
+            String errorMessage = tttErrorCodeToString(
               res.errorCode,
               res.errorParameters,
             );
@@ -123,7 +123,7 @@ class TicTacToeGameScreenState extends State<TicTacToeGameScreen> {
             continue;
           }
           final newOutputs = _gameObject.postInput(
-            TicTacToeEngineMoveInput(
+            TTTEngineMoveInput(
               nowUtc: DateTime.now().toUtc(),
               index: res.data!,
               enginePlayer: _gameObject.enginePlayer,
@@ -142,9 +142,7 @@ class TicTacToeGameScreenState extends State<TicTacToeGameScreen> {
       duration = Duration(seconds: 1);
     }
     Timer(duration, () {
-      final updateTimeInput = TicTacToeUpdateTime(
-        nowUtc: DateTime.now().toUtc(),
-      );
+      final updateTimeInput = TTTUpdateTime(nowUtc: DateTime.now().toUtc());
       final newOutputs = _gameObject.postInput(updateTimeInput);
       _processOutputs(newOutputs); // Process the outputs from the timer
     });

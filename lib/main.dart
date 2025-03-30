@@ -27,9 +27,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/tic-tac-toe':
-            (context) => TicTacToeGameScreen(
-              gameObject: GetIt.I<TicTacToeGameContainer>(),
-              engine: GetIt.I<TicTacToeEngineContract>(),
+            (context) => TTTGameScreen(
+              gameObject: GetIt.I<TTTGameContainer>(),
+              engine: GetIt.I<TTTEngineContract>(),
             ),
         '/connect-4': (context) => const Connect4Screen(),
       },

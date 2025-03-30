@@ -1,7 +1,7 @@
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
 
 class TTTGameConfiguration {
-  TicTacToeCellState enginePlayer;
+  TTTCellState enginePlayer;
   Duration betweenGamesWaitTime;
   Duration? engineMoveWaitTime;
 
@@ -12,7 +12,7 @@ class TTTGameConfiguration {
   });
 
   TTTGameConfiguration.defaults()
-    : enginePlayer = TicTacToeCellState.o,
+    : enginePlayer = TTTCellState.o,
       betweenGamesWaitTime = Duration(seconds: 7),
       engineMoveWaitTime = Duration(seconds: 5);
 
