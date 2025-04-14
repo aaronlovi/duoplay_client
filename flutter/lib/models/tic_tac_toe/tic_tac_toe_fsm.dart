@@ -5,6 +5,7 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart'; // For logging with `log`
+import 'dart:developer';
 
 class TTTFsmUpdateContext {
   bool addStartGameOutput;
@@ -64,31 +65,38 @@ class TicTacToeFSM {
 
   // Reset the game board with the new configuration
   void _processGameConfiguration(TTTGameConfigInput inputs) {
+    log('Processing game configuration: ${inputs.configuration}');
     gameState.processNewGameConfiguration(inputs.configuration, inputs.nowUtc);
     _outputs.outputs.add(TTTStartGameOutput(inputs.configuration));
   }
 
   void _processPlayerMove(TTTPlayerMoveInput inputs) {
+    log('Processing player move: index=${inputs.index}, player=${inputs.player}');
     if (inputs.player == gameState.configuration.enginePlayer ||
         inputs.player == TTTCellState.empty) {
+      log('Invalid move: Player is engine or empty');
       _appendErrorOutput(ResultErrorCode.invalidMove);
       return;
     }
 
     Result res = gameState.isLegalPositionReadyForMove();
     if (res.isFailure) {
+      log('Move failed validation: ${res.errorCode}');
       _appendErrorResult(res);
       return;
     }
 
     res = gameState.makeMove(inputs.index, inputs.player);
     if (res.isFailure) {
+      log('Move failed: ${res.errorCode}');
       _appendErrorResult(res);
       return;
     }
 
+    log('Move successful: index=${inputs.index}, player=${inputs.player}');
     _outputs.outputs.add(TTTNewBoardOutput(gameState: gameState));
     if (gameState.isGameOver) {
+      log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(
         TTTGameOverOutput(winner: gameState.winner, isDraw: gameState.isDraw),
       );
@@ -96,26 +104,32 @@ class TicTacToeFSM {
   }
 
   void _processEngineMove(TTTEngineMoveInput inputs) {
+    log('Processing engine move: index=${inputs.index}, enginePlayer=${inputs.enginePlayer}');
     if (inputs.enginePlayer != gameState.configuration.enginePlayer ||
         inputs.enginePlayer == TTTCellState.empty) {
+      log('Invalid engine move: Player mismatch or empty');
       _appendErrorOutput(ResultErrorCode.invalidMove);
       return;
     }
 
     Result res = gameState.isLegalPositionReadyForMove();
     if (res.isFailure) {
+      log('Engine move failed validation: ${res.errorCode}');
       _appendErrorResult(res);
       return;
     }
 
     res = gameState.makeMove(inputs.index, inputs.enginePlayer);
     if (res.isFailure) {
+      log('Engine move failed: ${res.errorCode}');
       _appendErrorResult(res);
       return;
     }
 
+    log('Engine move successful: index=${inputs.index}, enginePlayer=${inputs.enginePlayer}');
     _outputs.outputs.add(TTTNewBoardOutput(gameState: gameState));
     if (gameState.isGameOver) {
+      log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(
         TTTGameOverOutput(winner: gameState.winner, isDraw: gameState.isDraw),
       );
