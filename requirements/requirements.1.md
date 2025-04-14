@@ -17,3 +17,7 @@
 | G.1.4.2 | Add detailed logging for AI decisions in `tic_tac_toe_fsm.dart`. | Pending |
 | G.1.5 | Optimize the `getWinner` logic in `tic_tac_toe_game_state.dart` with precomputed data structures or caching. | Pending |
 | G.1.6 | Add detailed logging for FSM transitions and AI decisions in `tic_tac_toe_fsm.dart` to aid debugging and analysis. | Pending |
+| G.1.7 | Implement beginner, intermediate, and expert AI modes for tic-tac-toe. | Pending |
+| G.1.7.1 | Beginner mode: Try to make immediately winning moves, then make a random legal move. | Pending |
+| G.1.7.2 | Intermediate mode: Try to make immediately winning moves, block opponent's immediately winning moves, then make a random legal move. | Pending |
+| G.1.7.3 | Expert mode: Use perfect lookahead to make the best move. | Pending |
