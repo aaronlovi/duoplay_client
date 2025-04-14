@@ -52,6 +52,23 @@ class TicTacToeGameState {
   TTTCellState get enginePlayer => configuration.enginePlayer;
 
   Result makeMove(int index, TTTCellState player) {
+    Result res = _validateMove(index);
+    if (res.isFailure) {
+      return res;
+    }
+
+    final newBoard = _updateBoard(index, player);
+    final newNumberOfX = _updatePlayerCount(player, TTTCellState.x);
+    final newNumberOfO = _updatePlayerCount(player, TTTCellState.o);
+    final TTTCellState newWinner = _determineWinner(newBoard);
+    final TTTCellState nextPlayersTurn = _getNextPlayer(player);
+
+    _updateGameState(newBoard, newNumberOfX, newNumberOfO, newWinner, nextPlayersTurn);
+
+    return Result.success();
+  }
+
+  Result _validateMove(int index) {
     Result res = isLegalPositionReadyForMove();
     if (res.isFailure) {
       return Result.failure(
@@ -68,24 +85,39 @@ class TicTacToeGameState {
       return Result.failure(ResultErrorCode.invalidMove);
     }
 
+    return Result.success();
+  }
+
+  List<TTTCellState> _updateBoard(int index, TTTCellState player) {
     final newBoard = List<TTTCellState>.from(board);
     newBoard[index] = player;
+    return newBoard;
+  }
 
-    final newNumberOfX = player == TTTCellState.x ? numberOfX + 1 : numberOfX;
-    final newNumberOfO = player == TTTCellState.o ? numberOfO + 1 : numberOfO;
-    final TTTCellState newWinner =
-        winner == TTTCellState.empty ? getWinner(newBoard) : winner;
-    final TTTCellState nextPlayersTurn =
-        player == TTTCellState.x ? TTTCellState.o : TTTCellState.x;
+  int _updatePlayerCount(TTTCellState player, TTTCellState targetPlayer) {
+    return player == targetPlayer ? (targetPlayer == TTTCellState.x ? numberOfX + 1 : numberOfO + 1) : (targetPlayer == TTTCellState.x ? numberOfX : numberOfO);
+  }
 
-    bool newIsDraw =
-        newNumberOfX + newNumberOfO == numSquares &&
-        newWinner == TTTCellState.empty;
+  TTTCellState _determineWinner(List<TTTCellState> newBoard) {
+    return winner == TTTCellState.empty ? getWinner(newBoard) : winner;
+  }
+
+  TTTCellState _getNextPlayer(TTTCellState currentPlayer) {
+    return currentPlayer == TTTCellState.x ? TTTCellState.o : TTTCellState.x;
+  }
+
+  void _updateGameState(
+    List<TTTCellState> newBoard,
+    int newNumberOfX,
+    int newNumberOfO,
+    TTTCellState newWinner,
+    TTTCellState nextPlayersTurn,
+  ) {
+    bool newIsDraw = newNumberOfX + newNumberOfO == numSquares && newWinner == TTTCellState.empty;
     bool newHasWinner = newWinner != TTTCellState.empty;
     bool newIsEnginesTurn =
-        configuration.enginePlayer == nextPlayersTurn &&
-        !newIsDraw &&
-        !newHasWinner;
+        configuration.enginePlayer == nextPlayersTurn && !newIsDraw && !newHasWinner;
+
     DateTime? newNextGameTimeUtc;
     DateTime? newEngineMoveTimeUtc;
     if (newIsDraw || newHasWinner) {
@@ -93,12 +125,10 @@ class TicTacToeGameState {
     }
     if (newIsEnginesTurn) {
       newEngineMoveTimeUtc = nowUtc.add(
-        configuration.engineMoveWaitTime ??
-            TTTConstants.defaultEngineMoveWaitTime,
+        configuration.engineMoveWaitTime ?? TTTConstants.defaultEngineMoveWaitTime,
       );
     }
 
-    // Update game state
     for (int i = 0; i < board.length; ++i) {
       board[i] = newBoard[i];
     }
@@ -108,8 +138,6 @@ class TicTacToeGameState {
     numberOfO = newNumberOfO;
     nextGameTimeUtc = newNextGameTimeUtc;
     engineMoveTimeUtc = newEngineMoveTimeUtc;
-
-    return Result.success();
   }
 
   TTTCellState getWinner(List<TTTCellState> board) {
