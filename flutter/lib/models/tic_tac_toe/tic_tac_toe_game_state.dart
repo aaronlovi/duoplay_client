@@ -16,6 +16,17 @@ class TicTacToeGameState {
   DateTime? engineMoveTimeUtc;
   TTTGameConfiguration configuration;
 
+  // Made the constructor public to allow external instantiation for simulation purposes
+  TicTacToeGameState(
+    this.board,
+    this.currentPlayer,
+    this.winner,
+    this.numberOfX,
+    this.numberOfO,
+    this.nowUtc,
+    this.configuration,
+  );
+
   TicTacToeGameState._(
     this.board,
     this.currentPlayer,

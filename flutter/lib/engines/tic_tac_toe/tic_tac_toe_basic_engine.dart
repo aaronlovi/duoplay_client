@@ -195,7 +195,7 @@ class ExpertEngine extends TTTBasicEngine {
   TicTacToeGameState _simulateMove(TicTacToeGameState state, int index, TTTCellState player) {
     final newBoard = List<TTTCellState>.from(state.board);
     newBoard[index] = player;
-    return TicTacToeGameState._(
+    return TicTacToeGameState(
       newBoard,
       player.getOpponent(),
       state.getWinner(newBoard),
