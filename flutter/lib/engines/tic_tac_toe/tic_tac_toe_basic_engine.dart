@@ -213,3 +213,18 @@ class _MinimaxResult {
 
   _MinimaxResult({this.move, required this.score});
 }
+
+class EngineFactory {
+  static TTTBasicEngine createEngine(String difficulty) {
+    switch (difficulty.toLowerCase()) {
+      case 'beginner':
+        return BeginnerEngine();
+      case 'intermediate':
+        return IntermediateEngine();
+      case 'expert':
+        return ExpertEngine();
+      default:
+        throw ArgumentError('Invalid difficulty level: $difficulty');
+    }
+  }
+}
