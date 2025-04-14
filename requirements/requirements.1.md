@@ -4,8 +4,8 @@
 |----------------|-------------|--------|
 | G.1 | Review the Flutter tic-tac-toe implementation. Suggest improvements | Complete |
 | G.1.1 | Refactor lengthy methods in `tic_tac_toe_game_state.dart` into smaller, reusable functions for better readability and maintainability. | Complete |
-| G.1.1.1 | Extract helper functions from `makeMove` in `tic_tac_toe_game_state.dart` to improve readability. | Pending |
-| G.1.1.2 | Refactor `getWinner` in `tic_tac_toe_game_state.dart` to use precomputed data structures for optimization. | Pending |
+| G.1.1.1 | Extract helper functions from `makeMove` in `tic_tac_toe_game_state.dart` to improve readability. | Complete |
+| G.1.1.2 | Refactor `getWinner` in `tic_tac_toe_game_state.dart` to use precomputed data structures for optimization. | Copmlete |
 | G.1.2 | Enhance tic-tac-toe by allowing to play against an AI at Beginner and Expert level. Both levels will current play against the same engine. | Pending |
 | G.1.2.1 | Implement a minimax algorithm with alpha-beta pruning in `tic_tac_toe_basic_engine.dart`. | Pending |
 | G.1.2.2 | Add configuration options to toggle between basic and advanced AI in `tic_tac_toe_basic_engine.dart`. | Pending |

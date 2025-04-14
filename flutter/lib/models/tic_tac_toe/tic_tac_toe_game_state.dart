@@ -141,7 +141,7 @@ class TicTacToeGameState {
   }
 
   TTTCellState getWinner(List<TTTCellState> board) {
-    // Check each winning combination
+    // Precompute winning combinations for optimization
     for (var combination in TTTConstants.winningCombinations) {
       final a = combination[0];
       final b = combination[1];
