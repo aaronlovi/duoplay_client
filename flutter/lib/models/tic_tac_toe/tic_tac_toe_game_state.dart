@@ -217,4 +217,15 @@ class TicTacToeGameState {
   String toString() {
     return 'TTTGameState[curPlayer:${currentPlayer.toShortString()},winner:${winner.toShortString()},numX:$numberOfX,numO:$numberOfO]';
   }
+
+  // Add unit tests for invalid moves
+  Result validateMove(int index) {
+    if (index < 0 || index >= numSquares) {
+      return Result.failure(ResultErrorCode.invalidMove);
+    }
+    if (board[index] != TTTCellState.empty) {
+      return Result.failure(ResultErrorCode.invalidMove);
+    }
+    return Result.success();
+  }
 }
