@@ -7,7 +7,7 @@
 | G.1.1.1 | Extract helper functions from `makeMove` in `tic_tac_toe_game_state.dart` to improve readability. | Complete |
 | G.1.1.2 | Refactor `getWinner` in `tic_tac_toe_game_state.dart` to use precomputed data structures for optimization. | Complete |
 | G.1.2 | Enhance tic-tac-toe by allowing to play against an AI at Beginner and Expert level. Both levels will currently play against the same engine. | Complete |
-| G.1.2.1 | Implement a minimax algorithm with alpha-beta pruning in `tic_tac_toe_basic_engine.dart`. | Pending |
+| G.1.2.1 | Implement a minimax algorithm with alpha-beta pruning in `tic_tac_toe_basic_engine.dart`. | Complete |
 | G.1.2.2 | Add configuration options to toggle between basic and advanced AI in `tic_tac_toe_basic_engine.dart`. | Pending |
 | G.1.3 | Enhance the AI engine in `tic_tac_toe_basic_engine.dart` to use a more advanced algorithm like minimax with alpha-beta pruning. This is the "expert" level. Playing against beginner level will play against the original engine. | Pending |
 | G.1.3.1 | Write unit tests for invalid moves in `tic_tac_toe_game_state.dart`. | Pending |

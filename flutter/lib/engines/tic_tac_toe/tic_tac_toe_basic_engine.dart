@@ -148,3 +148,68 @@ class IntermediateEngine extends TTTBasicEngine {
     return GenericResult.failure(ResultErrorCode.invalidState);
   }
 }
+
+class ExpertEngine extends TTTBasicEngine {
+  @override
+  GenericResult<int> getNextMove(TicTacToeGameState currentState) {
+    Result res = currentState.isLegalPositionReadyForMove();
+    if (res.isFailure) {
+      return GenericResult.failure(ResultErrorCode.invalidState);
+    }
+
+    final bestMove = _minimax(currentState, currentState.currentPlayer, true).move;
+    if (bestMove != null) {
+      return GenericResult.success(bestMove);
+    }
+
+    return GenericResult.failure(ResultErrorCode.invalidState);
+  }
+
+  _MinimaxResult _minimax(TicTacToeGameState state, TTTCellState player, bool isMaximizing) {
+    if (state.isGameOver) {
+      if (state.winner == state.currentPlayer) {
+        return _MinimaxResult(score: 10);
+      } else if (state.winner == state.currentPlayer.getOpponent()) {
+        return _MinimaxResult(score: -10);
+      } else {
+        return _MinimaxResult(score: 0);
+      }
+    }
+
+    final moves = <_MinimaxResult>[];
+    for (int i = 0; i < state.board.length; ++i) {
+      if (state.board[i] == TTTCellState.empty) {
+        final newState = _simulateMove(state, i, player);
+        final result = _minimax(newState, player.getOpponent(), !isMaximizing);
+        moves.add(_MinimaxResult(move: i, score: result.score));
+      }
+    }
+
+    if (isMaximizing) {
+      return moves.reduce((a, b) => a.score > b.score ? a : b);
+    } else {
+      return moves.reduce((a, b) => a.score < b.score ? a : b);
+    }
+  }
+
+  TicTacToeGameState _simulateMove(TicTacToeGameState state, int index, TTTCellState player) {
+    final newBoard = List<TTTCellState>.from(state.board);
+    newBoard[index] = player;
+    return TicTacToeGameState._(
+      newBoard,
+      player.getOpponent(),
+      state.getWinner(newBoard),
+      player == TTTCellState.x ? state.numberOfX + 1 : state.numberOfX,
+      player == TTTCellState.o ? state.numberOfO + 1 : state.numberOfO,
+      state.nowUtc,
+      state.configuration,
+    );
+  }
+}
+
+class _MinimaxResult {
+  final int? move;
+  final int score;
+
+  _MinimaxResult({this.move, required this.score});
+}
