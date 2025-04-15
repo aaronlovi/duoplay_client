@@ -87,7 +87,6 @@ class TTTFsm {
   void _processGameConfiguration(TTTGameConfigInput inputs) {
     log('Processing game configuration: ${inputs.configuration}');
     gameState.processNewGameConfiguration(inputs.configuration, inputs.nowUtc);
-    // Use the next engine difficulty for the new game
     _currentEngineDifficulty = _nextEngineDifficulty;
     _engine = TTTEngineFactory.createEngine(_currentEngineDifficulty);
     _outputs.outputs.add(TTTStartGameOutput(inputs.configuration));

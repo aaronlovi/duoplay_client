@@ -35,6 +35,6 @@
 | G.2.3 | If a player changes the tic-tac-toe engine during the game, show a toast informing them of: the current engine, the engine for the next game, and that the engine will change at the next game. | Complete |
 | G.2.4 | Add persistent tic-tac-toe settings for time between moves and time between games. | Pending |
 | G.2.4.1 | The display for both of the new settings should use canonical Flutter widgets for picking a number between 0 and 10 (integer). | Complete |
-| G.2.4.2 | Implement the tic-tac-toe setting for time between moves. | Pending |
+| G.2.4.2 | Implement the tic-tac-toe setting for time between moves. | Complete |
 | G.2.4.3 | Implement the tic-tac-toe setting for time between games. | Pending |
 | G.2.5 | Add a status bar at the bottom of the tic-tac-toe screen indicating: which engine is in use, and which letter (X or O) the player is currently playing. | Pending |

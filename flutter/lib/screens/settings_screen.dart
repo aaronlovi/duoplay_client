@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
   final String initialDifficulty;
@@ -63,9 +64,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             DropdownButton<int>(
               value: _moveDelay,
               items: List.generate(11, (i) => DropdownMenuItem(value: i, child: Text(i.toString()))),
-              onChanged: (value) {
+              onChanged: (value) async {
                 if (value != null) {
                   setState(() => _moveDelay = value);
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setInt('ttt_move_delay', value);
                 }
               },
             ),
