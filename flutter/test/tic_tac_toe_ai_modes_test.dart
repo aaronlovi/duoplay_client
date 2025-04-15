@@ -1,8 +1,10 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_basic_engine.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_beginner_engine.dart';
+import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_expert_engine.dart';
+import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_intermediate_engine.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TicTacToe AI difficulty modes', () {
@@ -107,7 +109,7 @@ void main() {
     });
 
     test(
-      'Expert (O): does NOT pick center if it is a losing move after X picks a corner',
+      'Expert: O does not play upper-middle after X picks upper-left (should not play a losing move)',
       () {
         final config = TTTGameConfiguration(
           enginePlayer: TTTCellState.o,
@@ -119,7 +121,7 @@ void main() {
         // X _ _
         // _ _ _
         // _ _ _
-        // X is first, picks a corner (0). O to move.
+        // O to move. The only non-losing moves are corners or edge (not center or edge-middle).
         final state = TicTacToeGameState(
           [
             TTTCellState.x,
@@ -140,12 +142,12 @@ void main() {
           config,
         );
         final move = engine.getNextMove(state);
-        // The expert engine should NOT pick the center (4) if it leads to a loss
+        // O should NOT play edge (1, 3, 5, 7) as first move after X picks a corner
         expect(
-          move.value != 4,
-          true,
+          [1, 3, 5, 7].contains(move.value),
+          isFalse,
           reason:
-              'Expert O should avoid losing center move after X picks a corner',
+              'Expert O should not play a losing move after X picks a corner',
         );
       },
     );

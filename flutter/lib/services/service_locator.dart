@@ -9,10 +9,10 @@ final GetIt getIt = GetIt.instance;
 
 void setupLocator() {
   getIt.registerLazySingleton<GameServiceContract>(() => MockGameService());
-  getIt.registerLazySingleton<TicTacToeFSM>(
-    () => TicTacToeFSM(TTTGameConfiguration.defaults()),
+  getIt.registerLazySingleton<TTTFsm>(
+    () => TTTFsm(TTTGameConfiguration.defaults()),
   );
   getIt.registerLazySingleton<TTTGameContainer>(
-    () => TTTGameContainer(fsm: getIt.get<TicTacToeFSM>()),
+    () => TTTGameContainer(fsm: getIt.get<TTTFsm>()),
   );
 }

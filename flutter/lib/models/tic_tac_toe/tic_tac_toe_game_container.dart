@@ -7,9 +7,9 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
 import 'dart:developer'; // For logging with `log`
 
 class TTTGameContainer {
-  final TicTacToeFSM _fsm;
+  final TTTFsm _fsm;
 
-  TTTGameContainer({required TicTacToeFSM fsm}) : _fsm = fsm;
+  TTTGameContainer({required TTTFsm fsm}) : _fsm = fsm;
 
   List<TTTCellState> get board => _fsm.board;
   bool get isPlayerXEngine => _fsm.isPlayerXEngine;

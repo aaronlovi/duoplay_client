@@ -1,13 +1,13 @@
+import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/screens/connect_4_screen.dart';
 import 'package:duoplay/screens/game_list_screen.dart';
+import 'package:duoplay/screens/settings_screen.dart';
 import 'package:duoplay/screens/tic_tac_toe_game_screen.dart';
 import 'package:duoplay/services/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:duoplay/screens/settings_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_basic_engine.dart';
 
 void main() {
   setupLocator();
@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
         '/tic-tac-toe':
             (context) => TTTGameScreen(
               gameObject: GetIt.I<TTTGameContainer>(),
-              engine: EngineFactory.createEngine(_difficulty),
+              engine: TTTEngineFactory.createEngine(_difficulty),
             ),
         '/connect-4': (context) => const Connect4Screen(),
         '/settings':

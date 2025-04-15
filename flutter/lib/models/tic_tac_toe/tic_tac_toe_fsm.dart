@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
+import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_inputs.dart';
@@ -6,14 +9,12 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart'; // For logging with `log`
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_basic_engine.dart';
-import 'dart:developer';
 
-class TTTFsmUpdateContext {
+class _TTTFsmUpdateContext {
   bool addStartGameOutput;
   bool addDoEngineMoveOutput;
 
-  TTTFsmUpdateContext()
+  _TTTFsmUpdateContext()
     : addStartGameOutput = false,
       addDoEngineMoveOutput = false;
 
@@ -23,17 +24,17 @@ class TTTFsmUpdateContext {
   }
 }
 
-class TicTacToeFSM {
+class TTTFsm {
   TicTacToeGameState gameState;
   final TTTOutputContainer _outputs;
-  final TTTFsmUpdateContext _context;
+  final _TTTFsmUpdateContext _context;
   late TTTEngineContract _engine;
 
-  TicTacToeFSM(TTTGameConfiguration configuration)
+  TTTFsm(TTTGameConfiguration configuration)
     : gameState = TicTacToeGameState.initial(configuration),
       _outputs = TTTOutputContainer(outputs: <TTTOutputBase>[]),
-      _context = TTTFsmUpdateContext() {
-    _engine = EngineFactory.createEngine(configuration.difficulty);
+      _context = _TTTFsmUpdateContext() {
+    _engine = TTTEngineFactory.createEngine(configuration.difficulty);
   }
 
   List<TTTCellState> get board => gameState.board;
@@ -78,7 +79,7 @@ class TicTacToeFSM {
   void _processGameConfiguration(TTTGameConfigInput inputs) {
     log('Processing game configuration: ${inputs.configuration}');
     gameState.processNewGameConfiguration(inputs.configuration, inputs.nowUtc);
-    _engine = EngineFactory.createEngine(inputs.configuration.difficulty);
+    _engine = TTTEngineFactory.createEngine(inputs.configuration.difficulty);
     _outputs.outputs.add(TTTStartGameOutput(inputs.configuration));
   }
 
