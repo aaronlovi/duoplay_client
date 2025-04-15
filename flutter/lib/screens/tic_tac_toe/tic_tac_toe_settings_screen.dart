@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsScreen extends StatefulWidget {
+class TicTacToeSettingsScreen extends StatefulWidget {
   final String initialDifficulty;
-  final void Function(String) onDifficultyChanged;
   final int initialMoveDelay;
   final int initialGameDelay;
 
-  const SettingsScreen({
+  const TicTacToeSettingsScreen({
     super.key,
     required this.initialDifficulty,
-    required this.onDifficultyChanged,
     this.initialMoveDelay = 1,
     this.initialGameDelay = 1,
   });
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<TicTacToeSettingsScreen> createState() =>
+      _TicTacToeSettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
   late String _selectedDifficulty;
   late int _moveDelay;
   late int _gameDelay;
@@ -55,7 +54,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onChanged: (value) {
                 if (value != null) {
                   setState(() => _selectedDifficulty = value);
-                  widget.onDifficultyChanged(value);
                 }
               },
             ),
