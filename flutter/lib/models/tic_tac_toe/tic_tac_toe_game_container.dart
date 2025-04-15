@@ -18,6 +18,7 @@ class TTTGameContainer {
   TTTCellState get humanPlayer => _fsm.humanPlayer;
   TTTCellState get enginePlayer => _fsm.enginePlayer;
   TicTacToeGameState get gameState => _fsm.gameState;
+  String get nextGameDifficulty => _fsm.nextGameDifficulty;
 
   TTTOutputContainer postInput(TTTInputBase inputs) {
     final outputs = <TTTOutputBase>[];

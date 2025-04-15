@@ -36,6 +36,7 @@ void main() {
         2,
         DateTime.now().toUtc(),
         config,
+        config.difficulty,
       );
       final move = engine.getNextMove(state);
       // X can win by playing at index 1
@@ -70,6 +71,7 @@ void main() {
         1,
         DateTime.now().toUtc(),
         config,
+        config.difficulty,
       );
       final move = engine.getNextMove(state);
       // O should block X at index 2
@@ -102,6 +104,7 @@ void main() {
         0,
         DateTime.now().toUtc(),
         config,
+        config.difficulty,
       );
       final move = engine.getNextMove(state);
       // Perfect play: X should take center if available
@@ -140,6 +143,7 @@ void main() {
           0,
           DateTime.now().toUtc(),
           config,
+          config.difficulty,
         );
         final move = engine.getNextMove(state);
         // O should NOT play edge (1, 3, 5, 7) as first move after X picks a corner

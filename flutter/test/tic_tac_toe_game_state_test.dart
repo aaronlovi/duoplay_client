@@ -50,6 +50,7 @@ void main() {
         4,
         DateTime.now().toUtc(),
         config,
+        config.difficulty,
       );
       expect(state.isDraw, true);
       expect(state.hasWinner, false);
@@ -78,6 +79,7 @@ void main() {
         4, // numberOfO
         DateTime.now().toUtc(),
         config,
+        config.difficulty,
       );
       final result = state.makeMove(6, TTTCellState.x);
       expect(result.isSuccess, true);

@@ -15,6 +15,7 @@ class TicTacToeGameState {
   DateTime? nextGameTimeUtc;
   DateTime? engineMoveTimeUtc;
   TTTGameConfiguration configuration;
+  String nextGameEngineDifficulty;
 
   // Made the constructor public to allow external instantiation for simulation purposes
   TicTacToeGameState(
@@ -25,6 +26,7 @@ class TicTacToeGameState {
     this.numberOfO,
     this.nowUtc,
     this.configuration,
+    this.nextGameEngineDifficulty,
   );
 
   TicTacToeGameState._(
@@ -35,6 +37,7 @@ class TicTacToeGameState {
     this.numberOfO,
     this.nowUtc,
     this.configuration,
+    this.nextGameEngineDifficulty,
   );
 
   factory TicTacToeGameState.initial(
@@ -48,6 +51,7 @@ class TicTacToeGameState {
     0,
     nowUtc ?? DateTime.now().toUtc(),
     cfg,
+    cfg.difficulty,
   );
 
   bool get isDraw =>
@@ -196,6 +200,7 @@ class TicTacToeGameState {
     numberOfX = 0;
     numberOfO = 0;
     configuration.changeSides();
+    configuration.difficulty = nextGameEngineDifficulty;
     clearBoard();
     nextGameTimeUtc = null;
     engineMoveTimeUtc =
@@ -215,7 +220,7 @@ class TicTacToeGameState {
 
   @override
   String toString() {
-    return 'TTTGameState[curPlayer:${currentPlayer.toShortString()},winner:${winner.toShortString()},numX:$numberOfX,numO:$numberOfO]';
+    return 'TTTGameState[curPlayer:${currentPlayer.toShortString()},winner:${winner.toShortString()},numX:$numberOfX,numO:$numberOfO,nextDifficulty:$nextGameEngineDifficulty]';
   }
 
   // Add unit tests for invalid moves

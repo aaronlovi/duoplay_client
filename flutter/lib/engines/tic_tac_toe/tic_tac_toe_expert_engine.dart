@@ -77,6 +77,7 @@ class TTTExpertEngine implements TTTEngineContract {
       player == TTTCellState.o ? state.numberOfO + 1 : state.numberOfO,
       state.nowUtc,
       state.configuration,
+      state.configuration.difficulty,
     );
   }
 }

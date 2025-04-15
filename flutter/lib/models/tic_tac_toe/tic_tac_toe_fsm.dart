@@ -8,7 +8,7 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_inputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart'; // For logging with `log`
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
 
 class _TTTFsmUpdateContext {
   bool addStartGameOutput;
@@ -29,15 +29,11 @@ class TTTFsm {
   final TTTOutputContainer _outputs;
   final _TTTFsmUpdateContext _context;
   late TTTEngineContract _engine;
-  String _currentEngineDifficulty;
-  String _nextEngineDifficulty;
 
   TTTFsm(TTTGameConfiguration configuration)
     : gameState = TicTacToeGameState.initial(configuration),
       _outputs = TTTOutputContainer(outputs: <TTTOutputBase>[]),
-      _context = _TTTFsmUpdateContext(),
-      _currentEngineDifficulty = configuration.difficulty,
-      _nextEngineDifficulty = configuration.difficulty {
+      _context = _TTTFsmUpdateContext() {
     _engine = TTTEngineFactory.createEngine(configuration.difficulty);
   }
 
@@ -49,6 +45,7 @@ class TTTFsm {
   bool get isHumanPlayerToMove => gameState.isHumanPlayerToMove;
   TTTCellState get humanPlayer => gameState.humanPlayer;
   TTTCellState get enginePlayer => gameState.enginePlayer;
+  String get nextGameDifficulty => gameState.nextGameEngineDifficulty;
 
   void update(TTTInputBase inputs, TTTOutputContainer outputs) {
     final prevState = gameState.toString();
@@ -82,7 +79,7 @@ class TTTFsm {
   }
 
   void _processSetEngineDifficulty(TTTSetEngineDifficultyInput inputs) {
-    _nextEngineDifficulty = inputs.newDifficulty;
+    gameState.nextGameEngineDifficulty = inputs.newDifficulty;
     if (gameState.isBetweenGames) _updateEngineDifficulty();
   }
 
@@ -220,12 +217,15 @@ class TTTFsm {
   }
 
   void _updateEngineDifficulty() {
+    if (gameState.configuration.difficulty ==
+        gameState.nextGameEngineDifficulty) {
+      return;
+    }
     log(
-      '[FSM] Updating engine difficulty from $_currentEngineDifficulty to $_nextEngineDifficulty',
+      '[FSM] Updating engine difficulty from ${gameState.configuration.difficulty} to ${gameState.nextGameEngineDifficulty}',
     );
-    _currentEngineDifficulty = _nextEngineDifficulty;
-    gameState.configuration.difficulty = _currentEngineDifficulty;
-    _engine = TTTEngineFactory.createEngine(_currentEngineDifficulty);
+    gameState.configuration.difficulty = gameState.nextGameEngineDifficulty;
+    _engine = TTTEngineFactory.createEngine(gameState.configuration.difficulty);
   }
 
   DateTime? _getNextTimeout() {
