@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class SettingsScreen extends StatefulWidget {
   final String initialDifficulty;
   final void Function(String) onDifficultyChanged;
+  final int initialMoveDelay;
+  final int initialGameDelay;
 
   const SettingsScreen({
     super.key,
     required this.initialDifficulty,
     required this.onDifficultyChanged,
+    this.initialMoveDelay = 1,
+    this.initialGameDelay = 1,
   });
 
   @override
@@ -16,11 +20,15 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   late String _selectedDifficulty;
+  late int _moveDelay;
+  late int _gameDelay;
 
   @override
   void initState() {
     super.initState();
     _selectedDifficulty = widget.initialDifficulty;
+    _moveDelay = widget.initialMoveDelay;
+    _gameDelay = widget.initialGameDelay;
   }
 
   @override
@@ -47,6 +55,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 if (value != null) {
                   setState(() => _selectedDifficulty = value);
                   widget.onDifficultyChanged(value);
+                }
+              },
+            ),
+            const SizedBox(height: 24),
+            const Text('Time between moves (seconds)', style: TextStyle(fontSize: 18)),
+            DropdownButton<int>(
+              value: _moveDelay,
+              items: List.generate(11, (i) => DropdownMenuItem(value: i, child: Text(i.toString()))),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() => _moveDelay = value);
+                }
+              },
+            ),
+            const SizedBox(height: 24),
+            const Text('Time between games (seconds)', style: TextStyle(fontSize: 18)),
+            DropdownButton<int>(
+              value: _gameDelay,
+              items: List.generate(11, (i) => DropdownMenuItem(value: i, child: Text(i.toString()))),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() => _gameDelay = value);
                 }
               },
             ),
