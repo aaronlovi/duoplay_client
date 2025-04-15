@@ -16,15 +16,7 @@ class GameListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Two-Player Games'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: 'Settings',
-            onPressed: () {
-              Navigator.pushNamed(context, '/settings');
-            },
-          ),
-        ],
+        // Removed settings icon button (G.1.9.1)
       ),
       body: ListView.builder(
         itemCount: games.length,

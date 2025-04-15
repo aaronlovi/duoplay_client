@@ -24,15 +24,15 @@
 | G.1.8 | Add a settings screen or menu to allow users to select the AI difficulty level (Beginner, Intermediate, Expert). | Complete |
 | G.1.8.1 | Store the selected difficulty level in persistent storage (e.g., shared preferences). | Complete |
 | G.1.8.2 | Use the stored difficulty level to initialize the appropriate engine using the `EngineFactory`. | Complete |
-| G.1.9 | Move the tic-tac-toe settings widget from the main screen to the tic-tac-toe game screen, make it a text button labeled "Settings", and ensure settings navigation and persistence work as before. | Pending |
-| G.1.9.1 | Remove the settings icon button from the main game list screen’s app bar. | Pending |
-| G.1.9.2 | Add a “Settings” button (with text label) to the tic-tac-toe game screen. | Pending |
-| G.1.9.3 | When the “Settings” button is pressed, navigate to the settings screen as before. | Pending |
-| G.1.9.4 | Ensure the settings screen still updates and persists the AI difficulty, and that the game uses the updated difficulty after returning from settings. | Pending |
+| G.1.9 | Move the tic-tac-toe settings widget from the main screen to the tic-tac-toe game screen, make it a text button labeled "Settings", and ensure settings navigation and persistence work as before. | Complete |
+| G.1.9.1 | Remove the settings icon button from the main game list screen’s app bar. | Complete |
+| G.1.9.2 | Add a “Settings” button (with text label) to the tic-tac-toe game screen. | Complete |
+| G.1.9.3 | When the “Settings” button is pressed, navigate to the settings screen as before. | Complete |
+| G.1.9.4 | Ensure the settings screen still updates and persists the AI difficulty, and that the game uses the updated difficulty after returning from settings. | Complete |
 | G.2 | Ensure robust and user-friendly tic-tac-toe engine and settings management. | Pending |
-| G.2.1 | The correct tic-tac-toe engine is loaded the first time that the tic-tac-toe screen is accessed. | Pending |
-| G.2.2 | During a game, the player can change the tic-tac-toe engine, but it will only affect the next game—not the current one. This should affect the tic-tac-toe FSM in `tic_tac_toe_fsm.dart`. | Pending |
-| G.2.3 | If a player changes the tic-tac-toe engine during the game, show a toast informing them of: the current engine, the engine for the next game, and that the engine will change at the next game. | Pending |
+| G.2.1 | The correct tic-tac-toe engine is loaded the first time that the tic-tac-toe screen is accessed. | Complete |
+| G.2.2 | During a game, the player can change the tic-tac-toe engine, but it will only affect the next game—not the current one. This should affect the tic-tac-toe FSM in `tic_tac_toe_fsm.dart`. | Complete |
+| G.2.3 | If a player changes the tic-tac-toe engine during the game, show a toast informing them of: the current engine, the engine for the next game, and that the engine will change at the next game. | Complete |
 | G.2.4 | Add persistent tic-tac-toe settings for time between moves and time between games. | Pending |
 | G.2.4.1 | The display for both of the new settings should use canonical Flutter widgets for picking a number between 0 and 10 (integer). | Pending |
 | G.2.4.2 | Implement the tic-tac-toe setting for time between moves. | Pending |

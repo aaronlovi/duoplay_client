@@ -29,11 +29,15 @@ class TTTFsm {
   final TTTOutputContainer _outputs;
   final _TTTFsmUpdateContext _context;
   late TTTEngineContract _engine;
+  String _currentEngineDifficulty;
+  String _nextEngineDifficulty;
 
   TTTFsm(TTTGameConfiguration configuration)
     : gameState = TicTacToeGameState.initial(configuration),
       _outputs = TTTOutputContainer(outputs: <TTTOutputBase>[]),
-      _context = _TTTFsmUpdateContext() {
+      _context = _TTTFsmUpdateContext(),
+      _currentEngineDifficulty = configuration.difficulty,
+      _nextEngineDifficulty = configuration.difficulty {
     _engine = TTTEngineFactory.createEngine(configuration.difficulty);
   }
 
@@ -75,11 +79,17 @@ class TTTFsm {
     log('[FSM] Transition: newState=${gameState.toString()}');
   }
 
+  void updateEngineDifficulty(String newDifficulty) {
+    _nextEngineDifficulty = newDifficulty;
+  }
+
   // Reset the game board with the new configuration
   void _processGameConfiguration(TTTGameConfigInput inputs) {
     log('Processing game configuration: ${inputs.configuration}');
     gameState.processNewGameConfiguration(inputs.configuration, inputs.nowUtc);
-    _engine = TTTEngineFactory.createEngine(inputs.configuration.difficulty);
+    // Use the next engine difficulty for the new game
+    _currentEngineDifficulty = _nextEngineDifficulty;
+    _engine = TTTEngineFactory.createEngine(_currentEngineDifficulty);
     _outputs.outputs.add(TTTStartGameOutput(inputs.configuration));
   }
 

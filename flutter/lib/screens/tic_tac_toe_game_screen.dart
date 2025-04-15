@@ -9,6 +9,7 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TTTGameScreen extends StatefulWidget {
   final TTTGameContainer gameObject;
@@ -39,8 +40,42 @@ class TTTGameScreenState extends State<TTTGameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tic-Tac-Toe')),
-      body: _getBody(),
+      appBar: AppBar(
+        title: const Text('Tic-Tac-Toe'),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                final prevDifficulty = _gameObject.gameState.configuration.difficulty;
+                final navigator = Navigator.of(context);
+                final scaffoldMessenger = ScaffoldMessenger.of(context);
+                await navigator.pushNamed('/settings');
+                if (!mounted) return;
+                final prefs = await SharedPreferences.getInstance();
+                final newDifficulty = prefs.getString('ai_difficulty') ?? prevDifficulty;
+                if (newDifficulty != prevDifficulty) {
+                  // Update FSM for next game
+                  _gameObject.updateEngineDifficulty(newDifficulty);
+                  // Show toast if game is in progress
+                  if (!_gameObject.gameState.isGameOver) {
+                    final current = prevDifficulty;
+                    final next = newDifficulty;
+                    final msg = 'Current engine: $current\nNext game: $next\nEngine will change at next game.';
+                    scaffoldMessenger.showSnackBar(
+                      SnackBar(content: Text(msg)),
+                    );
+                  }
+                }
+              },
+              child: const Text('Settings'),
+            ),
+          ),
+          Expanded(child: _getBody()),
+        ],
+      ),
     );
   }
 
