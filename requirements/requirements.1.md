@@ -24,3 +24,8 @@
 | G.1.8 | Add a settings screen or menu to allow users to select the AI difficulty level (Beginner, Intermediate, Expert). | Complete |
 | G.1.8.1 | Store the selected difficulty level in persistent storage (e.g., shared preferences). | Complete |
 | G.1.8.2 | Use the stored difficulty level to initialize the appropriate engine using the `EngineFactory`. | Complete |
+| G.1.9 | Move the tic-tac-toe settings widget from the main screen to the tic-tac-toe game screen, make it a text button labeled "Settings", and ensure settings navigation and persistence work as before. | Pending |
+| G.1.9.1 | Remove the settings icon button from the main game list screen’s app bar. | Pending |
+| G.1.9.2 | Add a “Settings” button (with text label) to the tic-tac-toe game screen. | Pending |
+| G.1.9.3 | When the “Settings” button is pressed, navigate to the settings screen as before. | Pending |
+| G.1.9.4 | Ensure the settings screen still updates and persists the AI difficulty, and that the game uses the updated difficulty after returning from settings. | Pending |

@@ -1,72 +1,14 @@
-import 'dart:math';
 import 'dart:developer' as developer;
+import 'dart:math';
 
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_constants.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 
-class TTTBasicEngine implements TTTEngineContract {
-  final random = Random();
+final _random = Random();
 
-  @override
-  GenericResult<int> getNextMove(TicTacToeGameState currentState) {
-    Result res = currentState.isLegalPositionReadyForMove();
-    if (res.isFailure) {
-      return GenericResult.failure(ResultErrorCode.invalidState);
-    }
-
-    final blockingMoves = <int>[];
-    final otherMoves = <int>[];
-    final playerToMove = currentState.currentPlayer;
-    final otherPlayer = playerToMove.getOpponent();
-    final currentBoard = currentState.board;
-
-    for (int i = 0; i < currentState.board.length; ++i) {
-      if (currentState.board[i] != TTTCellState.empty) continue;
-
-      for (var combination in TTTConstants.winningCombinations) {
-        if (!combination.contains(i)) continue;
-
-        int numSquaresOccupiedByCurrentPlayer = 0;
-        int numSquaresOccupiedByOpponent = 0;
-        for (var index in combination) {
-          if (currentBoard[index] == playerToMove) {
-            ++numSquaresOccupiedByCurrentPlayer;
-          } else if (currentBoard[index] == otherPlayer) {
-            ++numSquaresOccupiedByOpponent;
-          }
-        }
-        if (numSquaresOccupiedByCurrentPlayer == 2) {
-          // Two squares occupied by player and one empty square,
-          // So this move is a win
-          return GenericResult.success(i);
-        } else if (numSquaresOccupiedByOpponent == 2) {
-          // Two squares occupied by opponent and one empty square,
-          // So this is a blocking move
-          blockingMoves.add(i);
-        } else {
-          otherMoves.add(i);
-        }
-      }
-    }
-
-    if (blockingMoves.isNotEmpty) {
-      final randomIndex = random.nextInt(blockingMoves.length);
-      return GenericResult.success(blockingMoves[randomIndex]);
-    }
-
-    if (otherMoves.isNotEmpty) {
-      final randomIndex = random.nextInt(otherMoves.length);
-      return GenericResult.success(otherMoves[randomIndex]);
-    }
-
-    return GenericResult.failure(ResultErrorCode.invalidState);
-  }
-}
-
-class BeginnerEngine extends TTTBasicEngine {
+class TTTBeginnerEngine implements TTTEngineContract {
   @override
   GenericResult<int> getNextMove(TicTacToeGameState currentState) {
     Result res = currentState.isLegalPositionReadyForMove();
@@ -96,7 +38,7 @@ class BeginnerEngine extends TTTBasicEngine {
     }
 
     if (legalMoves.isNotEmpty) {
-      final randomIndex = random.nextInt(legalMoves.length);
+      final randomIndex = _random.nextInt(legalMoves.length);
       developer.log(
         '[AI][Beginner] No winning move, picking random move at ${legalMoves[randomIndex]}',
       );
@@ -108,7 +50,7 @@ class BeginnerEngine extends TTTBasicEngine {
   }
 }
 
-class IntermediateEngine extends TTTBasicEngine {
+class TTTIntermediateEngine implements TTTEngineContract {
   @override
   GenericResult<int> getNextMove(TicTacToeGameState currentState) {
     Result res = currentState.isLegalPositionReadyForMove();
@@ -151,7 +93,7 @@ class IntermediateEngine extends TTTBasicEngine {
     }
 
     if (legalMoves.isNotEmpty) {
-      final randomIndex = random.nextInt(legalMoves.length);
+      final randomIndex = _random.nextInt(legalMoves.length);
       developer.log(
         '[AI][Intermediate] No win/block, picking random move at ${legalMoves[randomIndex]}',
       );
@@ -163,7 +105,7 @@ class IntermediateEngine extends TTTBasicEngine {
   }
 }
 
-class ExpertEngine extends TTTBasicEngine {
+class TTTExpertEngine implements TTTEngineContract {
   @override
   GenericResult<int> getNextMove(TicTacToeGameState currentState) {
     Result res = currentState.isLegalPositionReadyForMove();
@@ -254,14 +196,14 @@ class _MinimaxResult {
 }
 
 class EngineFactory {
-  static TTTBasicEngine createEngine(String difficulty) {
+  static TTTEngineContract createEngine(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'beginner':
-        return BeginnerEngine();
+        return TTTBeginnerEngine();
       case 'intermediate':
-        return IntermediateEngine();
+        return TTTIntermediateEngine();
       case 'expert':
-        return ExpertEngine();
+        return TTTExpertEngine();
       default:
         throw ArgumentError('Invalid difficulty level: $difficulty');
     }

@@ -1,3 +1,4 @@
+import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_inputs.dart';
@@ -26,7 +27,7 @@ class TicTacToeFSM {
   TicTacToeGameState gameState;
   final TTTOutputContainer _outputs;
   final TTTFsmUpdateContext _context;
-  late TTTBasicEngine _engine;
+  late TTTEngineContract _engine;
 
   TicTacToeFSM(TTTGameConfiguration configuration)
     : gameState = TicTacToeGameState.initial(configuration),

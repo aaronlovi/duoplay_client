@@ -12,7 +12,7 @@ void main() {
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'beginner',
       );
-      final engine = BeginnerEngine();
+      final engine = TTTBeginnerEngine();
       // X _ X
       // O O _
       // _ _ _
@@ -46,7 +46,7 @@ void main() {
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'intermediate',
       );
-      final engine = IntermediateEngine();
+      final engine = TTTIntermediateEngine();
       // X X _
       // O _ _
       // _ _ _
@@ -80,7 +80,7 @@ void main() {
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'expert',
       );
-      final engine = ExpertEngine();
+      final engine = TTTExpertEngine();
       // Empty board, X to move
       final state = TicTacToeGameState(
         [
@@ -114,7 +114,7 @@ void main() {
           betweenGamesWaitTime: Duration(seconds: 1),
           difficulty: 'expert',
         );
-        final engine = ExpertEngine();
+        final engine = TTTExpertEngine();
         // Board setup:
         // X _ _
         // _ _ _

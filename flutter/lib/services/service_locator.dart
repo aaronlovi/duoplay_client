@@ -1,5 +1,3 @@
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_basic_engine.dart';
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
@@ -14,7 +12,6 @@ void setupLocator() {
   getIt.registerLazySingleton<TicTacToeFSM>(
     () => TicTacToeFSM(TTTGameConfiguration.defaults()),
   );
-  getIt.registerLazySingleton<TTTEngineContract>(() => TTTBasicEngine());
   getIt.registerLazySingleton<TTTGameContainer>(
     () => TTTGameContainer(fsm: getIt.get<TicTacToeFSM>()),
   );
