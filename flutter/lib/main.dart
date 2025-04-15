@@ -3,7 +3,6 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/screens/connect_4/connect_4_game_screen.dart';
 import 'package:duoplay/screens/game_list_screen.dart';
 import 'package:duoplay/screens/tic_tac_toe/tic_tac_toe_game_screen.dart';
-import 'package:duoplay/screens/tic_tac_toe/tic_tac_toe_settings_screen.dart';
 import 'package:duoplay/screens/tic_tac_toe/tic_tac_toe_settings_loader.dart';
 import 'package:duoplay/services/service_locator.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +34,7 @@ class MyApp extends StatelessWidget {
                 GetIt.I<TTTGameContainer>().gameState.configuration.difficulty,
               ),
             ),
-        '/tic-tac-toe/settings':
-            (context) => const TicTacToeSettingsLoader(),
+        '/tic-tac-toe/settings': (context) => const TicTacToeSettingsLoader(),
         '/connect-4': (context) => const Connect4GameScreen(),
       },
     );
