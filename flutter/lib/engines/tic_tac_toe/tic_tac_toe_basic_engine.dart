@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:developer' as developer;
 
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
@@ -78,7 +79,9 @@ class BeginnerEngine extends TTTBasicEngine {
       if (currentState.board[i] == TTTCellState.empty) {
         final simulatedBoard = List<TTTCellState>.from(currentState.board);
         simulatedBoard[i] = currentState.currentPlayer;
-        if (currentState.getWinner(simulatedBoard) == currentState.currentPlayer) {
+        if (currentState.getWinner(simulatedBoard) ==
+            currentState.currentPlayer) {
+          developer.log('[AI][Beginner] Winning move found at $i');
           return GenericResult.success(i);
         }
       }
@@ -94,9 +97,13 @@ class BeginnerEngine extends TTTBasicEngine {
 
     if (legalMoves.isNotEmpty) {
       final randomIndex = random.nextInt(legalMoves.length);
+      developer.log(
+        '[AI][Beginner] No winning move, picking random move at ${legalMoves[randomIndex]}',
+      );
       return GenericResult.success(legalMoves[randomIndex]);
     }
 
+    developer.log('[AI][Beginner] No legal moves available');
     return GenericResult.failure(ResultErrorCode.invalidState);
   }
 }
@@ -114,7 +121,9 @@ class IntermediateEngine extends TTTBasicEngine {
       if (currentState.board[i] == TTTCellState.empty) {
         final simulatedBoard = List<TTTCellState>.from(currentState.board);
         simulatedBoard[i] = currentState.currentPlayer;
-        if (currentState.getWinner(simulatedBoard) == currentState.currentPlayer) {
+        if (currentState.getWinner(simulatedBoard) ==
+            currentState.currentPlayer) {
+          developer.log('[AI][Intermediate] Winning move found at $i');
           return GenericResult.success(i);
         }
       }
@@ -127,6 +136,7 @@ class IntermediateEngine extends TTTBasicEngine {
         final simulatedBoard = List<TTTCellState>.from(currentState.board);
         simulatedBoard[i] = opponent;
         if (currentState.getWinner(simulatedBoard) == opponent) {
+          developer.log('[AI][Intermediate] Blocking opponent win at $i');
           return GenericResult.success(i);
         }
       }
@@ -142,9 +152,13 @@ class IntermediateEngine extends TTTBasicEngine {
 
     if (legalMoves.isNotEmpty) {
       final randomIndex = random.nextInt(legalMoves.length);
+      developer.log(
+        '[AI][Intermediate] No win/block, picking random move at ${legalMoves[randomIndex]}',
+      );
       return GenericResult.success(legalMoves[randomIndex]);
     }
 
+    developer.log('[AI][Intermediate] No legal moves available');
     return GenericResult.failure(ResultErrorCode.invalidState);
   }
 }
@@ -157,23 +171,39 @@ class ExpertEngine extends TTTBasicEngine {
       return GenericResult.failure(ResultErrorCode.invalidState);
     }
 
-    final bestMove = _minimax(currentState, currentState.currentPlayer, true).move;
+    // Remove forced center pick: always use minimax
+    final bestMove =
+        _minimax(currentState, currentState.currentPlayer, true).move;
     if (bestMove != null) {
+      developer.log('[AI][Expert] Minimax selected move $bestMove');
       return GenericResult.success(bestMove);
     }
 
+    developer.log('[AI][Expert] No valid move found by minimax');
     return GenericResult.failure(ResultErrorCode.invalidState);
   }
 
-  _MinimaxResult _minimax(TicTacToeGameState state, TTTCellState player, bool isMaximizing) {
+  _MinimaxResult _minimax(
+    TicTacToeGameState state,
+    TTTCellState player,
+    bool isMaximizing,
+  ) {
+    // Center bonus value
+    const int centerBonus = 1;
     if (state.isGameOver) {
+      int score;
       if (state.winner == state.currentPlayer) {
-        return _MinimaxResult(score: 10);
+        score = 10;
       } else if (state.winner == state.currentPlayer.getOpponent()) {
-        return _MinimaxResult(score: -10);
+        score = -10;
       } else {
-        return _MinimaxResult(score: 0);
+        score = 0;
       }
+      // Add bonus if player occupies center
+      if (state.board[4] == state.currentPlayer) {
+        score += centerBonus;
+      }
+      return _MinimaxResult(score: score);
     }
 
     final moves = <_MinimaxResult>[];
@@ -181,7 +211,12 @@ class ExpertEngine extends TTTBasicEngine {
       if (state.board[i] == TTTCellState.empty) {
         final newState = _simulateMove(state, i, player);
         final result = _minimax(newState, player.getOpponent(), !isMaximizing);
-        moves.add(_MinimaxResult(move: i, score: result.score));
+        int moveScore = result.score;
+        // Add bonus if this move is the center
+        if (i == 4 && player == state.currentPlayer) {
+          moveScore += centerBonus;
+        }
+        moves.add(_MinimaxResult(move: i, score: moveScore));
       }
     }
 
@@ -192,7 +227,11 @@ class ExpertEngine extends TTTBasicEngine {
     }
   }
 
-  TicTacToeGameState _simulateMove(TicTacToeGameState state, int index, TTTCellState player) {
+  TicTacToeGameState _simulateMove(
+    TicTacToeGameState state,
+    int index,
+    TTTCellState player,
+  ) {
     final newBoard = List<TTTCellState>.from(state.board);
     newBoard[index] = player;
     return TicTacToeGameState(

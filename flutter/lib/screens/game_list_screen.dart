@@ -14,7 +14,18 @@ class GameListScreen extends StatelessWidget {
     final List<Game> games = gameService.fetchGames();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Two-Player Games')),
+      appBar: AppBar(
+        title: const Text('Two-Player Games'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: 'Settings',
+            onPressed: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+        ],
+      ),
       body: ListView.builder(
         itemCount: games.length,
         itemBuilder: (context, index) {

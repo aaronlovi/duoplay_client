@@ -5,6 +5,7 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart'; // For logging with `log`
+import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_basic_engine.dart';
 import 'dart:developer';
 
 class TTTFsmUpdateContext {
@@ -25,11 +26,14 @@ class TicTacToeFSM {
   TicTacToeGameState gameState;
   final TTTOutputContainer _outputs;
   final TTTFsmUpdateContext _context;
+  late TTTBasicEngine _engine;
 
   TicTacToeFSM(TTTGameConfiguration configuration)
     : gameState = TicTacToeGameState.initial(configuration),
       _outputs = TTTOutputContainer(outputs: <TTTOutputBase>[]),
-      _context = TTTFsmUpdateContext();
+      _context = TTTFsmUpdateContext() {
+    _engine = EngineFactory.createEngine(configuration.difficulty);
+  }
 
   List<TTTCellState> get board => gameState.board;
   bool get isPlayerXEngine =>
@@ -41,6 +45,11 @@ class TicTacToeFSM {
   TTTCellState get enginePlayer => gameState.enginePlayer;
 
   void update(TTTInputBase inputs, TTTOutputContainer outputs) {
+    final prevState = gameState.toString();
+    final inputType = inputs.runtimeType.toString();
+    log(
+      '[FSM] Transition: prevState=$prevState, inputType=$inputType, input=$inputs',
+    );
     _outputs.clear();
     _context.clear();
     outputs.clear();
@@ -61,17 +70,21 @@ class TicTacToeFSM {
 
     outputs.outputs.addAll(_outputs.outputs);
     outputs.nextTimeout = _getNextTimeout();
+    log('[FSM] Transition: newState=${gameState.toString()}');
   }
 
   // Reset the game board with the new configuration
   void _processGameConfiguration(TTTGameConfigInput inputs) {
     log('Processing game configuration: ${inputs.configuration}');
     gameState.processNewGameConfiguration(inputs.configuration, inputs.nowUtc);
+    _engine = EngineFactory.createEngine(inputs.configuration.difficulty);
     _outputs.outputs.add(TTTStartGameOutput(inputs.configuration));
   }
 
   void _processPlayerMove(TTTPlayerMoveInput inputs) {
-    log('Processing player move: index=${inputs.index}, player=${inputs.player}');
+    log(
+      'Processing player move: index=${inputs.index}, player=${inputs.player}',
+    );
     if (inputs.player == gameState.configuration.enginePlayer ||
         inputs.player == TTTCellState.empty) {
       log('Invalid move: Player is engine or empty');
@@ -104,7 +117,9 @@ class TicTacToeFSM {
   }
 
   void _processEngineMove(TTTEngineMoveInput inputs) {
-    log('Processing engine move: index=${inputs.index}, enginePlayer=${inputs.enginePlayer}');
+    log(
+      'Processing engine move: index=${inputs.index}, enginePlayer=${inputs.enginePlayer}',
+    );
     if (inputs.enginePlayer != gameState.configuration.enginePlayer ||
         inputs.enginePlayer == TTTCellState.empty) {
       log('Invalid engine move: Player mismatch or empty');
@@ -119,14 +134,25 @@ class TicTacToeFSM {
       return;
     }
 
-    res = gameState.makeMove(inputs.index, inputs.enginePlayer);
+    // Use the selected engine to get the move
+    final aiMove = _engine.getNextMove(gameState);
+    log(
+      '[FSM] AI (difficulty: ${gameState.configuration.difficulty}) selected move: ${aiMove.value}, reason: ${aiMove.isSuccess ? 'success' : 'failure'}',
+    );
+    if (aiMove.isFailure) {
+      _appendErrorResult(Result.failure(ResultErrorCode.invalidMove));
+      return;
+    }
+    res = gameState.makeMove(aiMove.value!, inputs.enginePlayer);
     if (res.isFailure) {
       log('Engine move failed: ${res.errorCode}');
       _appendErrorResult(res);
       return;
     }
 
-    log('Engine move successful: index=${inputs.index}, enginePlayer=${inputs.enginePlayer}');
+    log(
+      'Engine move successful: index=${aiMove.value}, enginePlayer=${inputs.enginePlayer}',
+    );
     _outputs.outputs.add(TTTNewBoardOutput(gameState: gameState));
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
@@ -161,11 +187,20 @@ class TicTacToeFSM {
 
   void _processUpdateContext() {
     if (_context.addStartGameOutput) {
+      log(
+        '[FSM] Transition: setupNextGame called, prevState=${gameState.toString()}',
+      );
       gameState.setupNextGame();
+      log(
+        '[FSM] Transition: after setupNextGame, newState=${gameState.toString()}',
+      );
       _outputs.outputs.add(TTTStartGameOutput(gameState.configuration));
     }
 
     if (_context.addDoEngineMoveOutput) {
+      log(
+        '[FSM] Transition: DoEngineMoveOutput triggered, state=${gameState.toString()}',
+      );
       _outputs.outputs.add(TTTDoEngineMoveOutput());
     }
   }

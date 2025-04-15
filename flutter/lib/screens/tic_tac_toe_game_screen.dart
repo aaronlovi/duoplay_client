@@ -125,7 +125,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
           final newOutputs = _gameObject.postInput(
             TTTEngineMoveInput(
               nowUtc: DateTime.now().toUtc(),
-              index: res.data!,
+              index: res.value!,
               enginePlayer: _gameObject.enginePlayer,
             ),
           );

@@ -12,15 +12,15 @@
 | G.1.3 | Enhance the AI engine in `tic_tac_toe_basic_engine.dart` to use a more advanced algorithm like minimax with alpha-beta pruning. This is the "expert" level. Playing against beginner level will play against the original engine. | Complete |
 | G.1.3.1 | Write unit tests for invalid moves in `tic_tac_toe_game_state.dart`. | Complete |
 | G.1.3.2 | Write unit tests for simultaneous win/draw conditions in `tic_tac_toe_game_state.dart`. | Complete |
-| G.1.4 | Add comprehensive unit tests to cover edge cases, such as invalid moves or simultaneous win/draw conditions. | Pending |
-| G.1.4.1 | Add detailed logging for FSM transitions in `tic_tac_toe_fsm.dart`. | Pending |
-| G.1.4.2 | Add detailed logging for AI decisions in `tic_tac_toe_fsm.dart`. | Pending |
+| G.1.4 | Add comprehensive unit tests to cover edge cases, such as invalid moves or simultaneous win/draw conditions. | Complete |
+| G.1.4.1 | Add detailed logging for FSM transitions in `tic_tac_toe_fsm.dart`. | Complete |
+| G.1.4.2 | Add detailed logging for AI decisions in `tic_tac_toe_fsm.dart`. | Complete |
 | G.1.5 | Optimize the `getWinner` logic in `tic_tac_toe_game_state.dart` with precomputed data structures or caching. | Completed |
 | G.1.6 | Add detailed logging for FSM transitions and AI decisions in `tic_tac_toe_fsm.dart` to aid debugging and analysis. | Completed |
-| G.1.7 | Implement beginner, intermediate, and expert AI modes for tic-tac-toe. | Pending |
-| G.1.7.1 | Beginner mode: Try to make immediately winning moves, then make a random legal move. | Pending |
-| G.1.7.2 | Intermediate mode: Try to make immediately winning moves, block opponent's immediately winning moves, then make a random legal move. | Pending |
-| G.1.7.3 | Expert mode: Use perfect lookahead to make the best move. | Pending |
+| G.1.7 | Implement beginner, intermediate, and expert AI modes for tic-tac-toe. | Complete |
+| G.1.7.1 | Beginner mode: Try to make immediately winning moves, then make a random legal move. | Complete |
+| G.1.7.2 | Intermediate mode: Try to make immediately winning moves, block opponent's immediately winning moves, then make a random legal move. | Complete |
+| G.1.7.3 | Expert mode: Use perfect lookahead to make the best move. | Complete |
 | G.1.8 | Add a settings screen or menu to allow users to select the AI difficulty level (Beginner, Intermediate, Expert). | Pending |
 | G.1.8.1 | Store the selected difficulty level in persistent storage (e.g., shared preferences). | Pending |
 | G.1.8.2 | Use the stored difficulty level to initialize the appropriate engine using the `EngineFactory`. | Pending |

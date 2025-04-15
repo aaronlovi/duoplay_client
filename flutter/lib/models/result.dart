@@ -39,28 +39,28 @@ class GenericResult<T> {
   final bool isSuccess;
   final ResultErrorCode errorCode;
   final List<String> errorParameters;
-  final T? data;
+  final T? value;
 
-  GenericResult.success(this.data)
+  GenericResult.success(this.value)
     : isSuccess = true,
       errorCode = ResultErrorCode.none,
       errorParameters = const [];
 
   GenericResult.failure(this.errorCode, {this.errorParameters = const []})
     : isSuccess = false,
-      data = null;
+      value = null;
 
   GenericResult.fromFailureResult(Result res)
     : isSuccess = false,
       errorCode = res.errorCode,
       errorParameters = res.errorParameters,
-      data = null;
+      value = null;
 
   bool get isFailure => !isSuccess;
 
   @override
   String toString() =>
       isSuccess
-          ? 'Result: Success, Data: $data'
+          ? 'Result: Success, Data: $value'
           : 'Result: Failure, ErrorCode: $errorCode, Parameters: $errorParameters';
 }
