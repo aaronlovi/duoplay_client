@@ -53,7 +53,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
                     _gameObject.gameState.configuration.difficulty;
                 final navigator = Navigator.of(context);
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
-                await navigator.pushNamed('/settings');
+                await navigator.pushNamed('/tic-tac-toe/settings');
                 if (!mounted) return;
                 final prefs = await SharedPreferences.getInstance();
                 final newDifficulty =
