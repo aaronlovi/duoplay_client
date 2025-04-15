@@ -21,6 +21,6 @@
 | G.1.7.1 | Beginner mode: Try to make immediately winning moves, then make a random legal move. | Complete |
 | G.1.7.2 | Intermediate mode: Try to make immediately winning moves, block opponent's immediately winning moves, then make a random legal move. | Complete |
 | G.1.7.3 | Expert mode: Use perfect lookahead to make the best move. | Complete |
-| G.1.8 | Add a settings screen or menu to allow users to select the AI difficulty level (Beginner, Intermediate, Expert). | Pending |
-| G.1.8.1 | Store the selected difficulty level in persistent storage (e.g., shared preferences). | Pending |
-| G.1.8.2 | Use the stored difficulty level to initialize the appropriate engine using the `EngineFactory`. | Pending |
+| G.1.8 | Add a settings screen or menu to allow users to select the AI difficulty level (Beginner, Intermediate, Expert). | Complete |
+| G.1.8.1 | Store the selected difficulty level in persistent storage (e.g., shared preferences). | Complete |
+| G.1.8.2 | Use the stored difficulty level to initialize the appropriate engine using the `EngineFactory`. | Complete |
