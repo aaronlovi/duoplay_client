@@ -63,6 +63,8 @@ class TTTFsm {
 
     if (inputs is TTTGameConfigInput) {
       _processGameConfiguration(inputs);
+    } else if (inputs is TTTSetEngineDifficultyInput) {
+      _nextEngineDifficulty = inputs.newDifficulty;
     } else if (inputs is TTTPlayerMoveInput) {
       _processPlayerMove(inputs);
     } else if (inputs is TTTEngineMoveInput) {

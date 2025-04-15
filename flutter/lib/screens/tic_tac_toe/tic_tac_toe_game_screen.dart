@@ -57,10 +57,15 @@ class TTTGameScreenState extends State<TTTGameScreen> {
                 if (!mounted) return;
                 final prefs = await SharedPreferences.getInstance();
                 final newDifficulty =
-                    prefs.getString('ttt_ai_difficulty') ?? prevDifficulty;
+                    prefs.getString('ai_difficulty') ?? prevDifficulty;
                 if (newDifficulty != prevDifficulty) {
-                  // Update FSM for next game
-                  _gameObject.updateEngineDifficulty(newDifficulty);
+                  // Update FSM for next game using postInput and TTTSetEngineDifficultyInput
+                  _gameObject.postInput(
+                    TTTSetEngineDifficultyInput(
+                      newDifficulty: newDifficulty,
+                      nowUtc: DateTime.now().toUtc(),
+                    ),
+                  );
                   // Show toast if game is in progress
                   if (!_gameObject.gameState.isGameOver) {
                     final current = prevDifficulty;
