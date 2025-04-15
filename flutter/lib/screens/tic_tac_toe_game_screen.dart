@@ -39,6 +39,8 @@ class TTTGameScreenState extends State<TTTGameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final difficulty = _gameObject.gameState.configuration.difficulty;
+    final playerLetter = _gameObject.humanPlayer.toShortString().toUpperCase();
     return Scaffold(
       appBar: AppBar(title: const Text('Tic-Tac-Toe')),
       body: Column(
@@ -75,6 +77,16 @@ class TTTGameScreenState extends State<TTTGameScreen> {
             ),
           ),
           Expanded(child: _getBody()),
+          Container(
+            width: double.infinity,
+            color: Colors.grey[200],
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: Text(
+              'Engine: $difficulty    You are: $playerLetter',
+              style: const TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ],
       ),
     );
