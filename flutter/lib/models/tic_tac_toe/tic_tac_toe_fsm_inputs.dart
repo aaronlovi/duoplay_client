@@ -53,14 +53,19 @@ class TTTUpdateTime extends TTTInputBase {
   String toString() => "TTTUpdateTime[now:$nowUtc]";
 }
 
-class TTTSetEngineDifficultyInput extends TTTInputBase {
+class TTTSettingsChangeInput extends TTTInputBase {
   final String newDifficulty;
-  TTTSetEngineDifficultyInput({
+  final int betweenMoveDelaySeconds;
+  final int betweenGameDelaySeconds;
+
+  TTTSettingsChangeInput({
     required this.newDifficulty,
+    required this.betweenMoveDelaySeconds,
+    required this.betweenGameDelaySeconds,
     required super.nowUtc,
   });
 
   @override
   String toString() =>
-      'TTTSetEngineDifficultyInput[newDifficulty:$newDifficulty]';
+      'TTTSetEngineDifficultyInput[newDifficulty:$newDifficulty,betweenMoveDelaySeconds:$betweenMoveDelaySeconds,betweenGameDelaySeconds:$betweenGameDelaySeconds]';
 }

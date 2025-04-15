@@ -62,8 +62,10 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setString('ttt_ai_difficulty', value);
                   _gameContainer.postInput(
-                    TTTSetEngineDifficultyInput(
+                    TTTSettingsChangeInput(
                       newDifficulty: value,
+                      betweenMoveDelaySeconds: _moveDelay,
+                      betweenGameDelaySeconds: _gameDelay,
                       nowUtc: DateTime.now().toUtc(),
                     ),
                   );
@@ -86,6 +88,14 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
                   setState(() => _moveDelay = value);
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setInt('ttt_move_delay', value);
+                  _gameContainer.postInput(
+                    TTTSettingsChangeInput(
+                      newDifficulty: _selectedDifficulty,
+                      betweenMoveDelaySeconds: value,
+                      betweenGameDelaySeconds: _gameDelay,
+                      nowUtc: DateTime.now().toUtc(),
+                    ),
+                  );
                 }
               },
             ),
@@ -105,6 +115,14 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
                   setState(() => _gameDelay = value);
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setInt('ttt_game_delay', value);
+                  _gameContainer.postInput(
+                    TTTSettingsChangeInput(
+                      newDifficulty: _selectedDifficulty,
+                      betweenMoveDelaySeconds: _moveDelay,
+                      betweenGameDelaySeconds: value,
+                      nowUtc: DateTime.now().toUtc(),
+                    ),
+                  );
                 }
               },
             ),

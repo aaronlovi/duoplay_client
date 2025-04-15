@@ -51,6 +51,20 @@ class TTTGameScreenState extends State<TTTGameScreen> {
               onPressed: () async {
                 final prevDifficulty =
                     _gameObject.gameState.configuration.difficulty;
+                final int prevBetweenMoveDelay =
+                    _gameObject
+                        .gameState
+                        .configuration
+                        .engineMoveWaitTime
+                        ?.inSeconds ??
+                    1;
+                final int prevBetweenGameDelay =
+                    _gameObject
+                        .gameState
+                        .configuration
+                        .betweenGamesWaitTime
+                        .inSeconds;
+
                 final navigator = Navigator.of(context);
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
                 await navigator.pushNamed('/tic-tac-toe/settings');
@@ -61,8 +75,10 @@ class TTTGameScreenState extends State<TTTGameScreen> {
                 if (newDifficulty != prevDifficulty) {
                   // Update FSM for next game using postInput and TTTSetEngineDifficultyInput
                   _gameObject.postInput(
-                    TTTSetEngineDifficultyInput(
+                    TTTSettingsChangeInput(
                       newDifficulty: newDifficulty,
+                      betweenMoveDelaySeconds: prevBetweenMoveDelay,
+                      betweenGameDelaySeconds: prevBetweenGameDelay,
                       nowUtc: DateTime.now().toUtc(),
                     ),
                   );

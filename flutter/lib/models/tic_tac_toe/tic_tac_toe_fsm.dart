@@ -60,8 +60,8 @@ class TTTFsm {
 
     if (inputs is TTTGameConfigInput) {
       _processGameConfiguration(inputs);
-    } else if (inputs is TTTSetEngineDifficultyInput) {
-      _processSetEngineDifficulty(inputs);
+    } else if (inputs is TTTSettingsChangeInput) {
+      _processSettingsChange(inputs);
     } else if (inputs is TTTPlayerMoveInput) {
       _processPlayerMove(inputs);
     } else if (inputs is TTTEngineMoveInput) {
@@ -78,9 +78,15 @@ class TTTFsm {
     log('[FSM] Transition: newState=${gameState.toString()}');
   }
 
-  void _processSetEngineDifficulty(TTTSetEngineDifficultyInput inputs) {
+  void _processSettingsChange(TTTSettingsChangeInput inputs) {
     gameState.nextGameEngineDifficulty = inputs.newDifficulty;
     if (gameState.isBetweenGames) _updateEngineDifficulty();
+    gameState.configuration.betweenGamesWaitTime = Duration(
+      seconds: inputs.betweenGameDelaySeconds,
+    );
+    gameState.configuration.engineMoveWaitTime = Duration(
+      seconds: inputs.betweenMoveDelaySeconds,
+    );
   }
 
   // Reset the game board with the new configuration
