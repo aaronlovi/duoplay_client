@@ -52,7 +52,15 @@ class TTTExpertEngine implements TTTEngineContract {
       if (state.board[i] != TTTCellState.empty) continue;
       final newState = _simulateMove(state, i, state.currentPlayer);
       final result = _minimax(newState, rootPlayer, !isMaximizing);
-      moves.add(MinimaxResult(move: i, score: result.score));
+
+      int score = result.score;
+
+      // Give a small bonus if the engine is picking the center square
+      if (isMaximizing && rootPlayer == state.currentPlayer && i == 4) {
+        score += 1;
+      }
+
+      moves.add(MinimaxResult(move: i, score: score));
     }
 
     if (isMaximizing) {
