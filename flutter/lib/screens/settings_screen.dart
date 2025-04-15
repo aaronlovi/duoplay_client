@@ -60,10 +60,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             const SizedBox(height: 24),
-            const Text('Time between moves (seconds)', style: TextStyle(fontSize: 18)),
+            const Text(
+              'Time between moves (seconds)',
+              style: TextStyle(fontSize: 18),
+            ),
             DropdownButton<int>(
               value: _moveDelay,
-              items: List.generate(11, (i) => DropdownMenuItem(value: i, child: Text(i.toString()))),
+              items: List.generate(
+                11,
+                (i) => DropdownMenuItem(value: i, child: Text(i.toString())),
+              ),
               onChanged: (value) async {
                 if (value != null) {
                   setState(() => _moveDelay = value);
@@ -73,13 +79,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             const SizedBox(height: 24),
-            const Text('Time between games (seconds)', style: TextStyle(fontSize: 18)),
+            const Text(
+              'Time between games (seconds)',
+              style: TextStyle(fontSize: 18),
+            ),
             DropdownButton<int>(
               value: _gameDelay,
-              items: List.generate(11, (i) => DropdownMenuItem(value: i, child: Text(i.toString()))),
-              onChanged: (value) {
+              items: List.generate(
+                11,
+                (i) => DropdownMenuItem(value: i, child: Text(i.toString())),
+              ),
+              onChanged: (value) async {
                 if (value != null) {
                   setState(() => _gameDelay = value);
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setInt('ttt_game_delay', value);
                 }
               },
             ),

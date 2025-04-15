@@ -12,13 +12,13 @@ final GetIt getIt = GetIt.instance;
 Future<void> setupLocator() async {
   final prefs = await SharedPreferences.getInstance();
   final moveDelay = prefs.getInt('ttt_move_delay') ?? 1;
-  // You can add more settings here as needed
+  final gameDelay = prefs.getInt('ttt_game_delay') ?? 1;
   getIt.registerLazySingleton<GameServiceContract>(() => MockGameService());
   getIt.registerLazySingleton<TTTFsm>(
     () => TTTFsm(
       TTTGameConfiguration(
         enginePlayer: TTTCellState.o,
-        betweenGamesWaitTime: Duration(seconds: 7),
+        betweenGamesWaitTime: Duration(seconds: gameDelay),
         engineMoveWaitTime: Duration(seconds: moveDelay),
         difficulty: 'beginner',
       ),

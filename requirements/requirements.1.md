@@ -36,5 +36,5 @@
 | G.2.4 | Add persistent tic-tac-toe settings for time between moves and time between games. | Pending |
 | G.2.4.1 | The display for both of the new settings should use canonical Flutter widgets for picking a number between 0 and 10 (integer). | Complete |
 | G.2.4.2 | Implement the tic-tac-toe setting for time between moves. | Complete |
-| G.2.4.3 | Implement the tic-tac-toe setting for time between games. | Pending |
+| G.2.4.3 | Implement the tic-tac-toe setting for time between games. | Complete |
 | G.2.5 | Add a status bar at the bottom of the tic-tac-toe screen indicating: which engine is in use, and which letter (X or O) the player is currently playing. | Pending |
