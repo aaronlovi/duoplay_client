@@ -28,7 +28,7 @@ class TicTacToeSettingsLoader extends StatelessWidget {
   Future<({String difficulty, int moveDelay, int gameDelay})>
   _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    final difficulty = prefs.getString('ai_difficulty') ?? 'beginner';
+    final difficulty = prefs.getString('ttt_ai_difficulty') ?? 'beginner';
     final moveDelay = prefs.getInt('ttt_move_delay') ?? 1;
     final gameDelay = prefs.getInt('ttt_game_delay') ?? 1;
     return (difficulty: difficulty, moveDelay: moveDelay, gameDelay: gameDelay);
