@@ -64,7 +64,7 @@ class TTTFsm {
     if (inputs is TTTGameConfigInput) {
       _processGameConfiguration(inputs);
     } else if (inputs is TTTSetEngineDifficultyInput) {
-      _nextEngineDifficulty = inputs.newDifficulty;
+      _processSetEngineDifficulty(inputs);
     } else if (inputs is TTTPlayerMoveInput) {
       _processPlayerMove(inputs);
     } else if (inputs is TTTEngineMoveInput) {
@@ -81,16 +81,16 @@ class TTTFsm {
     log('[FSM] Transition: newState=${gameState.toString()}');
   }
 
-  void updateEngineDifficulty(String newDifficulty) {
-    _nextEngineDifficulty = newDifficulty;
+  void _processSetEngineDifficulty(TTTSetEngineDifficultyInput inputs) {
+    _nextEngineDifficulty = inputs.newDifficulty;
+    if (gameState.isBetweenGames) _updateEngineDifficulty();
   }
 
   // Reset the game board with the new configuration
   void _processGameConfiguration(TTTGameConfigInput inputs) {
     log('Processing game configuration: ${inputs.configuration}');
     gameState.processNewGameConfiguration(inputs.configuration, inputs.nowUtc);
-    _currentEngineDifficulty = _nextEngineDifficulty;
-    _engine = TTTEngineFactory.createEngine(_currentEngineDifficulty);
+    _updateEngineDifficulty();
     _outputs.outputs.add(TTTStartGameOutput(inputs.configuration));
   }
 
@@ -204,6 +204,7 @@ class TTTFsm {
         '[FSM] Transition: setupNextGame called, prevState=${gameState.toString()}',
       );
       gameState.setupNextGame();
+      _updateEngineDifficulty();
       log(
         '[FSM] Transition: after setupNextGame, newState=${gameState.toString()}',
       );
@@ -216,6 +217,15 @@ class TTTFsm {
       );
       _outputs.outputs.add(TTTDoEngineMoveOutput());
     }
+  }
+
+  void _updateEngineDifficulty() {
+    log(
+      '[FSM] Updating engine difficulty from $_currentEngineDifficulty to $_nextEngineDifficulty',
+    );
+    _currentEngineDifficulty = _nextEngineDifficulty;
+    gameState.configuration.difficulty = _currentEngineDifficulty;
+    _engine = TTTEngineFactory.createEngine(_currentEngineDifficulty);
   }
 
   DateTime? _getNextTimeout() {

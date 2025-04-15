@@ -53,6 +53,7 @@ class TicTacToeGameState {
   bool get isDraw =>
       numberOfX + numberOfO == numSquares && winner == TTTCellState.empty;
   bool get hasWinner => winner != TTTCellState.empty;
+  bool get isBetweenGames => isGameOver || (numberOfX == 0 && numberOfO == 0);
   bool get isGameOver => isDraw || hasWinner;
   bool get isHumanPlayerToMove =>
       currentPlayer != configuration.enginePlayer && !isGameOver;

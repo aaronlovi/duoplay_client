@@ -1,4 +1,7 @@
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_inputs.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TicTacToeSettingsScreen extends StatefulWidget {
@@ -22,6 +25,7 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
   late String _selectedDifficulty;
   late int _moveDelay;
   late int _gameDelay;
+  late TTTGameContainer _gameContainer;
 
   @override
   void initState() {
@@ -29,6 +33,7 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
     _selectedDifficulty = widget.initialDifficulty;
     _moveDelay = widget.initialMoveDelay;
     _gameDelay = widget.initialGameDelay;
+    _gameContainer = GetIt.I<TTTGameContainer>();
   }
 
   @override
@@ -51,9 +56,17 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
                 ),
                 DropdownMenuItem(value: 'expert', child: Text('Expert')),
               ],
-              onChanged: (value) {
+              onChanged: (value) async {
                 if (value != null) {
                   setState(() => _selectedDifficulty = value);
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('ttt_ai_difficulty', value);
+                  _gameContainer.postInput(
+                    TTTSetEngineDifficultyInput(
+                      newDifficulty: value,
+                      nowUtc: DateTime.now().toUtc(),
+                    ),
+                  );
                 }
               },
             ),
