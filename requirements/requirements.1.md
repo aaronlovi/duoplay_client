@@ -20,7 +20,7 @@
 | G.1.7 | Implement beginner, intermediate, and expert AI modes for tic-tac-toe. | Complete |
 | G.1.7.1 | Beginner mode: Try to make immediately winning moves, then make a random legal move. | Complete |
 | G.1.7.2 | Intermediate mode: Try to make immediately winning moves, block opponent's immediately winning moves, then make a random legal move. | Complete |
-| G.1.7.3 | Expert mode: Use perfect lookahead to make the best move. | Complete |
+| G.1.7.3 | Expert mode: Use peerfect lookahead to make the best move. | Complete |
 | G.1.8 | Add a settings screen or menu to allow users to select the AI difficulty level (Beginner, Intermediate, Expert). | Complete |
 | G.1.8.1 | Store the selected difficulty level in persistent storage (e.g., shared preferences). | Complete |
 | G.1.8.2 | Use the stored difficulty level to initialize the appropriate engine using the `EngineFactory`. | Complete |
@@ -37,4 +37,4 @@
 | G.2.4.1 | The display for both of the new settings should use canonical Flutter widgets for picking a number between 0 and 10 (integer). | Complete |
 | G.2.4.2 | Implement the tic-tac-toe setting for time between moves. | Complete |
 | G.2.4.3 | Implement the tic-tac-toe setting for time between games. | Complete |
-| G.2.5 | Add a status bar at the bottom of the tic-tac-toe screen indicating: which engine is in use, and which letter (X or O) the player is currently playing. | Pending |
+| G.2.5 | Add a status bar at the bottom of the tic-tac-toe screen indicating: which engine is in use, and which letter (X or O) the player is currently playing. | Complete |
