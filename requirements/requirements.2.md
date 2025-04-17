@@ -3,8 +3,8 @@
 | Requirement id | Description | Status |
 |----------------|-------------|--------|
 | **C.1** | Integrate Connect 4 into the existing Flutter games app. | Pending |
-| **C.1.1** | Add a **game‑picker list item** for “Connect 4” with icon, title, and subtitle. Tapping it navigates to the new game screen. | Pending |
-| **C.1.1.1** | Refactor the game‑picker list so new games can be registered via a data model rather than hard‑coding each tile. | Pending |
+| **C.1.1** | Add a **game‑picker list item** for “Connect 4” with icon, title, and subtitle. Tapping it navigates to the new game screen. | Complete |
+| **C.1.1.1** | Refactor the game‑picker list so new games can be registered via a data model rather than hard‑coding each tile. | Complete |
 | **C.1.2** | Create **`connect4_game_screen.dart`** that hosts the board, status bar, and a “Settings” text button. | Pending |
 | **C.1.2.1** | Build the **board UI & animation** layer. | Pending |
 | **C.1.2.1.1** | Implement a reusable stateless `Connect4Board` widget (7 × 6 grid, no animation). | Pending |
