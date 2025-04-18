@@ -4,3 +4,15 @@ enum Connect4SquareState {
   red,   // The square is occupied by a red chip
   yellow // The square is occupied by a yellow chip
 }
+
+enum Connect4FSMState {
+  idle,
+  playing,
+  gameOver,
+}
+
+enum Connect4FSMEvent {
+  startGame,
+  endGame,
+  resetGame,
+}
