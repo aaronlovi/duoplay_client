@@ -14,6 +14,11 @@ class Connect4GameScreen extends StatelessWidget {
   }
 }
 
+/// A stateless widget that represents the Connect 4 game board.
+/// 
+/// This widget creates a 7 × 6 grid layout with circular placeholders
+/// for empty slots. It is designed to be reusable and does not rely
+/// on any mutable state.
 class Connect4Board extends StatelessWidget {
   static const int columns = 7; // Number of columns in the grid
   static const int rows = 6; // Number of rows in the grid
