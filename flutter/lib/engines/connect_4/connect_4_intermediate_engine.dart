@@ -1,0 +1,52 @@
+import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
+import 'package:duoplay/models/connect_4/connect_4_enums.dart';
+import 'dart:math';
+
+import 'connect_4_beginner_engine.dart';
+
+class Connect4IntermediateEngine extends Connect4BeginnerEngine {
+  @override
+  int getMove(List<List<Connect4SquareState>> board, Connect4SquareState chipColor) {
+    // Check for a winning move
+    for (int col = 0; col < Connect4GameLogic.columns; col++) {
+      if (Connect4GameLogic.isLegalMove(board, col)) {
+        // Simulate the move
+        final simulatedBoard = board.map((row) => List<Connect4SquareState>.from(row)).toList();
+        Connect4GameLogic.applyMove(simulatedBoard, col, chipColor);
+
+        // Check if this move wins the game
+        if (Connect4GameLogic.getWinner(simulatedBoard) == chipColor) {
+          return col;
+        }
+      }
+    }
+
+    // Check for a blocking move
+    final opponentChipColor = chipColor == Connect4SquareState.red
+        ? Connect4SquareState.yellow
+        : Connect4SquareState.red;
+
+    for (int col = 0; col < Connect4GameLogic.columns; col++) {
+      if (Connect4GameLogic.isLegalMove(board, col)) {
+        // Simulate the opponent's move
+        final simulatedBoard = board.map((row) => List<Connect4SquareState>.from(row)).toList();
+        Connect4GameLogic.applyMove(simulatedBoard, col, opponentChipColor);
+
+        // Check if this move would let the opponent win
+        if (Connect4GameLogic.getWinner(simulatedBoard) == opponentChipColor) {
+          return col; // Block the opponent's winning move
+        }
+      }
+    }
+
+    // Otherwise, pick a random legal column
+    final legalColumns = <int>[];
+    for (int col = 0; col < Connect4GameLogic.columns; col++) {
+      if (Connect4GameLogic.isLegalMove(board, col)) {
+        legalColumns.add(col);
+      }
+    }
+
+    return legalColumns[Random().nextInt(legalColumns.length)];
+  }
+}
