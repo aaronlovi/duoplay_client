@@ -1,6 +1,7 @@
-import 'package:duoplay/models/connect_4/connect_4_enums.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
+import 'package:duoplay/models/result.dart';
 
 abstract class Connect4EngineContract {
   /// Returns the column index for the next move.
-  int getMove(List<List<Connect4SquareState>> board, Connect4SquareState chipColor);
+  GenericResult<int> getNextMove(Connect4GameState currentState);
 }

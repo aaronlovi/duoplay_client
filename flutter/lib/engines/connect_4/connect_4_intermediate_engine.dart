@@ -1,12 +1,17 @@
 import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_enums.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
+import 'package:duoplay/models/result.dart';
 import 'dart:math';
 
 import 'connect_4_beginner_engine.dart';
 
 class Connect4IntermediateEngine extends Connect4BeginnerEngine {
   @override
-  int getMove(List<List<Connect4SquareState>> board, Connect4SquareState chipColor) {
+  GenericResult<int> getNextMove(Connect4GameState currentState) {
+    List<List<Connect4SquareState>> board = currentState.board;
+    Connect4SquareState chipColor = currentState.currentPlayer;
+
     // Check for a winning move
     for (int col = 0; col < Connect4GameLogic.columns; col++) {
       if (Connect4GameLogic.isLegalMove(board, col)) {
@@ -16,7 +21,7 @@ class Connect4IntermediateEngine extends Connect4BeginnerEngine {
 
         // Check if this move wins the game
         if (Connect4GameLogic.getWinner(simulatedBoard) == chipColor) {
-          return col;
+          return GenericResult<int>.success(col);
         }
       }
     }
@@ -34,7 +39,7 @@ class Connect4IntermediateEngine extends Connect4BeginnerEngine {
 
         // Check if this move would let the opponent win
         if (Connect4GameLogic.getWinner(simulatedBoard) == opponentChipColor) {
-          return col; // Block the opponent's winning move
+          return GenericResult<int>.success(col); // Block the opponent's winning move
         }
       }
     }
@@ -47,6 +52,10 @@ class Connect4IntermediateEngine extends Connect4BeginnerEngine {
       }
     }
 
-    return legalColumns[Random().nextInt(legalColumns.length)];
+    if (legalColumns.isEmpty) {
+      return GenericResult<int>.failure(ResultErrorCode.invalidState); // No legal moves available
+    }
+
+    return GenericResult<int>.success(legalColumns[Random().nextInt(legalColumns.length)]);
   }
 }

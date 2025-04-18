@@ -1,3 +1,4 @@
+import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/connect_4/connect_4_enums.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
@@ -14,12 +15,12 @@ class Connect4StartGameOutput implements Connect4OutputBase {
 }
 
 class Connect4NewBoardOutput implements Connect4OutputBase {
-  final List<List<Connect4SquareState>> board;
+  Connect4GameState gameState;
 
-  Connect4NewBoardOutput({required this.board});
+  Connect4NewBoardOutput({required this.gameState});
 
   @override
-  String toString() => 'Connect4NewBoardOutput[board: $board]';
+  String toString() => 'Connect4NewBoardOutput[gameState: $gameState]';
 }
 
 class Connect4GameOverOutput implements Connect4OutputBase {

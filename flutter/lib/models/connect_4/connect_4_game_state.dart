@@ -162,6 +162,22 @@ class Connect4GameState {
     return Connect4GameLogic.getWinner(board);
   }
 
+  /// Checks if the game is over, and if the board is set with the expected
+  /// number of X's and O's
+  Result isLegalPositionReadyForMove() {
+    if (isGameOver) return Result.failure(ResultErrorCode.gameOver);
+
+    if (currentPlayer == Connect4SquareState.red && numberOfRed != numberOfYellow) {
+      return Result.failure(ResultErrorCode.invalidState);
+    }
+
+    if (currentPlayer == Connect4SquareState.yellow && numberOfRed != numberOfYellow + 1) {
+      return Result.failure(ResultErrorCode.invalidState);
+    }
+
+    return Result.success();
+  }
+
   void processNewGameConfiguration(Connect4GameConfiguration cfg, DateTime nowUtc) {
     configuration = cfg;
     this.nowUtc = nowUtc;
