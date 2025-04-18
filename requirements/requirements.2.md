@@ -27,7 +27,7 @@
 | **C.1.4** | Introduce a finite‑state machine **`connect4_fsm.dart`** mirroring the tic‑tac‑toe FSM. | Pending |
 | **C.1.4.1** | Emit `GameStateChanged` events to the UI layer for smooth animation triggers. | Pending |
 | **C.1.5** | Build **AI engines** for three difficulty levels, exposed through `connect4_engine_factory.dart`. | Pending |
-| **C.1.5.1** | *Beginner*: random legal column; if a winning move exists, take it. | Pending |
+| **C.1.5.1** | *Beginner*: random legal column; if a winning move exists, take it. | Complete |
 | **C.1.5.2** | *Intermediate*: winning move → block opponent win → random. | Pending |
 | **C.1.5.3** | *Expert*: minimax with alpha‑beta pruning and iterative deepening. | Pending |
 | **C.1.5.3.1** | Implement static board evaluator (center weighting, two‑in‑a‑row, etc.). | Pending |
