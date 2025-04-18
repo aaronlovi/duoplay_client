@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 
 import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_enums.dart';
@@ -50,7 +51,7 @@ class Connect4Board extends StatefulWidget {
   static const int columns = 7; // Number of columns in the grid
   static const int rows = 6; // Number of rows in the grid
   static const double spacing = 4.0; // Spacing between grid cells
-  static const int droppingChipAnimationMs = 500; // Animation duration for dropping chips
+  static const int droppingChipAnimationMs = 50; // Animation duration for each step of the dropping chip
 
   const Connect4Board({super.key});
 
@@ -66,6 +67,7 @@ class _Connect4BoardState extends State<Connect4Board> {
 
   int? _droppingChipColumn;
   int? _droppingChipRow;
+  Connect4SquareState? _droppingChipColor;
 
   @override
   Widget build(BuildContext context) {
@@ -73,21 +75,29 @@ class _Connect4BoardState extends State<Connect4Board> {
       builder: (context, constraints) {
         final dimensions = _BoardDimensions.calculateBoardDimensions(constraints);
 
-        return Center(
-          child: SizedBox(
-            width: dimensions.boardWidth,
-            height: dimensions.boardHeight,
-            child: Stack(
-              children: [
-                _buildGrid(dimensions.cellSize),
-                _buildAnimatedChip(dimensions.cellSize),
-              ],
+        return Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: SizedBox(
+                  width: dimensions.boardWidth,
+                  height: dimensions.boardHeight,
+                  child: Stack(
+                    children: [
+                      _buildGrid(dimensions.cellSize),
+                      _buildAnimatedChip(dimensions.cellSize),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+            if (kDebugMode) _buildDebugControls(dimensions.cellSize),
+          ],
         );
       },
     );
   }
+  
   Widget _buildGrid(double cellSize) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -111,12 +121,12 @@ class _Connect4BoardState extends State<Connect4Board> {
   }
 
   Widget _buildAnimatedChip(double cellSize) {
-    if (_droppingChipColumn == null || _droppingChipRow == null) {
+    if (_droppingChipColumn == null || _droppingChipRow == null || _droppingChipColor == null) {
       return const SizedBox.shrink();
     }
 
     return AnimatedPositioned(
-      duration: const Duration(milliseconds: 500),
+      duration: Duration(milliseconds: Connect4Board.droppingChipAnimationMs),
       curve: Curves.easeIn,
       left: _droppingChipColumn! * cellSize,
       top: _droppingChipRow! * cellSize,
@@ -124,29 +134,80 @@ class _Connect4BoardState extends State<Connect4Board> {
         width: cellSize,
         height: cellSize,
         decoration: BoxDecoration(
-          color: Colors.red, // Example chip color
+          color: _getSquareColor(_droppingChipColor!), // Use the correct chip color
           shape: BoxShape.circle,
         ),
       ),
     );
   }
 
+  Widget _buildDebugControls(double cellSize) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(Connect4Board.columns, (column) {
+            return Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () => _dropChip(column, Connect4SquareState.red),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    minimumSize: Size(cellSize, cellSize / 2),
+                  ),
+                  child: const Text('R'),
+                ),
+                ElevatedButton(
+                  onPressed: () => _dropChip(column, Connect4SquareState.yellow),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow,
+                    minimumSize: Size(cellSize, cellSize / 2),
+                  ),
+                  child: const Text('Y'),
+                ),
+              ],
+            );
+          }),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Debug Mode: Use buttons to drop chips',
+          style: TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+      ],
+    );
+  }
+
   void _dropChip(int column, Connect4SquareState chipColor) {
     final row = Connect4GameLogic.getTargetRow(board, column);
-    if (row != null) {
-      setState(() {
-        _droppingChipColumn = column;
-        _droppingChipRow = 0; // Start animation from the top
-      });
+    if (row == null) return;
 
-      Future.delayed(const Duration(milliseconds: 500), () {
+    setState(() {
+      _droppingChipColumn = column;
+      _droppingChipRow = 0; // Start animation from the top
+      _droppingChipColor = chipColor; // Set the color of the dropping chip
+    });
+
+    // Simulate the falling animation by incrementally updating the row
+    Future.doWhile(() async {
+      await Future.delayed(Duration(milliseconds: Connect4Board.droppingChipAnimationMs));
+      if (_droppingChipRow! < row) {
         setState(() {
-          board[row][column] = chipColor;
-          _droppingChipColumn = null;
-          _droppingChipRow = null;
+          _droppingChipRow = _droppingChipRow! + 1;
         });
+        return true; // Continue the animation
+      } else {
+        return false; // Stop the animation
+      }
+    }).then((_) {
+      // Finalize the chip placement
+      setState(() {
+        board[row][column] = chipColor;
+        _droppingChipColumn = null;
+        _droppingChipRow = null;
+        _droppingChipColor = null;
       });
-    }
+    });
   }
 
   Color _getSquareColor(Connect4SquareState state) {
