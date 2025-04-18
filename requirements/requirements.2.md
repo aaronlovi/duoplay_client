@@ -7,12 +7,12 @@
 | **C.1.1.1** | Refactor the game‑picker list so new games can be registered via a data model rather than hard‑coding each tile. | Complete |
 | **C.1.2** | Create **`connect4_game_screen.dart`** that hosts the board, status bar, and a “Settings” text button. | Pending |
 | **C.1.2.1** | Build the **board UI & animation** layer. | Pending |
-| **C.1.2.1.1** | Implement a reusable stateless `Connect4Board` widget (7 × 6 grid, no animation). | Pending |
+| **C.1.2.1.1** | Implement a reusable stateless `Connect4Board` widget (7 × 6 grid, no animation). | Complete |
 | **C.1.2.1.1.1** | Create a 7 × 6 grid layout using `GridView` or `Table`. | Complete |
 | **C.1.2.1.1.2** | Add placeholder cells to represent empty slots. | Complete |
 | **C.1.2.1.1.3** | Ensure the widget is stateless and reusable. | Complete |
 | **C.1.2.1.2** | Add chip‑drop animation with `AnimatedPositioned` (60 fps smooth). | Pending |
-| **C.1.2.1.2.1** | Implement a method to determine the target position for a chip. | Pending |
+| **C.1.2.1.2.1** | Implement a method to determine the target position for a chip. | Complete |
 | **C.1.2.1.2.2** | Add `AnimatedPositioned` to animate the chip's movement. | Pending |
 | **C.1.2.1.2.3** | Test the animation for smoothness (60 fps). | Pending |
 | **C.1.2.1.3** | Implement win‑line highlight overlay (glow or pulse). | Pending |
