@@ -9,7 +9,7 @@
 | **C.1.2.1** | Build the **board UI & animation** layer. | Pending |
 | **C.1.2.1.1** | Implement a reusable stateless `Connect4Board` widget (7 × 6 grid, no animation). | Pending |
 | **C.1.2.1.1.1** | Create a 7 × 6 grid layout using `GridView` or `Table`. | Complete |
-| **C.1.2.1.1.2** | Add placeholder cells to represent empty slots. | Pending |
+| **C.1.2.1.1.2** | Add placeholder cells to represent empty slots. | Complete |
 | **C.1.2.1.1.3** | Ensure the widget is stateless and reusable. | Pending |
 | **C.1.2.1.2** | Add chip‑drop animation with `AnimatedPositioned` (60 fps smooth). | Pending |
 | **C.1.2.1.2.1** | Implement a method to determine the target position for a chip. | Pending |

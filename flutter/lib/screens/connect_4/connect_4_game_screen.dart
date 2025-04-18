@@ -47,9 +47,9 @@ class Connect4Board extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Container(
                   decoration: BoxDecoration(
-                    color:
-                        Colors.grey[300], // Placeholder color for empty slots
+                    color: Colors.blue[100], // Placeholder color for empty slots
                     border: Border.all(color: Colors.black),
+                    shape: BoxShape.circle, // Representing empty slots as circles
                   ),
                 );
               },
