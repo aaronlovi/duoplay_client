@@ -1,8 +1,15 @@
 import 'package:duoplay/models/connect_4/connect_4_enums.dart';
+import 'package:flutter/material.dart';
 
 class Connect4GameLogic {
+  /// Number of columns in the Connect 4 board.
+  static const int columns = 7;
+
+  /// Number of rows in the Connect 4 board.
+  static const int rows = 6;
+
   /// A helper method to determine the target position for a chip in a given column.
-  /// 
+  ///
   /// This method calculates the lowest available row in the specified column
   /// where a chip can be placed. It assumes a 2D list `board` representing the
   /// current state of the game, where `Connect4SquareState.empty` indicates an empty slot.
@@ -23,7 +30,11 @@ class Connect4GameLogic {
   }
 
   /// Applies a move to the board by placing the chip in the lowest available row.
-  static void applyMove(List<List<Connect4SquareState>> board, int column, Connect4SquareState chipColor) {
+  static void applyMove(
+    List<List<Connect4SquareState>> board,
+    int column,
+    Connect4SquareState chipColor,
+  ) {
     final row = getTargetRow(board, column);
     if (row != null) {
       board[row][column] = chipColor;
@@ -48,7 +59,9 @@ class Connect4GameLogic {
   /// Checks if the board is completely filled and there is no winner, resulting in a draw.
   static bool isDraw(List<List<Connect4SquareState>> board) {
     // Check if the board is completely filled
-    if (!board.every((row) => row.every((cell) => cell != Connect4SquareState.empty))) {
+    if (!board.every(
+      (row) => row.every((cell) => cell != Connect4SquareState.empty),
+    )) {
       return false;
     }
 
@@ -56,18 +69,69 @@ class Connect4GameLogic {
     return getWinner(board) == Connect4SquareState.empty;
   }
 
+  static void debugPrintBoard(List<List<Connect4SquareState>> board) {
+    // Print the board for debugging
+    for (final row in board) {
+      debugPrint(
+        row
+            .map(
+              (cell) =>
+                  cell == Connect4SquareState.empty
+                      ? '.'
+                      : (cell == Connect4SquareState.red ? 'R' : 'Y'),
+            )
+            .join(' '),
+      );
+    }
+  }
+
+  /// Converts a string representation of a board into a 2D list of Connect4SquareState.
+  static List<List<Connect4SquareState>> parseBoard(String boardString) {
+    return boardString
+        .trim()
+        .split('\n')
+        .map(
+          (row) =>
+              row.trim().split(RegExp(r'\s+')).map((cell) {
+                switch (cell) {
+                  case 'R':
+                    return Connect4SquareState.red;
+                  case 'r':
+                    return Connect4SquareState.red;
+                  case 'Y':
+                    return Connect4SquareState.yellow;
+                  case 'y':
+                    return Connect4SquareState.yellow;
+                  default:
+                    return Connect4SquareState.empty;
+                }
+              }).toList(),
+        )
+        .toList();
+  }
+
   /// Helper method to check for a winner starting from a specific cell.
   /// If no winner is found, it returns `Connect4SquareState.empty`.
-  static Connect4SquareState _checkWinnerFromCell(List<List<Connect4SquareState>> board, int row, int col) {
+  static Connect4SquareState _checkWinnerFromCell(
+    List<List<Connect4SquareState>> board,
+    int row,
+    int col,
+  ) {
     final directions = [
       [0, 1], // Horizontal
       [1, 0], // Vertical
       [1, 1], // Diagonal down-right
-      [1, -1] // Diagonal down-left
+      [1, -1], // Diagonal down-left
     ];
 
     for (final direction in directions) {
-      final winner = _checkDirection(board, row, col, direction[0], direction[1]);
+      final winner = _checkDirection(
+        board,
+        row,
+        col,
+        direction[0],
+        direction[1],
+      );
       if (winner != Connect4SquareState.empty) {
         return winner;
       }
@@ -93,7 +157,10 @@ class Connect4GameLogic {
       final newRow = startRow + i * rowDelta;
       final newCol = startCol + i * colDelta;
 
-      if (newRow < 0 || newRow >= board.length || newCol < 0 || newCol >= board[0].length) {
+      if (newRow < 0 ||
+          newRow >= board.length ||
+          newCol < 0 ||
+          newCol >= board[0].length) {
         return Connect4SquareState.empty; // Out of bounds
       }
 
