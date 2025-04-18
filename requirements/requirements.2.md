@@ -13,17 +13,17 @@
 | **C.1.2.1.1.3** | Ensure the widget is stateless and reusable. | Complete |
 | **C.1.2.1.2** | Add chip‑drop animation with `AnimatedPositioned` (60 fps smooth). | Pending |
 | **C.1.2.1.2.1** | Implement a method to determine the target position for a chip. | Complete |
-| **C.1.2.1.2.2** | Add `AnimatedPositioned` to animate the chip's movement. | Pending |
-| **C.1.2.1.2.3** | Test the animation for smoothness (60 fps). | Pending |
+| **C.1.2.1.2.2** | Add `AnimatedPositioned` to animate the chip's movement. | Complete |
 | **C.1.2.1.3** | Implement win‑line highlight overlay (glow or pulse). | Pending |
 | **C.1.2.1.3.1** | Define a method to calculate the winning line's coordinates. | Pending |
 | **C.1.2.1.3.2** | Overlay a visual effect (e.g., glow or pulse) on the winning line. | Pending |
 | **C.1.2.1.3.3** | Test the overlay for responsiveness and clarity. | Pending |
 | **C.1.3** | Implement **`connect4_game_state.dart`** to manage board state and rules. | Pending |
-| **C.1.3.1** | Provide helper methods: `isLegalMove(col)`, `applyMove(col)`, `getWinner()`, `isDraw()`. | Pending |
-| **C.1.3.2** | Optimize `getWinner()` using pre‑computed line masks or bitboards. | Pending |
-| **C.1.3.3** | Encode board as **bitboards** (two `int64` values) for AI speed. | Pending |
-| **C.1.3.4** | Add `hash()` and `clone()` helpers for AI transposition tables. | Pending |
+| **C.1.3.1** | Provide helper methods: `isLegalMove(col)`, `applyMove(col)`, `getWinner()`, `isDraw()`. | Complete |
+| **C.1.3.2** | Create unit tests for Connect 4 game logic methods: `isLegalMove`, `applyMove`, `getWinner`, and `isDraw`. Cover edge cases such as full columns, diagonal wins, and draw scenarios. | Pending |
+| **C.1.3.3** | Optimize `getWinner()` using pre‑computed line masks or bitboards. | Pending |
+| **C.1.3.4** | Encode board as **bitboards** (two `int64` values) for AI speed. | Pending |
+| **C.1.3.5** | Add `hash()` and `clone()` helpers for AI transposition tables. | Pending |
 | **C.1.4** | Introduce a finite‑state machine **`connect4_fsm.dart`** mirroring the tic‑tac‑toe FSM. | Pending |
 | **C.1.4.1** | Emit `GameStateChanged` events to the UI layer for smooth animation triggers. | Pending |
 | **C.1.5** | Build **AI engines** for three difficulty levels, exposed through `connect4_engine_factory.dart`. | Pending |
