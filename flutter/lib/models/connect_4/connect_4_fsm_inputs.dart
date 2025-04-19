@@ -1,13 +1,8 @@
 import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
-abstract class Connect4InputBase {
-  final DateTime nowUtc;
-
-  Connect4InputBase({required this.nowUtc});
-}
-
-class Connect4GameConfigInput extends Connect4InputBase {
+class Connect4GameConfigInput extends TurnBasedGameFsmInputBase {
   final TurnBasedGameConfiguration configuration;
 
   Connect4GameConfigInput({required super.nowUtc, required this.configuration});
@@ -16,7 +11,7 @@ class Connect4GameConfigInput extends Connect4InputBase {
   String toString() => "Connect4GameConfigInput[now:$nowUtc,config:$configuration]";
 }
 
-class Connect4PlayerMoveInput extends Connect4InputBase {
+class Connect4PlayerMoveInput extends TurnBasedGameFsmInputBase {
   final int column;
   final TurnBasedGameCellState player;
 
@@ -30,7 +25,7 @@ class Connect4PlayerMoveInput extends Connect4InputBase {
   String toString() => "Connect4PlayerMoveInput[now:$nowUtc,column:$column,player:$player]";
 }
 
-class Connect4EngineMoveInput extends Connect4InputBase {
+class Connect4EngineMoveInput extends TurnBasedGameFsmInputBase {
   final int column;
   final TurnBasedGameCellState enginePlayer;
 
@@ -44,14 +39,14 @@ class Connect4EngineMoveInput extends Connect4InputBase {
   String toString() => "Connect4EngineMoveInput[now:$nowUtc,column:$column,enginePlayer:$enginePlayer]";
 }
 
-class Connect4UpdateTime extends Connect4InputBase {
+class Connect4UpdateTime extends TurnBasedGameFsmInputBase {
   Connect4UpdateTime({required super.nowUtc});
 
   @override
   String toString() => "Connect4UpdateTime[now:$nowUtc]";
 }
 
-class Connect4SettingsChangeInput extends Connect4InputBase {
+class Connect4SettingsChangeInput extends TurnBasedGameFsmInputBase {
   final String newDifficulty;
   final int betweenMoveDelaySeconds;
   final int betweenGameDelaySeconds;

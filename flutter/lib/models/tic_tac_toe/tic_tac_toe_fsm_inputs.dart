@@ -1,13 +1,8 @@
 import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
-abstract class TTTInputBase {
-  final DateTime nowUtc;
-
-  TTTInputBase({required this.nowUtc});
-}
-
-class TTTGameConfigInput extends TTTInputBase {
+class TTTGameConfigInput extends TurnBasedGameFsmInputBase {
   TurnBasedGameConfiguration configuration;
 
   TTTGameConfigInput({required super.nowUtc, required this.configuration});
@@ -16,7 +11,7 @@ class TTTGameConfigInput extends TTTInputBase {
   String toString() => "TTTGameConfigInput[now:$nowUtc,config:$configuration]";
 }
 
-class TTTPlayerMoveInput extends TTTInputBase {
+class TTTPlayerMoveInput extends TurnBasedGameFsmInputBase {
   int index;
   TurnBasedGameCellState player;
 
@@ -31,7 +26,7 @@ class TTTPlayerMoveInput extends TTTInputBase {
       "TTTPlayerMoveInput[now:$nowUtc,index:$index,player:$player]";
 }
 
-class TTTEngineMoveInput extends TTTInputBase {
+class TTTEngineMoveInput extends TurnBasedGameFsmInputBase {
   int index;
   TurnBasedGameCellState enginePlayer;
 
@@ -46,14 +41,14 @@ class TTTEngineMoveInput extends TTTInputBase {
       "TTTEngineMoveInput[now:$nowUtc,index:$index,enginePlayer:$enginePlayer]";
 }
 
-class TTTUpdateTime extends TTTInputBase {
+class TTTUpdateTime extends TurnBasedGameFsmInputBase {
   TTTUpdateTime({required super.nowUtc});
 
   @override
   String toString() => "TTTUpdateTime[now:$nowUtc]";
 }
 
-class TTTSettingsChangeInput extends TTTInputBase {
+class TTTSettingsChangeInput extends TurnBasedGameFsmInputBase {
   final String newDifficulty;
   final int betweenMoveDelaySeconds;
   final int betweenGameDelaySeconds;

@@ -8,6 +8,7 @@ import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
@@ -48,7 +49,7 @@ class Connect4FSM {
   TurnBasedGameCellState get enginePlayer => gameState.enginePlayer;
   String get nextGameDifficulty => gameState.nextGameEngineDifficulty;
 
-  void update(Connect4InputBase inputs, Connect4OutputContainer outputs) {
+  void update(TurnBasedGameFsmInputBase inputs, Connect4OutputContainer outputs) {
     final prevState = gameState.toString();
     final inputType = inputs.runtimeType.toString();
     log(

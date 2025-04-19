@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:duoplay/models/connect_4/connect_4_fsm.dart';
-import 'package:duoplay/models/connect_4/connect_4_fsm_inputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart'; // For logging with `log`
 
@@ -21,7 +21,7 @@ class Connect4GameContainer {
   Connect4GameState get gameState => _fsm.gameState;
   String get nextGameDifficulty => _fsm.nextGameDifficulty;
 
-  Connect4OutputContainer postInput(Connect4InputBase inputs) {
+  Connect4OutputContainer postInput(TurnBasedGameFsmInputBase inputs) {
     final outputs = <TurnBasedGameFsmOutputBase>[];
     final outputContainer = Connect4OutputContainer(outputs: outputs);
     log('postInput(inputs: $inputs)');

@@ -8,6 +8,7 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
@@ -48,7 +49,7 @@ class TTTFsm {
   TurnBasedGameCellState get enginePlayer => gameState.enginePlayer;
   String get nextGameDifficulty => gameState.nextGameEngineDifficulty;
 
-  void update(TTTInputBase inputs, TTTOutputContainer outputs) {
+  void update(TurnBasedGameFsmInputBase inputs, TTTOutputContainer outputs) {
     final prevState = gameState.toString();
     final inputType = inputs.runtimeType.toString();
     log(
