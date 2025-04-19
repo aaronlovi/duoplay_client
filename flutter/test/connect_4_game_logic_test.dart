@@ -97,4 +97,74 @@ void main() {
       expect(isLegal, isFalse);
     });
   });
+
+  group('Connect4GameLogic - Win Conditions', () {
+    test('Detect horizontal win', () {
+      // Arrange: Create a board with a horizontal win
+      final board = List.generate(
+        Connect4GameLogic.rows,
+        (_) => List.filled(Connect4GameLogic.columns, Connect4SquareState.empty),
+      );
+      for (int col = 0; col < 4; col++) {
+        board[0][col] = Connect4SquareState.red;
+      }
+
+      // Act: Check for a winner
+      final winner = Connect4GameLogic.getWinner(board);
+
+      // Assert: The winner should be red
+      expect(winner, Connect4SquareState.red);
+    });
+
+    test('Detect vertical win', () {
+      // Arrange: Create a board with a vertical win
+      final board = List.generate(
+        Connect4GameLogic.rows,
+        (_) => List.filled(Connect4GameLogic.columns, Connect4SquareState.empty),
+      );
+      for (int row = 0; row < 4; row++) {
+        board[row][0] = Connect4SquareState.yellow;
+      }
+
+      // Act: Check for a winner
+      final winner = Connect4GameLogic.getWinner(board);
+
+      // Assert: The winner should be yellow
+      expect(winner, Connect4SquareState.yellow);
+    });
+
+    test('Detect diagonal win (down-right)', () {
+      // Arrange: Create a board with a diagonal win (down-right)
+      final board = List.generate(
+        Connect4GameLogic.rows,
+        (_) => List.filled(Connect4GameLogic.columns, Connect4SquareState.empty),
+      );
+      for (int i = 0; i < 4; i++) {
+        board[i][i] = Connect4SquareState.red;
+      }
+
+      // Act: Check for a winner
+      final winner = Connect4GameLogic.getWinner(board);
+
+      // Assert: The winner should be red
+      expect(winner, Connect4SquareState.red);
+    });
+
+    test('Detect diagonal win (down-left)', () {
+      // Arrange: Create a board with a diagonal win (down-left)
+      final board = List.generate(
+        Connect4GameLogic.rows,
+        (_) => List.filled(Connect4GameLogic.columns, Connect4SquareState.empty),
+      );
+      for (int i = 0; i < 4; i++) {
+        board[i][3 - i] = Connect4SquareState.yellow;
+      }
+
+      // Act: Check for a winner
+      final winner = Connect4GameLogic.getWinner(board);
+
+      // Assert: The winner should be yellow
+      expect(winner, Connect4SquareState.yellow);
+    });
+  });
 }
