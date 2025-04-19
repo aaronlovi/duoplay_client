@@ -77,4 +77,24 @@ void main() {
       expect(Connect4GameLogic.isDraw(board), isFalse);
     });
   });
+
+  group('Connect4GameLogic - Illegal Moves', () {
+    test('Selecting a full column should be illegal', () {
+      // Arrange: Create a board with a full column
+      final board = List.generate(
+        Connect4GameLogic.rows,
+        (_) => List.filled(Connect4GameLogic.columns, Connect4SquareState.empty),
+      );
+      final columnToFill = 3;
+      for (int row = 0; row < Connect4GameLogic.rows; row++) {
+        board[row][columnToFill] = Connect4SquareState.red;
+      }
+
+      // Act: Check if the move is legal
+      final isLegal = Connect4GameLogic.isLegalMove(board, columnToFill);
+
+      // Assert: The move should be illegal
+      expect(isLegal, isFalse);
+    });
+  });
 }

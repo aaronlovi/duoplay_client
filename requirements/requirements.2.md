@@ -46,7 +46,7 @@
 | **C.1.8.1** | Define FSM transition log wrapper (suppressed in `kReleaseMode`). | Complete |
 | **C.1.8.2** | Emit AI decision log as JSON blob per move (board hash, depth, chosen column, eval score). | Complete |
 | **C.1.9** | Provide **unit tests** using `flutter_test`. | Pending |
-| **C.1.9.1** | Illegal column selection (full column). | Pending |
+| **C.1.9.1** | Illegal column selection (full column). | Complete |
 | **C.1.9.2** | All four win directions, including edge diagonals. | Pending |
 | **C.1.9.3** | Draw detection on a completely filled board. | Pending |
 | **C.1.9.4** | AI correctness: Beginner never forfeits immediate win; Expert never misses forced win up to depth limit. | Pending |
