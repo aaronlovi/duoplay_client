@@ -191,4 +191,25 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
     return MinimaxResult(move: bestMove, score: bestEval);
   }
+
+  // Iterative deepening logic with a time cap
+  MinimaxResult iterativeDeepening(List<List<Connect4SquareState>> board, Connect4SquareState chipColor, int timeCapMs) {
+    final stopwatch = Stopwatch()..start();
+    MinimaxResult? bestResult;
+
+    for (int depth = 1; stopwatch.elapsedMilliseconds < timeCapMs; depth++) {
+      final result = minimaxWithAlphaBeta(board, depth, true, chipColor, -10000, 10000);
+      bestResult = result;
+
+      developer.log('[AI][Expert] Iterative deepening depth $depth: move=${result.move}, score=${result.score}');
+
+      // Stop if a winning move is found
+      if (result.score == 1000) {
+        break;
+      }
+    }
+
+    stopwatch.stop();
+    return bestResult ?? MinimaxResult(move: null, score: -10000); // Return the best result found
+  }
 }
