@@ -219,7 +219,7 @@ class TTTFsm {
       log(
         '[FSM] Transition: DoEngineMoveOutput triggered, state=${gameState.toString()}',
       );
-      _outputs.outputs.add(TTTDoEngineMoveOutput());
+      _outputs.outputs.add(TurnBasedGameDoEngineMoveFsmOutput());
     }
   }
 
@@ -253,8 +253,8 @@ class TTTFsm {
   }
 
   void _appendErrorOutput(ResultErrorCode errorCode) =>
-      _outputs.outputs.add(TTTErrorOutput(results: Result.failure(errorCode)));
+      _outputs.outputs.add(TurnBasedGameErrorFsmOutput(results: Result.failure(errorCode)));
 
   void _appendErrorResult(Result res) =>
-      _outputs.outputs.add(TTTErrorOutput(results: res));
+      _outputs.outputs.add(TurnBasedGameErrorFsmOutput(results: res));
 }

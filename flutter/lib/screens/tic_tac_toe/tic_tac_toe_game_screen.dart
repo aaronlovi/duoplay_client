@@ -161,7 +161,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
   void _processOutputs(TTTOutputContainer outputs) {
     setState(() {
       for (var item in outputs.outputs) {
-        if (item is TTTErrorOutput) {
+        if (item is TurnBasedGameErrorFsmOutput) {
           String errorMessage = TurnBasedGameUtils.errorCodeToString(
             item.results.errorCode,
             item.results.errorParameters,
@@ -175,7 +175,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
           // Show some game over stuff here
         } else if (item is TurnBasedGameStartGameFsmOutput) {
           // Show some start game stuff here
-        } else if (item is TTTDoEngineMoveOutput) {
+        } else if (item is TurnBasedGameDoEngineMoveFsmOutput) {
           GenericResult<int> res = _engine.getNextMove(_gameObject.gameState);
           if (res.isFailure) {
             String errorMessage = TurnBasedGameUtils.errorCodeToString(

@@ -226,7 +226,7 @@ class Connect4FSM {
       log(
         '[FSM] Transition: DoEngineMoveOutput triggered, state=${gameState.toString()}',
       );
-      _outputs.outputs.add(Connect4DoEngineMoveOutput());
+      _outputs.outputs.add(TurnBasedGameDoEngineMoveFsmOutput());
     }
   }
 
@@ -262,9 +262,9 @@ class Connect4FSM {
   }
 
   void _appendErrorOutput(ResultErrorCode errorCode) => _outputs.outputs.add(
-    Connect4ErrorOutput(results: Result.failure(errorCode)),
+    TurnBasedGameErrorFsmOutput(results: Result.failure(errorCode)),
   );
 
   void _appendErrorResult(Result res) =>
-      _outputs.outputs.add(Connect4ErrorOutput(results: res));
+      _outputs.outputs.add(TurnBasedGameErrorFsmOutput(results: res));
 }

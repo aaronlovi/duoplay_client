@@ -201,7 +201,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
   void _processOutputs(Connect4OutputContainer outputs) {
     setState(() {
       for (var item in outputs.outputs) {
-        if (item is Connect4ErrorOutput) {
+        if (item is TurnBasedGameErrorFsmOutput) {
           String errorMessage = TurnBasedGameUtils.errorCodeToString(
             item.results.errorCode,
             item.results.errorParameters,
@@ -215,7 +215,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
           // Not much to do here. New state will redraw the screen
         } else if (item is TurnBasedGameGameOverFsmOutput) {
           // Show some game over stuff here
-        } else if (item is Connect4DoEngineMoveOutput) {
+        } else if (item is TurnBasedGameDoEngineMoveFsmOutput) {
           GenericResult<int> res = _engine.getNextMove(_gameObject.gameState);
           if (res.isFailure) {
             String errorMessage = TurnBasedGameUtils.errorCodeToString(
