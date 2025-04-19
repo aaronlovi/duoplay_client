@@ -116,18 +116,31 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
   Widget _getGameGrid() => Container(
     color: const Color(0xFFFFE082), // Softer yellow for the grid background
     padding: const EdgeInsets.all(8.0), // Add padding for the margin effect
-    child: GridView.builder(
-      physics: const NeverScrollableScrollPhysics(), // Prevent scrolling
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 7, // 7 columns for the Connect 4 board
-        crossAxisSpacing: 4, // Space between columns
-        mainAxisSpacing: 4, // Space between rows
-      ),
-      itemCount: 42, // 6x7 grid = 42 cells
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () => _handleCellTap(index),
-          child: _getCellContents(index),
+    child: LayoutBuilder(
+      builder: (context, constraints) {
+        final cellSize = (constraints.maxWidth - 6 * 4) / 7; // Calculate cell size
+        final gridHeight = cellSize * 6 + 5 * 4; // 6 rows + spacing
+
+        return SizedBox(
+          height: gridHeight, // Constrain the height to the grid's content
+          child: ScrollConfiguration(
+            behavior: const ScrollBehavior().copyWith(scrollbars: false), // Disable scrollbars
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(), // Prevent scrolling
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 7, // 7 columns for the Connect 4 board
+                crossAxisSpacing: 4, // Space between columns
+                mainAxisSpacing: 4, // Space between rows
+              ),
+              itemCount: 42, // 6x7 grid = 42 cells
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () => _handleCellTap(index),
+                  child: _getCellContents(index),
+                );
+              },
+            ),
+          ),
         );
       },
     ),
