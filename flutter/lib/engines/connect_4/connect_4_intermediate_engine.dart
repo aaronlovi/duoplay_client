@@ -27,9 +27,7 @@ class Connect4IntermediateEngine extends Connect4BeginnerEngine {
     }
 
     // Check for a blocking move
-    final opponentChipColor = chipColor == Connect4SquareState.red
-        ? Connect4SquareState.yellow
-        : Connect4SquareState.red;
+    final opponentChipColor = chipColor.getOpponent();
 
     for (int col = 0; col < Connect4GameLogic.columns; col++) {
       if (Connect4GameLogic.isLegalMove(board, col)) {

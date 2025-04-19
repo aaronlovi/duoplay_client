@@ -12,9 +12,10 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     List<List<Connect4SquareState>> board = currentState.board;
     Connect4SquareState chipColor = currentState.currentPlayer;
 
-    // Combine winning move check and center weighting evaluation into a single loop
     int bestScore = -1;
     int bestColumn = -1;
+    int? blockingColumn;
+    final opponentChipColor = chipColor.getOpponent();
 
     for (int col = 0; col < Connect4GameLogic.columns; col++) {
       if (!Connect4GameLogic.isLegalMove(board, col)) {
@@ -32,13 +33,37 @@ class Connect4ExpertEngine implements Connect4EngineContract {
         return GenericResult<int>.success(col);
       }
 
-      // Evaluate the board using the center weighting metric
-      int score = _evaluateCenterWeighting(simulatedBoard, chipColor);
+      // Simulate the opponent's move
+      final opponentSimulatedBoard =
+          board.map((row) => List<Connect4SquareState>.from(row)).toList();
+      Connect4GameLogic.applyMove(opponentSimulatedBoard, col, opponentChipColor);
+
+      // Check if this move would let the opponent win
+      if (Connect4GameLogic.getWinner(opponentSimulatedBoard) == opponentChipColor) {
+        // Keep track of the most recent blocking column
+        // If the opponent has multiple winning moves, we will block the last one
+        developer.log('[AI][Expert] Blocking opponent win found at column $col');
+        blockingColumn = col;
+      }
+
+      if (blockingColumn != null) {
+        // If we found a blocking move, we can skip further evaluation
+        continue;
+      }
+      
+      // Evaluate the board using the center weighting and potential connections metrics
+      int score = _evaluateCenterWeighting(simulatedBoard, chipColor) +
+          _evaluatePotentialConnections(simulatedBoard, chipColor);
 
       if (score > bestScore) {
         bestScore = score;
         bestColumn = col;
       }
+    }
+
+    if (blockingColumn != null) {
+      developer.log('[AI][Expert] Blocking opponent win at column $blockingColumn');
+      return GenericResult<int>.success(blockingColumn);
     }
 
     if (bestColumn != -1) {
@@ -53,7 +78,10 @@ class Connect4ExpertEngine implements Connect4EngineContract {
   }
 
   // Center weighting metric: prioritize moves closer to the center of the board
-  int _evaluateCenterWeighting(List<List<Connect4SquareState>> board, Connect4SquareState chipColor) {
+  int _evaluateCenterWeighting(
+    List<List<Connect4SquareState>> board,
+    Connect4SquareState chipColor,
+  ) {
     final centerColumn = Connect4GameLogic.columns ~/ 2;
     int score = 0;
 
@@ -63,6 +91,69 @@ class Connect4ExpertEngine implements Connect4EngineContract {
           // Higher weight for chips closer to the center column
           score += Connect4GameLogic.columns - (col - centerColumn).abs();
         }
+      }
+    }
+
+    return score;
+  }
+
+  // Potential connections metric: evaluate open sequences of 2 or 3 chips
+  int _evaluatePotentialConnections(
+    List<List<Connect4SquareState>> board,
+    Connect4SquareState chipColor,
+  ) {
+    int score = 0;
+
+    // Helper function to count open sequences in a line
+    int countOpenSequences(List<Connect4SquareState> line) {
+      int count = 0;
+      for (int i = 0; i <= line.length - 4; i++) {
+        final window = line.sublist(i, i + 4);
+        if (window.where((cell) => cell == chipColor).length >= 2 &&
+            window.where((cell) => cell == Connect4SquareState.empty).length ==
+                4 - window.where((cell) => cell == chipColor).length) {
+          count++;
+        }
+      }
+      return count;
+    }
+
+    // Check rows
+    for (int row = 0; row < Connect4GameLogic.rows; row++) {
+      score += countOpenSequences(board[row]);
+    }
+
+    // Check columns
+    for (int col = 0; col < Connect4GameLogic.columns; col++) {
+      final column = [
+        for (int row = 0; row < Connect4GameLogic.rows; row++) board[row][col],
+      ];
+      score += countOpenSequences(column);
+    }
+
+    // Check diagonals (bottom-left to top-right)
+    for (int row = 0; row < Connect4GameLogic.rows - 3; row++) {
+      for (int col = 0; col < Connect4GameLogic.columns - 3; col++) {
+        final diagonal = [
+          board[row][col],
+          board[row + 1][col + 1],
+          board[row + 2][col + 2],
+          board[row + 3][col + 3],
+        ];
+        score += countOpenSequences(diagonal);
+      }
+    }
+
+    // Check diagonals (top-left to bottom-right)
+    for (int row = 3; row < Connect4GameLogic.rows; row++) {
+      for (int col = 0; col < Connect4GameLogic.columns - 3; col++) {
+        final diagonal = [
+          board[row][col],
+          board[row - 1][col + 1],
+          board[row - 2][col + 2],
+          board[row - 3][col + 3],
+        ];
+        score += countOpenSequences(diagonal);
       }
     }
 
