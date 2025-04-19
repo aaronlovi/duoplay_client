@@ -15,10 +15,19 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
     // Use minimax as the primary decision-making mechanism
     const depthLimit = 4; // Set a fixed depth limit for minimax
-    final minimaxResult = minimax(board, depthLimit, true, chipColor);
+    final minimaxResult = minimaxWithAlphaBeta(
+      board,
+      depthLimit,
+      true,
+      chipColor,
+      -10000,
+      10000,
+    );
 
     if (minimaxResult.move != null) {
-      developer.log('[AI][Expert] Minimax selected column ${minimaxResult.move} with score ${minimaxResult.score}');
+      developer.log(
+        '[AI][Expert] Minimax selected column ${minimaxResult.move} with score ${minimaxResult.score}',
+      );
       return GenericResult<int>.success(minimaxResult.move!);
     }
 
@@ -109,21 +118,32 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     return score;
   }
 
-  MinimaxResult minimax(
+  // Minimax algorithm with alpha-beta pruning
+  MinimaxResult minimaxWithAlphaBeta(
     List<List<Connect4SquareState>> board,
     int remainingDepth,
     bool isMaximizing,
     Connect4SquareState chipColor,
+    int alpha,
+    int beta,
   ) {
     // Base case: check for terminal states (win, loss, draw) or depth limit
-    final Connect4SquareState winner = Connect4GameLogic.getWinner(board);
+    final winner = Connect4GameLogic.getWinner(board);
     if (winner != Connect4SquareState.empty) {
-      return winner == chipColor
-          ? MinimaxResult(move: null, score: 1000)
-          : MinimaxResult(move: null, score: -1000);
+      if (winner == chipColor) {
+        return MinimaxResult(
+          move: null,
+          score: 1000,
+        ); // High positive score for a win
+      } else {
+        return MinimaxResult(
+          move: null,
+          score: -1000,
+        ); // High negative score for a loss
+      }
     }
     if (remainingDepth == 0 || Connect4GameLogic.isDraw(board)) {
-      final int score =
+      final score =
           evaluateCenterWeighting(board, chipColor) +
           evaluatePotentialConnections(board, chipColor); // Static evaluation
       return MinimaxResult(move: null, score: score);
@@ -137,24 +157,36 @@ class Connect4ExpertEngine implements Connect4EngineContract {
       if (!Connect4GameLogic.isLegalMove(board, col)) continue;
 
       // Simulate the move
-      final List<List<Connect4SquareState>> simulatedBoard =
+      final simulatedBoard =
           board.map((row) => List<Connect4SquareState>.from(row)).toList();
       Connect4GameLogic.applyMove(simulatedBoard, col, currentChipColor);
 
-      // Recursive call
-      final MinimaxResult result = minimax(
+      // Recursive call with alpha-beta pruning
+      final result = minimaxWithAlphaBeta(
         simulatedBoard,
         remainingDepth - 1,
         !isMaximizing,
         chipColor,
+        alpha,
+        beta,
       );
 
-      // Prune branches that are better than the best found so far
-      if (isMaximizing && result.score <= bestEval) continue;
-      if (!isMaximizing && result.score >= bestEval) continue;
+      if (isMaximizing) {
+        if (result.score > bestEval) {
+          bestEval = result.score;
+          bestMove = col;
+        }
+        alpha = alpha > bestEval ? alpha : bestEval;
+      } else {
+        if (result.score < bestEval) {
+          bestEval = result.score;
+          bestMove = col;
+        }
+        beta = beta < bestEval ? beta : bestEval;
+      }
 
-      bestEval = result.score;
-      bestMove = col;
+      // Prune branches
+      if (beta <= alpha) break; // Beta cut-off
     }
 
     return MinimaxResult(move: bestMove, score: bestEval);
