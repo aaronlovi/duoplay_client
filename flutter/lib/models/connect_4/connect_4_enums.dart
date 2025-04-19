@@ -5,18 +5,6 @@ enum Connect4SquareState {
   yellow // The square is occupied by a yellow chip
 }
 
-enum Connect4FSMState {
-  idle,
-  playing,
-  gameOver,
-}
-
-enum Connect4FSMEvent {
-  startGame,
-  endGame,
-  resetGame,
-}
-
 extension Connect4SquareStateExtensions on Connect4SquareState {
   String toShortString() {
     switch (this) {
