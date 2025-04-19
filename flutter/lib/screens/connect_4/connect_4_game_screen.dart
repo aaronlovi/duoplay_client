@@ -108,7 +108,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
 
   Widget _getBody() => Center(
     child: AspectRatio(
-      aspectRatio: 7 / 6, // 7 columns and 6 rows for the Connect 4 board
+      aspectRatio: Connect4GameLogic.columns / Connect4GameLogic.rows, // Use constants for aspect ratio
       child: _getGameGrid(),
     ),
   );
@@ -118,8 +118,8 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     padding: const EdgeInsets.all(8.0), // Add padding for the margin effect
     child: LayoutBuilder(
       builder: (context, constraints) {
-        final cellSize = (constraints.maxWidth - 6 * 4) / 7; // Calculate cell size
-        final gridHeight = cellSize * 6 + 5 * 4; // 6 rows + spacing
+        final cellSize = (constraints.maxWidth - (Connect4GameLogic.columns - 1) * 4) / Connect4GameLogic.columns; // Calculate cell size
+        final gridHeight = cellSize * Connect4GameLogic.rows + (Connect4GameLogic.rows - 1) * 4; // Rows + spacing
 
         return SizedBox(
           height: gridHeight, // Constrain the height to the grid's content
@@ -127,12 +127,12 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
             behavior: const ScrollBehavior().copyWith(scrollbars: false), // Disable scrollbars
             child: GridView.builder(
               physics: const NeverScrollableScrollPhysics(), // Prevent scrolling
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 7, // 7 columns for the Connect 4 board
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: Connect4GameLogic.columns, // Columns for the Connect 4 board
                 crossAxisSpacing: 4, // Space between columns
                 mainAxisSpacing: 4, // Space between rows
               ),
-              itemCount: 42, // 6x7 grid = 42 cells
+              itemCount: Connect4GameLogic.rows * Connect4GameLogic.columns, // Total cells
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () => _handleCellTap(index),
