@@ -35,7 +35,7 @@
 | **C.1.5.3.1.2** | Implement potential connections metric. | Complete |
 | **C.1.5.3.1.3** | Test and validate the static board evaluator. | Complete |
 | **C.1.5.3.2** | Add minimax with alpha-beta pruning (fixed depth). | Pending |
-| **C.1.5.3.2.1** | Implement minimax algorithm. | Pending |
+| **C.1.5.3.2.1** | Implement minimax algorithm. | Complete |
 | **C.1.5.3.2.2** | Add alpha-beta pruning to minimax. | Pending |
 | **C.1.5.3.2.3** | Write unit tests for minimax with alpha-beta pruning. | Pending |
 | **C.1.5.3.3** | Add iterative deepening with a time cap (≤ 500 ms). | Pending |
