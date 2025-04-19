@@ -13,25 +13,18 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     List<List<Connect4SquareState>> board = currentState.board;
     Connect4SquareState chipColor = currentState.currentPlayer;
 
-    // Use minimax as the primary decision-making mechanism
-    const depthLimit = 5; // Set a fixed depth limit for minimax
-    final minimaxResult = minimaxWithAlphaBeta(
-      board,
-      depthLimit,
-      true,
-      chipColor,
-      -10000,
-      10000,
-    );
+    // Use iterative deepening as the primary decision-making mechanism
+    const timeCapMs = 500; // Set the time cap for iterative deepening
+    final iterativeResult = iterativeDeepening(board, chipColor, timeCapMs);
 
-    if (minimaxResult.move != null) {
+    if (iterativeResult.move != null) {
       developer.log(
-        '[AI][Expert] Minimax selected column ${minimaxResult.move} with score ${minimaxResult.score}',
+        '[AI][Expert] Iterative deepening selected column ${iterativeResult.move} with score ${iterativeResult.score}',
       );
-      return GenericResult<int>.success(minimaxResult.move!);
+      return GenericResult<int>.success(iterativeResult.move!);
     }
 
-    developer.log('[AI][Expert] No legal moves available after minimax');
+    developer.log('[AI][Expert] No legal moves available after iterative deepening');
     return GenericResult<int>.failure(ResultErrorCode.invalidState);
   }
 

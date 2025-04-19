@@ -38,10 +38,10 @@
 | **C.1.5.3.2.1** | Implement minimax algorithm. | Complete |
 | **C.1.5.3.2.2** | Add alpha-beta pruning to minimax. | Complete |
 | **C.1.5.3.2.3** | Write unit tests for minimax with alpha-beta pruning. | Complete |
-| **C.1.5.3.3** | Add iterative deepening with a time cap (≤ 500 ms). | Pending |
-| **C.1.5.3.3.1** | Implement iterative deepening logic. | Pending |
-| **C.1.5.3.3.2** | Add timer mechanism to enforce the time cap. | Pending |
-| **C.1.5.3.3.3** | Test iterative deepening with various time caps. | Pending |
+| **C.1.5.3.3** | Add iterative deepening with a time cap (≤ 500 ms). | Complete |
+| **C.1.5.3.3.1** | Implement iterative deepening logic. | Complete |
+| **C.1.5.3.3.2** | Add timer mechanism to enforce the time cap. | Complete |
+| **C.1.5.3.3.3** | Test iterative deepening with various time caps. | Complete |
 | **C.1.5.3.4** | Add transposition table with Zobrist hashing. | Pending |
 | **C.1.5.3.4.1** | Generate unique hashes for board states using Zobrist hashing. | Pending |
 | **C.1.5.3.4.2** | Implement a cache for transposition tables. | Pending |
