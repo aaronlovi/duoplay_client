@@ -1,8 +1,8 @@
 // Tests for the tic-tac-toe implementation
-import 'package:flutter_test/flutter_test.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TicTacToeGameState', () {
@@ -15,7 +15,7 @@ void main() {
       expect(gameState.validateMove(9).isFailure, true);
 
       // Test move on occupied cell
-      gameState.board[0] = TTTCellState.x;
+      gameState.board[0] = TurnBasedGameCellState.player1;
       expect(gameState.validateMove(0).isFailure, true);
 
       // Test valid move
@@ -28,36 +28,36 @@ void main() {
 
       // Set up a board state where the last move results in both a win and a full board
       // Create a potential diagonal win (0, 4, 8) when X plays at position 8
-      gameState.board[0] = TTTCellState.x;
-      gameState.board[1] = TTTCellState.o;
-      gameState.board[2] = TTTCellState.x;
-      gameState.board[3] = TTTCellState.x;
-      gameState.board[4] = TTTCellState.x;
-      gameState.board[5] = TTTCellState.o;
-      gameState.board[6] = TTTCellState.o;
-      gameState.board[7] = TTTCellState.o;
-      gameState.board[8] = TTTCellState.empty;
+      gameState.board[0] = TurnBasedGameCellState.player1;
+      gameState.board[1] = TurnBasedGameCellState.player2;
+      gameState.board[2] = TurnBasedGameCellState.player1;
+      gameState.board[3] = TurnBasedGameCellState.player1;
+      gameState.board[4] = TurnBasedGameCellState.player1;
+      gameState.board[5] = TurnBasedGameCellState.player2;
+      gameState.board[6] = TurnBasedGameCellState.player2;
+      gameState.board[7] = TurnBasedGameCellState.player2;
+      gameState.board[8] = TurnBasedGameCellState.empty;
 
       // Update the game state counts to match the board
       gameState.numberOfX = 4;
       gameState.numberOfO = 4;
       
       // Ensure the current player is set to X since we want X to make the move
-      gameState.currentPlayer = TTTCellState.x;
+      gameState.currentPlayer = TurnBasedGameCellState.player1;
 
       // Make the final move
-      final result = gameState.makeMove(8, TTTCellState.x);
+      final result = gameState.makeMove(8, TurnBasedGameCellState.player1);
       
       // Verify the result and game state
       expect(result.isSuccess, true);
       
       // Make sure we have a horizontal win in the top row (0,1,8)
-      expect(gameState.board[0], TTTCellState.x);
-      expect(gameState.board[4], TTTCellState.x);
-      expect(gameState.board[8], TTTCellState.x);
+      expect(gameState.board[0], TurnBasedGameCellState.player1);
+      expect(gameState.board[4], TurnBasedGameCellState.player1);
+      expect(gameState.board[8], TurnBasedGameCellState.player1);
       
       // Check win-related properties
-      expect(gameState.winner, TTTCellState.x, reason: "X should be marked as the winner");
+      expect(gameState.winner, TurnBasedGameCellState.player1, reason: "X should be marked as the winner");
       expect(gameState.hasWinner, true, reason: "hasWinner should be true");
       expect(gameState.isDraw, false, reason: "isDraw should be false since we have a winner");
       expect(gameState.isGameOver, true, reason: "Game should be marked as over");

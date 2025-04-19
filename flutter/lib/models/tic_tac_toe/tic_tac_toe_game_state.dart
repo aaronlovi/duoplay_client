@@ -1,14 +1,14 @@
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_constants.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 class TicTacToeGameState {
   static final int numSquares = 9;
 
-  final List<TTTCellState> board;
-  TTTCellState currentPlayer;
-  TTTCellState winner;
+  final List<TurnBasedGameCellState> board;
+  TurnBasedGameCellState currentPlayer;
+  TurnBasedGameCellState winner;
   int numberOfX;
   int numberOfO;
   DateTime nowUtc;
@@ -44,9 +44,12 @@ class TicTacToeGameState {
     TTTGameConfiguration cfg, {
     DateTime? nowUtc,
   }) => TicTacToeGameState._(
-    List<TTTCellState>.filled(numSquares, TTTCellState.empty),
-    TTTCellState.x,
-    TTTCellState.empty,
+    List<TurnBasedGameCellState>.filled(
+      numSquares,
+      TurnBasedGameCellState.empty,
+    ),
+    TurnBasedGameCellState.player1,
+    TurnBasedGameCellState.empty,
     0,
     0,
     nowUtc ?? DateTime.now().toUtc(),
@@ -55,31 +58,34 @@ class TicTacToeGameState {
   );
 
   bool get isDraw =>
-      numberOfX + numberOfO == numSquares && winner == TTTCellState.empty;
-  bool get hasWinner => winner != TTTCellState.empty;
+      numberOfX + numberOfO == numSquares &&
+      winner == TurnBasedGameCellState.empty;
+  bool get hasWinner => winner != TurnBasedGameCellState.empty;
   bool get isBetweenGames => isGameOver || (numberOfX == 0 && numberOfO == 0);
   bool get isGameOver => isDraw || hasWinner;
   bool get isHumanPlayerToMove =>
       currentPlayer != configuration.enginePlayer && !isGameOver;
-  TTTCellState get humanPlayer =>
-      configuration.enginePlayer == TTTCellState.x
-          ? TTTCellState.o
-          : TTTCellState.x;
-  TTTCellState get enginePlayer => configuration.enginePlayer;
+  TurnBasedGameCellState get humanPlayer =>
+      configuration.enginePlayer == TurnBasedGameCellState.player1
+          ? TurnBasedGameCellState.player2
+          : TurnBasedGameCellState.player1;
+  TurnBasedGameCellState get enginePlayer => configuration.enginePlayer;
 
-  Result makeMove(int index, TTTCellState player) {
+  Result makeMove(int index, TurnBasedGameCellState player) {
     Result res = _validateMove(index);
     if (res.isFailure) {
       return res;
     }
 
     // Create a new board for winner detection
-    final newBoard = List<TTTCellState>.from(board);
+    final newBoard = List<TurnBasedGameCellState>.from(board);
     newBoard[index] = player;
-    final newNumberOfX = player == TTTCellState.x ? numberOfX + 1 : numberOfX;
-    final newNumberOfO = player == TTTCellState.o ? numberOfO + 1 : numberOfO;
-    final TTTCellState newWinner = getWinner(newBoard);
-    final TTTCellState nextPlayersTurn = _getNextPlayer(player);
+    final newNumberOfX =
+        player == TurnBasedGameCellState.player1 ? numberOfX + 1 : numberOfX;
+    final newNumberOfO =
+        player == TurnBasedGameCellState.player2 ? numberOfO + 1 : numberOfO;
+    final TurnBasedGameCellState newWinner = getWinner(newBoard);
+    final TurnBasedGameCellState nextPlayersTurn = _getNextPlayer(player);
 
     _updateGameState(
       newBoard,
@@ -105,28 +111,30 @@ class TicTacToeGameState {
       return Result.failure(ResultErrorCode.invalidMove);
     }
 
-    if (board[index] != TTTCellState.empty) {
+    if (board[index] != TurnBasedGameCellState.empty) {
       return Result.failure(ResultErrorCode.invalidMove);
     }
 
     return Result.success();
   }
 
-  TTTCellState _getNextPlayer(TTTCellState currentPlayer) {
-    return currentPlayer == TTTCellState.x ? TTTCellState.o : TTTCellState.x;
+  TurnBasedGameCellState _getNextPlayer(TurnBasedGameCellState currentPlayer) {
+    return currentPlayer == TurnBasedGameCellState.player1
+        ? TurnBasedGameCellState.player2
+        : TurnBasedGameCellState.player1;
   }
 
   void _updateGameState(
-    List<TTTCellState> newBoard,
+    List<TurnBasedGameCellState> newBoard,
     int newNumberOfX,
     int newNumberOfO,
-    TTTCellState newWinner,
-    TTTCellState nextPlayersTurn,
+    TurnBasedGameCellState newWinner,
+    TurnBasedGameCellState nextPlayersTurn,
   ) {
     bool newIsDraw =
         newNumberOfX + newNumberOfO == numSquares &&
-        newWinner == TTTCellState.empty;
-    bool newHasWinner = newWinner != TTTCellState.empty;
+        newWinner == TurnBasedGameCellState.empty;
+    bool newHasWinner = newWinner != TurnBasedGameCellState.empty;
     bool newIsEnginesTurn =
         configuration.enginePlayer == nextPlayersTurn &&
         !newIsDraw &&
@@ -155,7 +163,7 @@ class TicTacToeGameState {
     engineMoveTimeUtc = newEngineMoveTimeUtc;
   }
 
-  TTTCellState getWinner(List<TTTCellState> board) {
+  TurnBasedGameCellState getWinner(List<TurnBasedGameCellState> board) {
     // Cache the winning combinations to avoid redundant checks
     for (var combination in TTTConstants.winningCombinations) {
       final a = combination[0];
@@ -163,14 +171,14 @@ class TicTacToeGameState {
       final c = combination[2];
 
       // If all three cells in the combination are the same and not empty, we have a winner
-      if (board[a] != TTTCellState.empty &&
+      if (board[a] != TurnBasedGameCellState.empty &&
           board[a] == board[b] &&
           board[a] == board[c]) {
         return board[a]; // Return the winner (TicTacToeCellState.x or TicTacToeCellState.o)
       }
     }
 
-    return TTTCellState.empty;
+    return TurnBasedGameCellState.empty;
   }
 
   /// Checks if the game is over, and if the board is set with the expected
@@ -178,11 +186,13 @@ class TicTacToeGameState {
   Result isLegalPositionReadyForMove() {
     if (isGameOver) return Result.failure(ResultErrorCode.gameOver);
 
-    if (currentPlayer == TTTCellState.x && numberOfX != numberOfO) {
+    if (currentPlayer == TurnBasedGameCellState.player1 &&
+        numberOfX != numberOfO) {
       return Result.failure(ResultErrorCode.invalidState);
     }
 
-    if (currentPlayer == TTTCellState.o && numberOfX != numberOfO + 1) {
+    if (currentPlayer == TurnBasedGameCellState.player2 &&
+        numberOfX != numberOfO + 1) {
       return Result.failure(ResultErrorCode.invalidState);
     }
 
@@ -195,8 +205,8 @@ class TicTacToeGameState {
   }
 
   void setupNextGame() {
-    currentPlayer = TTTCellState.x;
-    winner = TTTCellState.empty;
+    currentPlayer = TurnBasedGameCellState.player1;
+    winner = TurnBasedGameCellState.empty;
     numberOfX = 0;
     numberOfO = 0;
     configuration.changeSides();
@@ -214,21 +224,23 @@ class TicTacToeGameState {
 
   void clearBoard() {
     for (int i = 0; i < board.length; ++i) {
-      board[i] = TTTCellState.empty;
+      board[i] = TurnBasedGameCellState.empty;
     }
   }
 
-  @override
-  String toString() {
-    return 'TTTGameState[curPlayer:${currentPlayer.toShortString()},winner:${winner.toShortString()},numX:$numberOfX,numO:$numberOfO,nextDifficulty:$nextGameEngineDifficulty]';
-  }
+  // @override
+  // String toString() {
+  //   String currentPlayerStr = _gameUtils.cellStateToShortString(currentPlayer);
+  //   String winnerStr = _gameUtils.cellStateToShortString(winner);
+  //   return 'TTTGameState[curPlayer:$currentPlayerStr,winner:$winnerStr,numX:$numberOfX,numO:$numberOfO,nextDifficulty:$nextGameEngineDifficulty]';
+  // }
 
   // Add unit tests for invalid moves
   Result validateMove(int index) {
     if (index < 0 || index >= numSquares) {
       return Result.failure(ResultErrorCode.invalidMove);
     }
-    if (board[index] != TTTCellState.empty) {
+    if (board[index] != TurnBasedGameCellState.empty) {
       return Result.failure(ResultErrorCode.invalidMove);
     }
     return Result.success();

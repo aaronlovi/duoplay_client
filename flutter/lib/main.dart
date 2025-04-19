@@ -1,7 +1,9 @@
 import 'package:duoplay/engines/connect_4/connect_4_engine_factory.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
 import 'package:duoplay/screens/connect_4/connect_4_game_screen.dart';
 import 'package:duoplay/screens/connect_4/connect_4_settings_loader.dart';
 import 'package:duoplay/screens/game_list_screen.dart';
@@ -32,21 +34,23 @@ class MyApp extends StatelessWidget {
       routes: {
         '/tic-tac-toe':
             (context) => TTTGameScreen(
-              gameObject: GetIt.I<TTTGameContainer>(),
+              gameObject: GetIt.I.get<TTTGameContainer>(),
               engine: TTTEngineFactory.createEngine(
-                GetIt.I<TTTGameContainer>().gameState.configuration.difficulty,
+                GetIt.I.get<TTTGameContainer>().gameState.configuration.difficulty,
               ),
+              gameUtils: GetIt.I.get<TTTGameUtils>(),
             ),
         '/tic-tac-toe/settings': (context) => const TicTacToeSettingsLoader(),
         '/connect-4':
             (context) => Connect4GameScreen(
-              gameObject: GetIt.I<Connect4GameContainer>(),
+              gameObject: GetIt.I.get<Connect4GameContainer>(),
               engine: Connect4EngineFactory.createEngine(
-                GetIt.I<Connect4GameContainer>()
+                GetIt.I.get<Connect4GameContainer>()
                     .gameState
                     .configuration
                     .difficulty,
               ),
+              gameUtils: GetIt.I.get<Connect4GameUtils>(),
             ),
         '/connect-4/settings': (context) => const Connect4SettingsLoader(),
       },

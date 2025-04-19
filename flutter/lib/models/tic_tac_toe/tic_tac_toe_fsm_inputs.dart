@@ -1,5 +1,5 @@
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 abstract class TTTInputBase {
   final DateTime nowUtc;
@@ -18,7 +18,7 @@ class TTTGameConfigInput extends TTTInputBase {
 
 class TTTPlayerMoveInput extends TTTInputBase {
   int index;
-  TTTCellState player;
+  TurnBasedGameCellState player;
 
   TTTPlayerMoveInput({
     required super.nowUtc,
@@ -33,7 +33,7 @@ class TTTPlayerMoveInput extends TTTInputBase {
 
 class TTTEngineMoveInput extends TTTInputBase {
   int index;
-  TTTCellState enginePlayer;
+  TurnBasedGameCellState enginePlayer;
 
   TTTEngineMoveInput({
     required super.nowUtc,

@@ -1,16 +1,16 @@
-import 'package:duoplay/models/connect_4/connect_4_constants.dart';
-import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/connect_4/connect_4_enums.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
 import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
+import 'package:duoplay/models/connect_4/connect_4_constants.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
+import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 class Connect4GameState {
   static const int rows = 6;
   static const int columns = 7;
 
-  final List<List<Connect4SquareState>> board;
-  Connect4SquareState currentPlayer;
-  Connect4SquareState winner;
+  final List<List<TurnBasedGameCellState>> board;
+  TurnBasedGameCellState currentPlayer;
+  TurnBasedGameCellState winner;
   int numberOfRed;
   int numberOfYellow;
   DateTime nowUtc;
@@ -45,9 +45,9 @@ class Connect4GameState {
     Connect4GameConfiguration cfg, {
     DateTime? nowUtc,
   }) => Connect4GameState._(
-    List.generate(rows, (_) => List.filled(columns, Connect4SquareState.empty)),
-    Connect4SquareState.red,
-    Connect4SquareState.empty,
+    List.generate(rows, (_) => List.filled(columns, TurnBasedGameCellState.empty)),
+    TurnBasedGameCellState.player1,
+    TurnBasedGameCellState.empty,
     0,
     0,
     nowUtc ?? DateTime.now().toUtc(),
@@ -56,30 +56,30 @@ class Connect4GameState {
   );
 
   bool get isDraw => Connect4GameLogic.isDraw(board);
-  bool get hasWinner => winner != Connect4SquareState.empty;
+  bool get hasWinner => winner != TurnBasedGameCellState.empty;
   bool get isBetweenGames => isGameOver || (numberOfRed == 0 && numberOfYellow == 0);
   bool get isGameOver => isDraw || hasWinner;
   bool get isHumanPlayerToMove =>
       currentPlayer != configuration.enginePlayer && !isGameOver;
-  Connect4SquareState get humanPlayer =>
-      configuration.enginePlayer == Connect4SquareState.red
-          ? Connect4SquareState.yellow
-          : Connect4SquareState.red;
-  Connect4SquareState get enginePlayer => configuration.enginePlayer;
+  TurnBasedGameCellState get humanPlayer =>
+      configuration.enginePlayer == TurnBasedGameCellState.player1
+          ? TurnBasedGameCellState.player2
+          : TurnBasedGameCellState.player1;
+  TurnBasedGameCellState get enginePlayer => configuration.enginePlayer;
 
-  Result makeMove(int column, Connect4SquareState player) {
+  Result makeMove(int column, TurnBasedGameCellState player) {
     Result res = _validateMove(column);
     if (res.isFailure) {
       return res;
     }
 
-    final newBoard = board.map((row) => List<Connect4SquareState>.from(row)).toList();
+    final newBoard = board.map((row) => List<TurnBasedGameCellState>.from(row)).toList();
     Connect4GameLogic.applyMove(newBoard, column, player);
 
-    final newNumberOfRed = player == Connect4SquareState.red ? numberOfRed + 1 : numberOfRed;
-    final newNumberOfYellow = player == Connect4SquareState.yellow ? numberOfYellow + 1 : numberOfYellow;
-    final Connect4SquareState newWinner = Connect4GameLogic.getWinner(newBoard);
-    final Connect4SquareState nextPlayersTurn = _getNextPlayer(player);
+    final newNumberOfRed = player == TurnBasedGameCellState.player1 ? numberOfRed + 1 : numberOfRed;
+    final newNumberOfYellow = player == TurnBasedGameCellState.player2 ? numberOfYellow + 1 : numberOfYellow;
+    final TurnBasedGameCellState newWinner = Connect4GameLogic.getWinner(newBoard);
+    final TurnBasedGameCellState nextPlayersTurn = _getNextPlayer(player);
 
     _updateGameState(
       newBoard,
@@ -106,30 +106,30 @@ class Connect4GameState {
 
   int _getAvailableRow(int column) {
     for (int row = rows - 1; row >= 0; row--) {
-      if (board[row][column] == Connect4SquareState.empty) {
+      if (board[row][column] == TurnBasedGameCellState.empty) {
         return row;
       }
     }
     return -1;
   }
 
-  Connect4SquareState _getNextPlayer(Connect4SquareState currentPlayer) {
-    return currentPlayer == Connect4SquareState.red
-        ? Connect4SquareState.yellow
-        : Connect4SquareState.red;
+  TurnBasedGameCellState _getNextPlayer(TurnBasedGameCellState currentPlayer) {
+    return currentPlayer == TurnBasedGameCellState.player1
+        ? TurnBasedGameCellState.player2
+        : TurnBasedGameCellState.player1;
   }
 
   void _updateGameState(
-    List<List<Connect4SquareState>> newBoard,
+    List<List<TurnBasedGameCellState>> newBoard,
     int newNumberOfRed,
     int newNumberOfYellow,
-    Connect4SquareState newWinner,
-    Connect4SquareState nextPlayersTurn,
+    TurnBasedGameCellState newWinner,
+    TurnBasedGameCellState nextPlayersTurn,
   ) {
     bool newIsDraw =
         newNumberOfRed + newNumberOfYellow == rows * columns &&
-        newWinner == Connect4SquareState.empty;
-    bool newHasWinner = newWinner != Connect4SquareState.empty;
+        newWinner == TurnBasedGameCellState.empty;
+    bool newHasWinner = newWinner != TurnBasedGameCellState.empty;
     bool newIsEnginesTurn =
         configuration.enginePlayer == nextPlayersTurn &&
         !newIsDraw &&
@@ -159,7 +159,7 @@ class Connect4GameState {
     engineMoveTimeUtc = newEngineMoveTimeUtc;
   }
 
-  Connect4SquareState getWinner(List<List<Connect4SquareState>> board) {
+  TurnBasedGameCellState getWinner(List<List<TurnBasedGameCellState>> board) {
     return Connect4GameLogic.getWinner(board);
   }
 
@@ -168,11 +168,11 @@ class Connect4GameState {
   Result isLegalPositionReadyForMove() {
     if (isGameOver) return Result.failure(ResultErrorCode.gameOver);
 
-    if (currentPlayer == Connect4SquareState.red && numberOfRed != numberOfYellow) {
+    if (currentPlayer == TurnBasedGameCellState.player1 && numberOfRed != numberOfYellow) {
       return Result.failure(ResultErrorCode.invalidState);
     }
 
-    if (currentPlayer == Connect4SquareState.yellow && numberOfRed != numberOfYellow + 1) {
+    if (currentPlayer == TurnBasedGameCellState.player2 && numberOfRed != numberOfYellow + 1) {
       return Result.failure(ResultErrorCode.invalidState);
     }
 
@@ -185,8 +185,8 @@ class Connect4GameState {
   }
 
   void setupNextGame() {
-    currentPlayer = Connect4SquareState.red;
-    winner = Connect4SquareState.empty;
+    currentPlayer = TurnBasedGameCellState.player1;
+    winner = TurnBasedGameCellState.empty;
     numberOfRed = 0;
     numberOfYellow = 0;
     configuration.changeSides();
@@ -204,7 +204,7 @@ class Connect4GameState {
   void clearBoard() {
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < columns; col++) {
-        board[row][col] = Connect4SquareState.empty;
+        board[row][col] = TurnBasedGameCellState.empty;
       }
     }
   }

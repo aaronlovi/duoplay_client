@@ -1,16 +1,16 @@
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_beginner_engine.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_expert_engine.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_intermediate_engine.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TicTacToe AI difficulty modes', () {
     test('Beginner: makes winning move if available, otherwise random', () {
       final config = TTTGameConfiguration(
-        enginePlayer: TTTCellState.x,
+        enginePlayer: TurnBasedGameCellState.player1,
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'beginner',
       );
@@ -20,18 +20,18 @@ void main() {
       // _ _ _
       final state = TicTacToeGameState(
         [
-          TTTCellState.x,
-          TTTCellState.empty,
-          TTTCellState.x,
-          TTTCellState.o,
-          TTTCellState.o,
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
+          TurnBasedGameCellState.player1,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.player1,
+          TurnBasedGameCellState.player2,
+          TurnBasedGameCellState.player2,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
         ],
-        TTTCellState.x,
-        TTTCellState.empty,
+        TurnBasedGameCellState.player1,
+        TurnBasedGameCellState.empty,
         2,
         2,
         DateTime.now().toUtc(),
@@ -45,7 +45,7 @@ void main() {
 
     test('Intermediate: blocks opponent win if possible', () {
       final config = TTTGameConfiguration(
-        enginePlayer: TTTCellState.o,
+        enginePlayer: TurnBasedGameCellState.player2,
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'intermediate',
       );
@@ -55,18 +55,18 @@ void main() {
       // _ _ _
       final state = TicTacToeGameState(
         [
-          TTTCellState.x,
-          TTTCellState.x,
-          TTTCellState.empty,
-          TTTCellState.o,
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
+          TurnBasedGameCellState.player1,
+          TurnBasedGameCellState.player1,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.player2,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
         ],
-        TTTCellState.o,
-        TTTCellState.empty,
+        TurnBasedGameCellState.player2,
+        TurnBasedGameCellState.empty,
         2,
         1,
         DateTime.now().toUtc(),
@@ -80,7 +80,7 @@ void main() {
 
     test('Expert: always plays perfect (center if available)', () {
       final config = TTTGameConfiguration(
-        enginePlayer: TTTCellState.x,
+        enginePlayer: TurnBasedGameCellState.player1,
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'expert',
       );
@@ -88,18 +88,18 @@ void main() {
       // Empty board, X to move
       final state = TicTacToeGameState(
         [
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
-          TTTCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
+          TurnBasedGameCellState.empty,
         ],
-        TTTCellState.x,
-        TTTCellState.empty,
+        TurnBasedGameCellState.player1,
+        TurnBasedGameCellState.empty,
         0,
         0,
         DateTime.now().toUtc(),
@@ -115,7 +115,7 @@ void main() {
       'Expert: O does not play upper-middle after X picks upper-left (should not play a losing move)',
       () {
         final config = TTTGameConfiguration(
-          enginePlayer: TTTCellState.o,
+          enginePlayer: TurnBasedGameCellState.player2,
           betweenGamesWaitTime: Duration(seconds: 1),
           difficulty: 'expert',
         );
@@ -127,18 +127,18 @@ void main() {
         // O to move. The only non-losing moves are corners or edge (not center or edge-middle).
         final state = TicTacToeGameState(
           [
-            TTTCellState.x,
-            TTTCellState.empty,
-            TTTCellState.empty,
-            TTTCellState.empty,
-            TTTCellState.empty,
-            TTTCellState.empty,
-            TTTCellState.empty,
-            TTTCellState.empty,
-            TTTCellState.empty,
+            TurnBasedGameCellState.player1,
+            TurnBasedGameCellState.empty,
+            TurnBasedGameCellState.empty,
+            TurnBasedGameCellState.empty,
+            TurnBasedGameCellState.empty,
+            TurnBasedGameCellState.empty,
+            TurnBasedGameCellState.empty,
+            TurnBasedGameCellState.empty,
+            TurnBasedGameCellState.empty,
           ],
-          TTTCellState.o,
-          TTTCellState.empty,
+          TurnBasedGameCellState.player2,
+          TurnBasedGameCellState.empty,
           1,
           0,
           DateTime.now().toUtc(),

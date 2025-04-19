@@ -1,11 +1,11 @@
 import 'package:duoplay/services/game_service_contract.dart';
-import 'package:duoplay/services/service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import '../models/game.dart';
 
 class GameListScreen extends StatelessWidget {
-  final GameServiceContract gameService = getIt<GameServiceContract>();
+  final GameServiceContract gameService = GetIt.I.get<GameServiceContract>();
 
   GameListScreen({super.key});
 

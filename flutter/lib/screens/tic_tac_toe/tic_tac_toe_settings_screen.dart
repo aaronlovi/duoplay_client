@@ -33,7 +33,7 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
     _selectedDifficulty = widget.initialDifficulty;
     _moveDelay = widget.initialMoveDelay;
     _gameDelay = widget.initialGameDelay;
-    _gameContainer = GetIt.I<TTTGameContainer>();
+    _gameContainer = GetIt.I.get<TTTGameContainer>();
   }
 
   @override

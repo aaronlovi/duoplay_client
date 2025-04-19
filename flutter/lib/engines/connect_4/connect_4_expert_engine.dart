@@ -2,16 +2,16 @@ import 'dart:developer' as developer;
 
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
-import 'package:duoplay/models/connect_4/connect_4_enums.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/mini_max_result.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 class Connect4ExpertEngine implements Connect4EngineContract {
   @override
   GenericResult<int> getNextMove(Connect4GameState currentState) {
-    List<List<Connect4SquareState>> board = currentState.board;
-    Connect4SquareState chipColor = currentState.currentPlayer;
+    List<List<TurnBasedGameCellState>> board = currentState.board;
+    TurnBasedGameCellState chipColor = currentState.currentPlayer;
 
     // Use iterative deepening as the primary decision-making mechanism
     const timeCapMs = 500; // Set the time cap for iterative deepening
@@ -30,8 +30,8 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
   // Center weighting metric: prioritize moves closer to the center of the board
   int evaluateCenterWeighting(
-    List<List<Connect4SquareState>> board,
-    Connect4SquareState chipColor,
+    List<List<TurnBasedGameCellState>> board,
+    TurnBasedGameCellState chipColor,
   ) {
     final centerColumn = Connect4GameLogic.columns ~/ 2;
     int score = 0;
@@ -50,18 +50,18 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
   // Potential connections metric: evaluate open sequences of 2 or 3 chips
   int evaluatePotentialConnections(
-    List<List<Connect4SquareState>> board,
-    Connect4SquareState chipColor,
+    List<List<TurnBasedGameCellState>> board,
+    TurnBasedGameCellState chipColor,
   ) {
     int score = 0;
 
     // Helper function to count open sequences in a line
-    int countOpenSequences(List<Connect4SquareState> line) {
+    int countOpenSequences(List<TurnBasedGameCellState> line) {
       int count = 0;
       for (int i = 0; i <= line.length - 4; i++) {
         final window = line.sublist(i, i + 4);
         if (window.where((cell) => cell == chipColor).length >= 2 &&
-            window.where((cell) => cell == Connect4SquareState.empty).length ==
+            window.where((cell) => cell == TurnBasedGameCellState.empty).length ==
                 4 - window.where((cell) => cell == chipColor).length) {
           count++;
         }
@@ -113,16 +113,16 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
   // Minimax algorithm with alpha-beta pruning
   MinimaxResult minimaxWithAlphaBeta(
-    List<List<Connect4SquareState>> board,
+    List<List<TurnBasedGameCellState>> board,
     int remainingDepth,
     bool isMaximizing,
-    Connect4SquareState chipColor,
+    TurnBasedGameCellState chipColor,
     int alpha,
     int beta,
   ) {
     // Base case: check for terminal states (win, loss, draw) or depth limit
     final winner = Connect4GameLogic.getWinner(board);
-    if (winner != Connect4SquareState.empty) {
+    if (winner != TurnBasedGameCellState.empty) {
       if (winner == chipColor) {
         return MinimaxResult(
           move: null,
@@ -151,7 +151,7 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
       // Simulate the move
       final simulatedBoard =
-          board.map((row) => List<Connect4SquareState>.from(row)).toList();
+          board.map((row) => List<TurnBasedGameCellState>.from(row)).toList();
       Connect4GameLogic.applyMove(simulatedBoard, col, currentChipColor);
 
       // Recursive call with alpha-beta pruning
@@ -186,7 +186,7 @@ class Connect4ExpertEngine implements Connect4EngineContract {
   }
 
   // Iterative deepening logic with a time cap
-  MinimaxResult iterativeDeepening(List<List<Connect4SquareState>> board, Connect4SquareState chipColor, int timeCapMs) {
+  MinimaxResult iterativeDeepening(List<List<TurnBasedGameCellState>> board, TurnBasedGameCellState chipColor, int timeCapMs) {
     final stopwatch = Stopwatch()..start();
     MinimaxResult? bestResult;
 

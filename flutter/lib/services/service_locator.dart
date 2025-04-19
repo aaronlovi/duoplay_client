@@ -1,11 +1,12 @@
-import 'package:duoplay/models/connect_4/connect_4_enums.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:duoplay/services/game_service_contract.dart';
 import 'package:duoplay/services/mock_game_service.dart';
 import 'package:get_it/get_it.dart';
@@ -22,11 +23,14 @@ Future<void> setupLocator() async {
   final connect4GameDelay = prefs.getInt('connect4_game_delay') ?? 1;
   final connect4Difficulty =
       prefs.getString('connect4_ai_difficulty') ?? 'beginner';
+  
   getIt.registerLazySingleton<GameServiceContract>(() => MockGameService());
+
+  getIt.registerSingleton<TTTGameUtils>(TTTGameUtils());
   getIt.registerLazySingleton<TTTFsm>(
     () => TTTFsm(
       TTTGameConfiguration(
-        enginePlayer: TTTCellState.o,
+        enginePlayer: TurnBasedGameCellState.player2,
         betweenGamesWaitTime: Duration(seconds: tttGameDelay),
         engineMoveWaitTime: Duration(seconds: tttMoveDelay),
         difficulty: tttDifficulty,
@@ -36,10 +40,12 @@ Future<void> setupLocator() async {
   getIt.registerLazySingleton<TTTGameContainer>(
     () => TTTGameContainer(fsm: getIt.get<TTTFsm>()),
   );
+
+  getIt.registerSingleton<Connect4GameUtils>(Connect4GameUtils());
   getIt.registerLazySingleton<Connect4FSM>(
     () => Connect4FSM(
       Connect4GameConfiguration(
-        enginePlayer: Connect4SquareState.yellow,
+        enginePlayer: TurnBasedGameCellState.player2,
         betweenGamesWaitTime: Duration(seconds: connect4GameDelay),
         engineMoveWaitTime: Duration(seconds: connect4MoveDelay),
         difficulty: connect4Difficulty,

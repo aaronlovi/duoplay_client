@@ -1,22 +1,23 @@
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
+import 'dart:developer';
+
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_inputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
-import 'dart:developer'; // For logging with `log`
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart'; // For logging with `log`
 
-class TTTGameContainer {
+class TTTGameContainer extends TurnBasedGameUtils {
   final TTTFsm _fsm;
 
   TTTGameContainer({required TTTFsm fsm}) : _fsm = fsm;
 
-  List<TTTCellState> get board => _fsm.board;
+  List<TurnBasedGameCellState> get board => _fsm.board;
   bool get isPlayerXEngine => _fsm.isPlayerXEngine;
   bool get isPlayerOEngine => _fsm.isPlayerOEngine;
   bool get isHumanPlayerToMove => _fsm.isHumanPlayerToMove;
-  TTTCellState get humanPlayer => _fsm.humanPlayer;
-  TTTCellState get enginePlayer => _fsm.enginePlayer;
+  TurnBasedGameCellState get humanPlayer => _fsm.humanPlayer;
+  TurnBasedGameCellState get enginePlayer => _fsm.enginePlayer;
   TicTacToeGameState get gameState => _fsm.gameState;
   String get nextGameDifficulty => _fsm.nextGameDifficulty;
 
@@ -30,5 +31,17 @@ class TTTGameContainer {
     }
     log('nextTimeOut: ${outputContainer.nextTimeout}');
     return outputContainer;
+  }
+  
+  @override
+  String cellStateToShortString(TurnBasedGameCellState state) {
+    switch (state) {
+      case TurnBasedGameCellState.empty:
+        return 'empty';
+      case TurnBasedGameCellState.player1:
+        return 'X';
+      case TurnBasedGameCellState.player2:
+        return 'O';
+    }
   }
 }

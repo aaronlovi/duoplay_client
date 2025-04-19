@@ -1,6 +1,25 @@
 import 'package:duoplay/models/result.dart';
 
-abstract class TurnBasedGame {
+enum TurnBasedGameCellState {
+  empty,
+  player1,
+  player2,
+}
+
+extension TurnBasedGameCellStateExtensions on TurnBasedGameCellState {
+  TurnBasedGameCellState getOpponent() {
+    switch (this) {
+      case TurnBasedGameCellState.empty:
+        return TurnBasedGameCellState.empty;
+      case TurnBasedGameCellState.player1:
+        return TurnBasedGameCellState.player2;
+      case TurnBasedGameCellState.player2:
+        return TurnBasedGameCellState.player1;
+    }
+  }
+}
+
+abstract class TurnBasedGameUtils {
   static String errorCodeToString(ResultErrorCode code, List<String> errorParams) {
     switch (code) {
       case ResultErrorCode.none:
@@ -19,4 +38,6 @@ abstract class TurnBasedGame {
         return 'Game is in invalid state for this operation';
     }
   }
+
+  String cellStateToShortString(TurnBasedGameCellState state);
 }

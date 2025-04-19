@@ -2,23 +2,25 @@ import 'dart:async';
 
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_inputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
-import 'package:duoplay/models/turn-based-game.dart/turn_based_game.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TTTGameScreen extends StatefulWidget {
   final TTTGameContainer gameObject;
   final TTTEngineContract engine;
+  final TTTGameUtils gameUtils;
 
   const TTTGameScreen({
     super.key,
     required this.gameObject,
     required this.engine,
+    required this.gameUtils,
   });
 
   @override
@@ -28,6 +30,7 @@ class TTTGameScreen extends StatefulWidget {
 class TTTGameScreenState extends State<TTTGameScreen> {
   TTTGameContainer get _gameObject => widget.gameObject;
   TTTEngineContract get _engine => widget.engine;
+  TTTGameUtils get _gameUtils => widget.gameUtils;
   bool get isPlayerXEngine => _gameObject.isPlayerXEngine;
   bool get isPlayerOEngine => _gameObject.isPlayerOEngine;
   bool get isHumanPlayerToMove => _gameObject.isHumanPlayerToMove;
@@ -40,7 +43,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
   @override
   Widget build(BuildContext context) {
     final difficulty = _gameObject.gameState.configuration.difficulty;
-    final playerLetter = _gameObject.humanPlayer.toShortString().toUpperCase();
+    final playerLetter = _gameUtils.cellStateToShortString(_gameObject.humanPlayer).toUpperCase();
     return Scaffold(
       appBar: AppBar(title: const Text('Tic-Tac-Toe')),
       body: Column(
@@ -149,7 +152,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
 
   Widget _getCellContents(int index) => Center(
     child: Text(
-      _gameObject.board[index].toShortString(),
+      _gameUtils.cellStateToShortString(_gameObject.board[index]),
       style: const TextStyle(fontSize: 32),
     ),
   );
@@ -158,7 +161,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
     setState(() {
       for (var item in outputs.outputs) {
         if (item is TTTErrorOutput) {
-          String errorMessage = TurnBasedGame.errorCodeToString(
+          String errorMessage = TurnBasedGameUtils.errorCodeToString(
             item.results.errorCode,
             item.results.errorParameters,
           );
@@ -174,7 +177,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
         } else if (item is TTTDoEngineMoveOutput) {
           GenericResult<int> res = _engine.getNextMove(_gameObject.gameState);
           if (res.isFailure) {
-            String errorMessage = TurnBasedGame.errorCodeToString(
+            String errorMessage = TurnBasedGameUtils.errorCodeToString(
               res.errorCode,
               res.errorParameters,
             );

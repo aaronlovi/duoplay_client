@@ -1,5 +1,5 @@
-import 'package:duoplay/models/connect_4/connect_4_enums.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 abstract class Connect4InputBase {
   final DateTime nowUtc;
@@ -18,7 +18,7 @@ class Connect4GameConfigInput extends Connect4InputBase {
 
 class Connect4PlayerMoveInput extends Connect4InputBase {
   final int column;
-  final Connect4SquareState player;
+  final TurnBasedGameCellState player;
 
   Connect4PlayerMoveInput({
     required super.nowUtc,
@@ -32,7 +32,7 @@ class Connect4PlayerMoveInput extends Connect4InputBase {
 
 class Connect4EngineMoveInput extends Connect4InputBase {
   final int column;
-  final Connect4SquareState enginePlayer;
+  final TurnBasedGameCellState enginePlayer;
 
   Connect4EngineMoveInput({
     required super.nowUtc,

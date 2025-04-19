@@ -1,5 +1,5 @@
 import 'package:duoplay/engines/connect_4/connect_4_expert_engine.dart';
-import 'package:duoplay/models/connect_4/connect_4_enums.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -9,11 +9,11 @@ void main() {
     test('Center weighting metric prioritizes center columns', () {
       final board = List.generate(
         6,
-        (_) => List.generate(7, (_) => Connect4SquareState.empty),
+        (_) => List.generate(7, (_) => TurnBasedGameCellState.empty),
       );
-      board[5][3] = Connect4SquareState.red; // Place a chip in the center
+      board[5][3] = TurnBasedGameCellState.player1; // Place a chip in the center
 
-      final score = engine.evaluateCenterWeighting(board, Connect4SquareState.red);
+      final score = engine.evaluateCenterWeighting(board, TurnBasedGameCellState.player1);
 
       expect(score, greaterThan(0)); // Ensure center chip contributes to score
     });
@@ -21,14 +21,14 @@ void main() {
     test('Potential connections metric identifies open sequences', () {
       final board = List.generate(
         6,
-        (_) => List.generate(7, (_) => Connect4SquareState.empty),
+        (_) => List.generate(7, (_) => TurnBasedGameCellState.empty),
       );
-      board[5][0] = Connect4SquareState.red;
-      board[5][1] = Connect4SquareState.red;
-      board[5][2] = Connect4SquareState.empty;
-      board[5][3] = Connect4SquareState.empty;
+      board[5][0] = TurnBasedGameCellState.player1;
+      board[5][1] = TurnBasedGameCellState.player1;
+      board[5][2] = TurnBasedGameCellState.empty;
+      board[5][3] = TurnBasedGameCellState.empty;
 
-      final score = engine.evaluatePotentialConnections(board, Connect4SquareState.red);
+      final score = engine.evaluatePotentialConnections(board, TurnBasedGameCellState.player1);
 
       expect(score, greaterThan(0)); // Ensure open sequences contribute to score
     });
@@ -40,18 +40,18 @@ void main() {
     test('Alpha-beta pruning avoids unnecessary branches', () {
       final board = List.generate(
         6,
-        (_) => List.generate(7, (_) => Connect4SquareState.empty),
+        (_) => List.generate(7, (_) => TurnBasedGameCellState.empty),
       );
-      board[5][0] = Connect4SquareState.red;
-      board[5][1] = Connect4SquareState.red;
-      board[5][2] = Connect4SquareState.red;
-      board[5][3] = Connect4SquareState.empty; // Winning move
+      board[5][0] = TurnBasedGameCellState.player1;
+      board[5][1] = TurnBasedGameCellState.player1;
+      board[5][2] = TurnBasedGameCellState.player1;
+      board[5][3] = TurnBasedGameCellState.empty; // Winning move
 
       final result = engine.minimaxWithAlphaBeta(
         board,
         4, // Depth limit
         true,
-        Connect4SquareState.red,
+        TurnBasedGameCellState.player1,
         -10000,
         10000,
       );
@@ -63,18 +63,18 @@ void main() {
     test('Alpha-beta pruning blocks opponent win', () {
       final board = List.generate(
         6,
-        (_) => List.generate(7, (_) => Connect4SquareState.empty),
+        (_) => List.generate(7, (_) => TurnBasedGameCellState.empty),
       );
-      board[5][0] = Connect4SquareState.yellow;
-      board[5][1] = Connect4SquareState.yellow;
-      board[5][2] = Connect4SquareState.yellow;
-      board[5][3] = Connect4SquareState.empty; // Blocking move
+      board[5][0] = TurnBasedGameCellState.player2;
+      board[5][1] = TurnBasedGameCellState.player2;
+      board[5][2] = TurnBasedGameCellState.player2;
+      board[5][3] = TurnBasedGameCellState.empty; // Blocking move
 
       final result = engine.minimaxWithAlphaBeta(
         board,
         4, // Depth limit
         true,
-        Connect4SquareState.red,
+        TurnBasedGameCellState.player1,
         -10000,
         10000,
       );
@@ -90,15 +90,15 @@ void main() {
     test('Iterative deepening respects time cap', () {
       final board = List.generate(
         6,
-        (_) => List.generate(7, (_) => Connect4SquareState.empty),
+        (_) => List.generate(7, (_) => TurnBasedGameCellState.empty),
       );
-      board[5][0] = Connect4SquareState.red;
-      board[5][1] = Connect4SquareState.red;
-      board[5][2] = Connect4SquareState.red;
-      board[5][3] = Connect4SquareState.empty; // Winning move
+      board[5][0] = TurnBasedGameCellState.player1;
+      board[5][1] = TurnBasedGameCellState.player1;
+      board[5][2] = TurnBasedGameCellState.player1;
+      board[5][3] = TurnBasedGameCellState.empty; // Winning move
 
       final startTime = DateTime.now();
-      final result = engine.iterativeDeepening(board, Connect4SquareState.red, 500);
+      final result = engine.iterativeDeepening(board, TurnBasedGameCellState.player1, 500);
       final elapsedTime = DateTime.now().difference(startTime).inMilliseconds;
 
       expect(elapsedTime, lessThanOrEqualTo(500)); // Ensure time cap is respected
@@ -108,14 +108,14 @@ void main() {
     test('Iterative deepening finds best move within time cap', () {
       final board = List.generate(
         6,
-        (_) => List.generate(7, (_) => Connect4SquareState.empty),
+        (_) => List.generate(7, (_) => TurnBasedGameCellState.empty),
       );
-      board[5][0] = Connect4SquareState.yellow;
-      board[5][1] = Connect4SquareState.yellow;
-      board[5][2] = Connect4SquareState.yellow;
-      board[5][3] = Connect4SquareState.empty; // Blocking move
+      board[5][0] = TurnBasedGameCellState.player2;
+      board[5][1] = TurnBasedGameCellState.player2;
+      board[5][2] = TurnBasedGameCellState.player2;
+      board[5][3] = TurnBasedGameCellState.empty; // Blocking move
 
-      final result = engine.iterativeDeepening(board, Connect4SquareState.red, 500);
+      final result = engine.iterativeDeepening(board, TurnBasedGameCellState.player1, 500);
 
       expect(result.move, equals(3)); // Ensure the blocking move is selected
     });

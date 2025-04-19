@@ -1,7 +1,7 @@
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 abstract class TTTOutputBase {}
 
@@ -24,14 +24,14 @@ class TTTNewBoardOutput implements TTTOutputBase {
 }
 
 class TTTGameOverOutput implements TTTOutputBase {
-  TTTCellState winner;
+  TurnBasedGameCellState winner;
   bool isDraw;
 
   TTTGameOverOutput({required this.winner, required this.isDraw}) {
-    if (winner == TTTCellState.empty && !isDraw) {
+    if (winner == TurnBasedGameCellState.empty && !isDraw) {
       throw ArgumentError('Game has no winner and is not a draw');
     }
-    if (isDraw && winner != TTTCellState.empty) {
+    if (isDraw && winner != TurnBasedGameCellState.empty) {
       throw ArgumentError('Game is both a draw and has a winner');
     }
   }

@@ -1,7 +1,7 @@
+import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/connect_4/connect_4_enums.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 abstract class Connect4OutputBase {}
 
@@ -24,14 +24,14 @@ class Connect4NewBoardOutput implements Connect4OutputBase {
 }
 
 class Connect4GameOverOutput implements Connect4OutputBase {
-  final Connect4SquareState winner;
+  final TurnBasedGameCellState winner;
   final bool isDraw;
 
   Connect4GameOverOutput({required this.winner, required this.isDraw}) {
-    if (winner == Connect4SquareState.empty && !isDraw) {
+    if (winner == TurnBasedGameCellState.empty && !isDraw) {
       throw ArgumentError('Game has no winner and is not a draw');
     }
-    if (isDraw && winner != Connect4SquareState.empty) {
+    if (isDraw && winner != TurnBasedGameCellState.empty) {
       throw ArgumentError('Game is both a draw and has a winner');
     }
   }

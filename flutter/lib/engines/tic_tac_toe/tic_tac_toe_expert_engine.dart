@@ -3,8 +3,8 @@ import 'dart:developer' as developer;
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/mini_max_result.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 class TTTExpertEngine implements TTTEngineContract {
   @override
@@ -32,7 +32,7 @@ class TTTExpertEngine implements TTTEngineContract {
 
   MinimaxResult _minimax(
     TicTacToeGameState state,
-    TTTCellState rootPlayer, // Always optimize for the engine player
+    TurnBasedGameCellState rootPlayer, // Always optimize for the engine player
     bool isMaximizing,
   ) {
     if (state.isGameOver) {
@@ -49,7 +49,7 @@ class TTTExpertEngine implements TTTEngineContract {
 
     final moves = <MinimaxResult>[];
     for (int i = 0; i < state.board.length; ++i) {
-      if (state.board[i] != TTTCellState.empty) continue;
+      if (state.board[i] != TurnBasedGameCellState.empty) continue;
       final newState = _simulateMove(state, i, state.currentPlayer);
       final result = _minimax(newState, rootPlayer, !isMaximizing);
 
@@ -73,16 +73,16 @@ class TTTExpertEngine implements TTTEngineContract {
   TicTacToeGameState _simulateMove(
     TicTacToeGameState state,
     int index,
-    TTTCellState player,
+    TurnBasedGameCellState player,
   ) {
-    final newBoard = List<TTTCellState>.from(state.board);
+    final newBoard = List<TurnBasedGameCellState>.from(state.board);
     newBoard[index] = player;
     return TicTacToeGameState(
       newBoard,
       player.getOpponent(),
       state.getWinner(newBoard),
-      player == TTTCellState.x ? state.numberOfX + 1 : state.numberOfX,
-      player == TTTCellState.o ? state.numberOfO + 1 : state.numberOfO,
+      player == TurnBasedGameCellState.player1 ? state.numberOfX + 1 : state.numberOfX,
+      player == TurnBasedGameCellState.player2 ? state.numberOfO + 1 : state.numberOfO,
       state.nowUtc,
       state.configuration,
       state.configuration.difficulty,

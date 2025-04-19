@@ -1,7 +1,7 @@
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 class TTTGameConfiguration {
-  TTTCellState enginePlayer;
+  TurnBasedGameCellState enginePlayer;
   Duration betweenGamesWaitTime;
   Duration? engineMoveWaitTime;
   String difficulty;
@@ -14,7 +14,7 @@ class TTTGameConfiguration {
   });
 
   TTTGameConfiguration.defaults()
-    : enginePlayer = TTTCellState.o,
+    : enginePlayer = TurnBasedGameCellState.player2,
       betweenGamesWaitTime = Duration(seconds: 7),
       engineMoveWaitTime = Duration(seconds: 5),
       difficulty = 'beginner';

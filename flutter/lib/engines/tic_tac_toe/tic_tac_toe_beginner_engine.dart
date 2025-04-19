@@ -2,8 +2,8 @@ import 'dart:developer' as developer;
 
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:duoplay/utils/random.dart';
 
 class TTTBeginnerEngine implements TTTEngineContract {
@@ -16,8 +16,8 @@ class TTTBeginnerEngine implements TTTEngineContract {
 
     // Try to make an immediately winning move
     for (int i = 0; i < currentState.board.length; ++i) {
-      if (currentState.board[i] == TTTCellState.empty) {
-        final simulatedBoard = List<TTTCellState>.from(currentState.board);
+      if (currentState.board[i] == TurnBasedGameCellState.empty) {
+        final simulatedBoard = List<TurnBasedGameCellState>.from(currentState.board);
         simulatedBoard[i] = currentState.currentPlayer;
         if (currentState.getWinner(simulatedBoard) ==
             currentState.currentPlayer) {
@@ -30,7 +30,7 @@ class TTTBeginnerEngine implements TTTEngineContract {
     // Otherwise, make a random legal move
     final legalMoves = <int>[];
     for (int i = 0; i < currentState.board.length; ++i) {
-      if (currentState.board[i] == TTTCellState.empty) {
+      if (currentState.board[i] == TurnBasedGameCellState.empty) {
         legalMoves.add(i);
       }
     }

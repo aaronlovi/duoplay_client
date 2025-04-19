@@ -1,4 +1,4 @@
-import 'package:duoplay/models/connect_4/connect_4_enums.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
 
 class Connect4GameLogic {
@@ -12,12 +12,12 @@ class Connect4GameLogic {
   ///
   /// This method calculates the lowest available row in the specified column
   /// where a chip can be placed. It assumes a 2D list `board` representing the
-  /// current state of the game, where `Connect4SquareState.empty` indicates an empty slot.
-  static int? getTargetRow(List<List<Connect4SquareState>> board, int column) {
+  /// current state of the game, where `TurnBasedGameCellState.empty` indicates an empty slot.
+  static int? getTargetRow(List<List<TurnBasedGameCellState>> board, int column) {
     const int rows = 6; // Number of rows in the Connect 4 board
 
     for (int row = rows - 1; row >= 0; row--) {
-      if (board[row][column] == Connect4SquareState.empty) {
+      if (board[row][column] == TurnBasedGameCellState.empty) {
         return row;
       }
     }
@@ -25,15 +25,15 @@ class Connect4GameLogic {
   }
 
   /// Checks if a move is legal in the given column.
-  static bool isLegalMove(List<List<Connect4SquareState>> board, int column) {
+  static bool isLegalMove(List<List<TurnBasedGameCellState>> board, int column) {
     return getTargetRow(board, column) != null;
   }
 
   /// Applies a move to the board by placing the chip in the lowest available row.
   static void applyMove(
-    List<List<Connect4SquareState>> board,
+    List<List<TurnBasedGameCellState>> board,
     int column,
-    Connect4SquareState chipColor,
+    TurnBasedGameCellState chipColor,
   ) {
     final row = getTargetRow(board, column);
     if (row != null) {
@@ -42,51 +42,51 @@ class Connect4GameLogic {
   }
 
   /// Checks if there is a winner on the board.
-  /// If no winner is found, it returns `Connect4SquareState.empty`.
-  static Connect4SquareState getWinner(List<List<Connect4SquareState>> board) {
+  /// If no winner is found, it returns `TurnBasedGameCellState.empty`.
+  static TurnBasedGameCellState getWinner(List<List<TurnBasedGameCellState>> board) {
     // Check horizontal, vertical, and diagonal lines for a winner.
     for (int row = 0; row < board.length; row++) {
       for (int col = 0; col < board[row].length; col++) {
         final winner = _checkWinnerFromCell(board, row, col);
-        if (winner != Connect4SquareState.empty) {
+        if (winner != TurnBasedGameCellState.empty) {
           return winner;
         }
       }
     }
-    return Connect4SquareState.empty; // No winner found
+    return TurnBasedGameCellState.empty; // No winner found
   }
 
   /// Checks if the board is completely filled and there is no winner, resulting in a draw.
-  static bool isDraw(List<List<Connect4SquareState>> board) {
+  static bool isDraw(List<List<TurnBasedGameCellState>> board) {
     // Check if the board is completely filled
     if (!board.every(
-      (row) => row.every((cell) => cell != Connect4SquareState.empty),
+      (row) => row.every((cell) => cell != TurnBasedGameCellState.empty),
     )) {
       return false;
     }
 
     // Check if there is a winner
-    return getWinner(board) == Connect4SquareState.empty;
+    return getWinner(board) == TurnBasedGameCellState.empty;
   }
 
-  static void debugPrintBoard(List<List<Connect4SquareState>> board) {
+  static void debugPrintBoard(List<List<TurnBasedGameCellState>> board) {
     // Print the board for debugging
     for (final row in board) {
       debugPrint(
         row
             .map(
               (cell) =>
-                  cell == Connect4SquareState.empty
+                  cell == TurnBasedGameCellState.empty
                       ? '.'
-                      : (cell == Connect4SquareState.red ? 'R' : 'Y'),
+                      : (cell == TurnBasedGameCellState.player1 ? 'R' : 'Y'),
             )
             .join(' '),
       );
     }
   }
 
-  /// Converts a string representation of a board into a 2D list of Connect4SquareState.
-  static List<List<Connect4SquareState>> parseBoard(String boardString) {
+  /// Converts a string representation of a board into a 2D list of TurnBasedGameCellState.
+  static List<List<TurnBasedGameCellState>> parseBoard(String boardString) {
     return boardString
         .trim()
         .split('\n')
@@ -95,15 +95,15 @@ class Connect4GameLogic {
               row.trim().split(RegExp(r'\s+')).map((cell) {
                 switch (cell) {
                   case 'R':
-                    return Connect4SquareState.red;
+                    return TurnBasedGameCellState.player1;
                   case 'r':
-                    return Connect4SquareState.red;
+                    return TurnBasedGameCellState.player1;
                   case 'Y':
-                    return Connect4SquareState.yellow;
+                    return TurnBasedGameCellState.player2;
                   case 'y':
-                    return Connect4SquareState.yellow;
+                    return TurnBasedGameCellState.player2;
                   default:
-                    return Connect4SquareState.empty;
+                    return TurnBasedGameCellState.empty;
                 }
               }).toList(),
         )
@@ -111,9 +111,9 @@ class Connect4GameLogic {
   }
 
   /// Helper method to check for a winner starting from a specific cell.
-  /// If no winner is found, it returns `Connect4SquareState.empty`.
-  static Connect4SquareState _checkWinnerFromCell(
-    List<List<Connect4SquareState>> board,
+  /// If no winner is found, it returns `TurnBasedGameCellState.empty`.
+  static TurnBasedGameCellState _checkWinnerFromCell(
+    List<List<TurnBasedGameCellState>> board,
     int row,
     int col,
   ) {
@@ -132,25 +132,25 @@ class Connect4GameLogic {
         direction[0],
         direction[1],
       );
-      if (winner != Connect4SquareState.empty) {
+      if (winner != TurnBasedGameCellState.empty) {
         return winner;
       }
     }
-    return Connect4SquareState.empty;
+    return TurnBasedGameCellState.empty;
   }
 
   /// Helper method to check a specific direction for four consecutive chips.
-  /// If no winner is found, it returns `Connect4SquareState.empty`.
-  static Connect4SquareState _checkDirection(
-    List<List<Connect4SquareState>> board,
+  /// If no winner is found, it returns `TurnBasedGameCellState.empty`.
+  static TurnBasedGameCellState _checkDirection(
+    List<List<TurnBasedGameCellState>> board,
     int startRow,
     int startCol,
     int rowDelta,
     int colDelta,
   ) {
     final initial = board[startRow][startCol];
-    if (initial == Connect4SquareState.empty) {
-      return Connect4SquareState.empty;
+    if (initial == TurnBasedGameCellState.empty) {
+      return TurnBasedGameCellState.empty;
     }
 
     for (int i = 1; i < 4; i++) {
@@ -161,11 +161,11 @@ class Connect4GameLogic {
           newRow >= board.length ||
           newCol < 0 ||
           newCol >= board[0].length) {
-        return Connect4SquareState.empty; // Out of bounds
+        return TurnBasedGameCellState.empty; // Out of bounds
       }
 
       if (board[newRow][newCol] != initial) {
-        return Connect4SquareState.empty; // Not a match
+        return TurnBasedGameCellState.empty; // Not a match
       }
     }
 

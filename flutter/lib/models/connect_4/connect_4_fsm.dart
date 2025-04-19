@@ -2,13 +2,13 @@ import 'dart:developer';
 
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/engines/connect_4/connect_4_engine_factory.dart';
-import 'package:duoplay/models/connect_4/connect_4_enums.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_inputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 class _Connect4FsmUpdateContext {
   bool addStartGameOutput;
@@ -37,14 +37,14 @@ class Connect4FSM {
     _engine = Connect4EngineFactory.createEngine(configuration.difficulty);
   }
 
-  List<List<Connect4SquareState>> get board => gameState.board;
+  List<List<TurnBasedGameCellState>> get board => gameState.board;
   bool get isPlayerRedEngine =>
-      gameState.configuration.enginePlayer == Connect4SquareState.red;
+      gameState.configuration.enginePlayer == TurnBasedGameCellState.player1;
   bool get isPlayerYellowEngine =>
-      gameState.configuration.enginePlayer == Connect4SquareState.yellow;
+      gameState.configuration.enginePlayer == TurnBasedGameCellState.player2;
   bool get isHumanPlayerToMove => gameState.isHumanPlayerToMove;
-  Connect4SquareState get humanPlayer => gameState.humanPlayer;
-  Connect4SquareState get enginePlayer => gameState.enginePlayer;
+  TurnBasedGameCellState get humanPlayer => gameState.humanPlayer;
+  TurnBasedGameCellState get enginePlayer => gameState.enginePlayer;
   String get nextGameDifficulty => gameState.nextGameEngineDifficulty;
 
   void update(Connect4InputBase inputs, Connect4OutputContainer outputs) {
@@ -103,7 +103,7 @@ class Connect4FSM {
       'Processing player move: column=${inputs.column}, player=${inputs.player}',
     );
     if (inputs.player == gameState.configuration.enginePlayer ||
-        inputs.player == Connect4SquareState.empty) {
+        inputs.player == TurnBasedGameCellState.empty) {
       log('Invalid move: Player is engine or empty');
       _appendErrorOutput(ResultErrorCode.invalidMove);
       return;
@@ -141,7 +141,7 @@ class Connect4FSM {
       'Processing engine move: column=${inputs.column}, enginePlayer=${inputs.enginePlayer}',
     );
     if (inputs.enginePlayer != gameState.configuration.enginePlayer ||
-        inputs.enginePlayer == Connect4SquareState.empty) {
+        inputs.enginePlayer == TurnBasedGameCellState.empty) {
       log('Invalid engine move: Player mismatch or empty');
       _appendErrorOutput(ResultErrorCode.invalidMove);
       return;

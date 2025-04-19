@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_inputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 class _TTTFsmUpdateContext {
   bool addStartGameOutput;
@@ -37,14 +37,14 @@ class TTTFsm {
     _engine = TTTEngineFactory.createEngine(configuration.difficulty);
   }
 
-  List<TTTCellState> get board => gameState.board;
+  List<TurnBasedGameCellState> get board => gameState.board;
   bool get isPlayerXEngine =>
-      gameState.configuration.enginePlayer == TTTCellState.x;
+      gameState.configuration.enginePlayer == TurnBasedGameCellState.player1;
   bool get isPlayerOEngine =>
-      gameState.configuration.enginePlayer == TTTCellState.o;
+      gameState.configuration.enginePlayer == TurnBasedGameCellState.player2;
   bool get isHumanPlayerToMove => gameState.isHumanPlayerToMove;
-  TTTCellState get humanPlayer => gameState.humanPlayer;
-  TTTCellState get enginePlayer => gameState.enginePlayer;
+  TurnBasedGameCellState get humanPlayer => gameState.humanPlayer;
+  TurnBasedGameCellState get enginePlayer => gameState.enginePlayer;
   String get nextGameDifficulty => gameState.nextGameEngineDifficulty;
 
   void update(TTTInputBase inputs, TTTOutputContainer outputs) {
@@ -102,7 +102,7 @@ class TTTFsm {
       'Processing player move: index=${inputs.index}, player=${inputs.player}',
     );
     if (inputs.player == gameState.configuration.enginePlayer ||
-        inputs.player == TTTCellState.empty) {
+        inputs.player == TurnBasedGameCellState.empty) {
       log('Invalid move: Player is engine or empty');
       _appendErrorOutput(ResultErrorCode.invalidMove);
       return;
@@ -137,7 +137,7 @@ class TTTFsm {
       'Processing engine move: index=${inputs.index}, enginePlayer=${inputs.enginePlayer}',
     );
     if (inputs.enginePlayer != gameState.configuration.enginePlayer ||
-        inputs.enginePlayer == TTTCellState.empty) {
+        inputs.enginePlayer == TurnBasedGameCellState.empty) {
       log('Invalid engine move: Player mismatch or empty');
       _appendErrorOutput(ResultErrorCode.invalidMove);
       return;

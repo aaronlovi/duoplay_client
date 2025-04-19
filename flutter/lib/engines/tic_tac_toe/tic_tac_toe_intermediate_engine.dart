@@ -2,8 +2,8 @@ import 'dart:developer' as developer;
 
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:duoplay/utils/random.dart';
 
 class TTTIntermediateEngine implements TTTEngineContract {
@@ -16,8 +16,8 @@ class TTTIntermediateEngine implements TTTEngineContract {
 
     // Try to make an immediately winning move
     for (int i = 0; i < currentState.board.length; ++i) {
-      if (currentState.board[i] == TTTCellState.empty) {
-        final simulatedBoard = List<TTTCellState>.from(currentState.board);
+      if (currentState.board[i] == TurnBasedGameCellState.empty) {
+        final simulatedBoard = List<TurnBasedGameCellState>.from(currentState.board);
         simulatedBoard[i] = currentState.currentPlayer;
         if (currentState.getWinner(simulatedBoard) ==
             currentState.currentPlayer) {
@@ -30,8 +30,8 @@ class TTTIntermediateEngine implements TTTEngineContract {
     // Try to block opponent's immediately winning move
     final opponent = currentState.currentPlayer.getOpponent();
     for (int i = 0; i < currentState.board.length; ++i) {
-      if (currentState.board[i] == TTTCellState.empty) {
-        final simulatedBoard = List<TTTCellState>.from(currentState.board);
+      if (currentState.board[i] == TurnBasedGameCellState.empty) {
+        final simulatedBoard = List<TurnBasedGameCellState>.from(currentState.board);
         simulatedBoard[i] = opponent;
         if (currentState.getWinner(simulatedBoard) == opponent) {
           developer.log('[AI][Intermediate] Blocking opponent win at $i');
@@ -43,7 +43,7 @@ class TTTIntermediateEngine implements TTTEngineContract {
     // Otherwise, make a random legal move
     final legalMoves = <int>[];
     for (int i = 0; i < currentState.board.length; ++i) {
-      if (currentState.board[i] == TTTCellState.empty) {
+      if (currentState.board[i] == TurnBasedGameCellState.empty) {
         legalMoves.add(i);
       }
     }

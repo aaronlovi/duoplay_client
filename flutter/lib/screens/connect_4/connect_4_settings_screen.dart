@@ -33,7 +33,7 @@ class _Connect4SettingsScreenState extends State<Connect4SettingsScreen> {
     _selectedDifficulty = widget.initialDifficulty;
     _moveDelay = widget.initialMoveDelay;
     _gameDelay = widget.initialGameDelay;
-    _gameContainer = GetIt.I<Connect4GameContainer>();
+    _gameContainer = GetIt.I.get<Connect4GameContainer>();
   }
 
   @override

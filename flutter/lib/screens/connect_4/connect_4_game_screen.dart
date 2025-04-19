@@ -2,24 +2,26 @@ import 'dart:async';
 
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
-import 'package:duoplay/models/connect_4/connect_4_enums.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_inputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/turn-based-game.dart/turn_based_game.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Connect4GameScreen extends StatefulWidget {
   final Connect4GameContainer gameObject;
   final Connect4EngineContract engine;
+  final Connect4GameUtils gameUtils;
 
   const Connect4GameScreen({
     super.key,
     required this.gameObject,
     required this.engine,
+    required this.gameUtils,
   });
 
   @override
@@ -29,6 +31,7 @@ class Connect4GameScreen extends StatefulWidget {
 class Connect4GameScreenState extends State<Connect4GameScreen> {
   Connect4GameContainer get _gameObject => widget.gameObject;
   Connect4EngineContract get _engine => widget.engine;
+  Connect4GameUtils get _gameUtils => widget.gameUtils;
   bool get isPlayerRedTheEngine => _gameObject.isPlayerRedEngine;
   bool get isPlayerYellowTheEngine => _gameObject.isPlayerYellowEngine;
   bool get isHumanPlayerToMove => _gameObject.isHumanPlayerToMove;
@@ -41,7 +44,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
   @override
   Widget build(BuildContext context) {
     final difficulty = _gameObject.gameState.configuration.difficulty;
-    final playerColor = _gameObject.humanPlayer.toShortString().toUpperCase();
+    final playerColor = _gameUtils.cellStateToShortString(_gameObject.humanPlayer).toUpperCase();
     return Scaffold(
       appBar: AppBar(title: const Text('Connect 4')),
       body: Column(
@@ -183,11 +186,11 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     );
   }
 
-  Color _getCellColor(Connect4SquareState state) {
+  Color _getCellColor(TurnBasedGameCellState state) {
     switch (state) {
-      case Connect4SquareState.red:
+      case TurnBasedGameCellState.player1:
         return Colors.red;
-      case Connect4SquareState.yellow:
+      case TurnBasedGameCellState.player2:
         return Colors.yellow;
       default:
         return Colors.transparent; // Empty cells
@@ -198,7 +201,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     setState(() {
       for (var item in outputs.outputs) {
         if (item is Connect4ErrorOutput) {
-          String errorMessage = TurnBasedGame.errorCodeToString(
+          String errorMessage = TurnBasedGameUtils.errorCodeToString(
             item.results.errorCode,
             item.results.errorParameters,
           );
@@ -214,7 +217,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
         } else if (item is Connect4DoEngineMoveOutput) {
           GenericResult<int> res = _engine.getNextMove(_gameObject.gameState);
           if (res.isFailure) {
-            String errorMessage = TurnBasedGame.errorCodeToString(
+            String errorMessage = TurnBasedGameUtils.errorCodeToString(
               res.errorCode,
               res.errorParameters,
             );
