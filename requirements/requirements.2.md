@@ -30,10 +30,22 @@
 | **C.1.5.1** | *Beginner*: random legal column; if a winning move exists, take it. | Complete |
 | **C.1.5.2** | *Intermediate*: winning move → block opponent win → random. | Complete |
 | **C.1.5.3** | *Expert*: minimax with alpha‑beta pruning and iterative deepening. | Pending |
-| **C.1.5.3.1** | Implement static board evaluator (center weighting, two‑in‑a‑row, etc.). | Pending |
-| **C.1.5.3.2** | Add minimax + alpha‑beta (fixed depth). | Pending |
-| **C.1.5.3.3** | Add iterative deepening with time cap (≤ 500 ms). | Pending |
+| **C.1.5.3.1** | Define evaluation metrics for the static board evaluator (e.g., center weighting, potential connections). | Pending |
+| **C.1.5.3.1.1** | Implement center weighting metric. | Pending |
+| **C.1.5.3.1.2** | Implement potential connections metric. | Pending |
+| **C.1.5.3.1.3** | Test and validate the static board evaluator. | Pending |
+| **C.1.5.3.2** | Add minimax with alpha-beta pruning (fixed depth). | Pending |
+| **C.1.5.3.2.1** | Implement minimax algorithm. | Pending |
+| **C.1.5.3.2.2** | Add alpha-beta pruning to minimax. | Pending |
+| **C.1.5.3.2.3** | Write unit tests for minimax with alpha-beta pruning. | Pending |
+| **C.1.5.3.3** | Add iterative deepening with a time cap (≤ 500 ms). | Pending |
+| **C.1.5.3.3.1** | Implement iterative deepening logic. | Pending |
+| **C.1.5.3.3.2** | Add timer mechanism to enforce the time cap. | Pending |
+| **C.1.5.3.3.3** | Test iterative deepening with various time caps. | Pending |
 | **C.1.5.3.4** | Add transposition table with Zobrist hashing. | Pending |
+| **C.1.5.3.4.1** | Generate unique hashes for board states using Zobrist hashing. | Pending |
+| **C.1.5.3.4.2** | Implement a cache for transposition tables. | Pending |
+| **C.1.5.3.4.3** | Validate transposition table integration with minimax. | Pending |
 | **C.1.5.4** | Place engine code in `ai/connect4/` directory mirroring tic‑tac‑toe structure. | Pending |
 | **C.1.6** | **Settings screen** (`connect4_settings_screen.dart`) accessible via a “Settings” button on the game screen. | Pending |
 | **C.1.6.1** | Allow users to pick AI difficulty (Beginner, Intermediate, Expert) with a segmented button. | Complete |
