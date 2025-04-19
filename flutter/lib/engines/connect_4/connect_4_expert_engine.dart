@@ -47,4 +47,21 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     developer.log('[AI][Expert] No legal moves available');
     return GenericResult<int>.failure(ResultErrorCode.invalidState);
   }
+
+  // Center weighting metric: prioritize moves closer to the center of the board
+  int _evaluateCenterWeighting(List<List<Connect4SquareState>> board, Connect4SquareState chipColor) {
+    final centerColumn = Connect4GameLogic.columns ~/ 2;
+    int score = 0;
+
+    for (int row = 0; row < Connect4GameLogic.rows; row++) {
+      for (int col = 0; col < Connect4GameLogic.columns; col++) {
+        if (board[row][col] == chipColor) {
+          // Higher weight for chips closer to the center column
+          score += Connect4GameLogic.columns - (col - centerColumn).abs();
+        }
+      }
+    }
+
+    return score;
+  }
 }
