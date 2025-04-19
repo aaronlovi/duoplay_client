@@ -13,78 +13,16 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     List<List<Connect4SquareState>> board = currentState.board;
     Connect4SquareState chipColor = currentState.currentPlayer;
 
-    int bestScore = -1;
-    int bestColumn = -1;
-    int? blockingColumn;
-    final opponentChipColor = chipColor.getOpponent();
+    // Use minimax as the primary decision-making mechanism
+    const depthLimit = 4; // Set a fixed depth limit for minimax
+    final minimaxResult = minimax(board, depthLimit, true, chipColor);
 
-    for (int col = 0; col < Connect4GameLogic.columns; col++) {
-      if (!Connect4GameLogic.isLegalMove(board, col)) {
-        continue;
-      }
-
-      // Simulate the move
-      final simulatedBoard =
-          board.map((row) => List<Connect4SquareState>.from(row)).toList();
-      Connect4GameLogic.applyMove(simulatedBoard, col, chipColor);
-
-      // Check if this move wins the game
-      if (Connect4GameLogic.getWinner(simulatedBoard) == chipColor) {
-        developer.log('[AI][Expert] Winning move found at column $col');
-        return GenericResult<int>.success(col);
-      }
-
-      // Simulate the opponent's move
-      final opponentSimulatedBoard =
-          board.map((row) => List<Connect4SquareState>.from(row)).toList();
-      Connect4GameLogic.applyMove(
-        opponentSimulatedBoard,
-        col,
-        opponentChipColor,
-      );
-
-      // Check if this move would let the opponent win
-      if (Connect4GameLogic.getWinner(opponentSimulatedBoard) ==
-          opponentChipColor) {
-        // Keep track of the most recent blocking column
-        // If the opponent has multiple winning moves, we will block the last one
-        developer.log(
-          '[AI][Expert] Blocking opponent win found at column $col',
-        );
-        blockingColumn = col;
-      }
-
-      if (blockingColumn != null) {
-        // If we found a blocking move, we can skip further evaluation
-        continue;
-      }
-
-      // Evaluate the board using the center weighting and potential connections metrics
-      int score =
-          evaluateCenterWeighting(simulatedBoard, chipColor) +
-          evaluatePotentialConnections(simulatedBoard, chipColor);
-
-      if (score > bestScore) {
-        bestScore = score;
-        bestColumn = col;
-      }
+    if (minimaxResult.move != null) {
+      developer.log('[AI][Expert] Minimax selected column ${minimaxResult.move} with score ${minimaxResult.score}');
+      return GenericResult<int>.success(minimaxResult.move!);
     }
 
-    if (blockingColumn != null) {
-      developer.log(
-        '[AI][Expert] Blocking opponent win at column $blockingColumn',
-      );
-      return GenericResult<int>.success(blockingColumn);
-    }
-
-    if (bestColumn != -1) {
-      developer.log(
-        '[AI][Expert] Best move found at column $bestColumn with score $bestScore',
-      );
-      return GenericResult<int>.success(bestColumn);
-    }
-
-    developer.log('[AI][Expert] No legal moves available');
+    developer.log('[AI][Expert] No legal moves available after minimax');
     return GenericResult<int>.failure(ResultErrorCode.invalidState);
   }
 
