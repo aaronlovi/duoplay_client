@@ -1,5 +1,5 @@
 import 'package:duoplay/engines/connect_4/connect_4_expert_engine.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

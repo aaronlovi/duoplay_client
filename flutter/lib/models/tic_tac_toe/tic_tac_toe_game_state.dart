@@ -1,7 +1,7 @@
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_constants.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class TicTacToeGameState {
   static final int numSquares = 9;

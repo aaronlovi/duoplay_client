@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart'; // For logging with `log`
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart'; // For logging with `log`
 
 class TTTGameContainer extends TurnBasedGameUtils {
   final TTTFsm _fsm;

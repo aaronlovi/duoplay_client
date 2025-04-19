@@ -6,9 +6,9 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

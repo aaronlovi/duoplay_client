@@ -6,10 +6,10 @@ import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class _Connect4FsmUpdateContext {
   bool addStartGameOutput;

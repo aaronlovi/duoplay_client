@@ -1,4 +1,4 @@
-import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class TurnBasedGameConfiguration {
   TurnBasedGameCellState enginePlayer;

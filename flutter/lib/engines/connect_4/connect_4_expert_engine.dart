@@ -5,7 +5,7 @@ import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/mini_max_result.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class Connect4ExpertEngine implements Connect4EngineContract {
   @override

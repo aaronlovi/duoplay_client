@@ -6,10 +6,10 @@ import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class _TTTFsmUpdateContext {
   bool addStartGameOutput;
