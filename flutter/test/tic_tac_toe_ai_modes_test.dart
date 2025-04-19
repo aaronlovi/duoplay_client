@@ -1,7 +1,7 @@
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_beginner_engine.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_expert_engine.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_intermediate_engine.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:flutter_test/flutter_test.dart';

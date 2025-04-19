@@ -1,4 +1,4 @@
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 
 abstract class TTTInputBase {

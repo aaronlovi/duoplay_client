@@ -2,7 +2,7 @@ import 'package:duoplay/models/connect_4/connect_4_enums.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';

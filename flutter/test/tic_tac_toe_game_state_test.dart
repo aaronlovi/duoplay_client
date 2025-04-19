@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_enums.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 
 void main() {
