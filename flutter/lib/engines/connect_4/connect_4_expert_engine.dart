@@ -4,6 +4,7 @@ import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_enums.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
+import 'package:duoplay/models/mini_max_result.dart';
 import 'package:duoplay/models/result.dart';
 
 class Connect4ExpertEngine implements Connect4EngineContract {
@@ -36,13 +37,20 @@ class Connect4ExpertEngine implements Connect4EngineContract {
       // Simulate the opponent's move
       final opponentSimulatedBoard =
           board.map((row) => List<Connect4SquareState>.from(row)).toList();
-      Connect4GameLogic.applyMove(opponentSimulatedBoard, col, opponentChipColor);
+      Connect4GameLogic.applyMove(
+        opponentSimulatedBoard,
+        col,
+        opponentChipColor,
+      );
 
       // Check if this move would let the opponent win
-      if (Connect4GameLogic.getWinner(opponentSimulatedBoard) == opponentChipColor) {
+      if (Connect4GameLogic.getWinner(opponentSimulatedBoard) ==
+          opponentChipColor) {
         // Keep track of the most recent blocking column
         // If the opponent has multiple winning moves, we will block the last one
-        developer.log('[AI][Expert] Blocking opponent win found at column $col');
+        developer.log(
+          '[AI][Expert] Blocking opponent win found at column $col',
+        );
         blockingColumn = col;
       }
 
@@ -50,9 +58,10 @@ class Connect4ExpertEngine implements Connect4EngineContract {
         // If we found a blocking move, we can skip further evaluation
         continue;
       }
-      
+
       // Evaluate the board using the center weighting and potential connections metrics
-      int score = evaluateCenterWeighting(simulatedBoard, chipColor) +
+      int score =
+          evaluateCenterWeighting(simulatedBoard, chipColor) +
           evaluatePotentialConnections(simulatedBoard, chipColor);
 
       if (score > bestScore) {
@@ -62,7 +71,9 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     }
 
     if (blockingColumn != null) {
-      developer.log('[AI][Expert] Blocking opponent win at column $blockingColumn');
+      developer.log(
+        '[AI][Expert] Blocking opponent win at column $blockingColumn',
+      );
       return GenericResult<int>.success(blockingColumn);
     }
 
@@ -158,5 +169,56 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     }
 
     return score;
+  }
+
+  MinimaxResult minimax(
+    List<List<Connect4SquareState>> board,
+    int remainingDepth,
+    bool isMaximizing,
+    Connect4SquareState chipColor,
+  ) {
+    // Base case: check for terminal states (win, loss, draw) or depth limit
+    final Connect4SquareState winner = Connect4GameLogic.getWinner(board);
+    if (winner != Connect4SquareState.empty) {
+      return winner == chipColor
+          ? MinimaxResult(move: null, score: 1000)
+          : MinimaxResult(move: null, score: -1000);
+    }
+    if (remainingDepth == 0 || Connect4GameLogic.isDraw(board)) {
+      final int score =
+          evaluateCenterWeighting(board, chipColor) +
+          evaluatePotentialConnections(board, chipColor); // Static evaluation
+      return MinimaxResult(move: null, score: score);
+    }
+
+    int bestEval = isMaximizing ? -10000 : 10000;
+    int? bestMove;
+    final currentChipColor = isMaximizing ? chipColor : chipColor.getOpponent();
+
+    for (int col = 0; col < Connect4GameLogic.columns; col++) {
+      if (!Connect4GameLogic.isLegalMove(board, col)) continue;
+
+      // Simulate the move
+      final List<List<Connect4SquareState>> simulatedBoard =
+          board.map((row) => List<Connect4SquareState>.from(row)).toList();
+      Connect4GameLogic.applyMove(simulatedBoard, col, currentChipColor);
+
+      // Recursive call
+      final MinimaxResult result = minimax(
+        simulatedBoard,
+        remainingDepth - 1,
+        !isMaximizing,
+        chipColor,
+      );
+
+      // Prune branches that are better than the best found so far
+      if (isMaximizing && result.score <= bestEval) continue;
+      if (!isMaximizing && result.score >= bestEval) continue;
+
+      bestEval = result.score;
+      bestMove = col;
+    }
+
+    return MinimaxResult(move: bestMove, score: bestEval);
   }
 }
