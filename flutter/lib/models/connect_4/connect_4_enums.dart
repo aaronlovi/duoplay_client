@@ -16,3 +16,27 @@ enum Connect4FSMEvent {
   endGame,
   resetGame,
 }
+
+extension Connect4SquareStateExtensions on Connect4SquareState {
+  String toShortString() {
+    switch (this) {
+      case Connect4SquareState.empty:
+        return '';
+      case Connect4SquareState.red:
+        return 'red';
+      case Connect4SquareState.yellow:
+        return 'yellow';
+    }
+  }
+
+  Connect4SquareState getOpponent() {
+    switch (this) {
+      case Connect4SquareState.empty:
+        return Connect4SquareState.empty;
+      case Connect4SquareState.red:
+        return Connect4SquareState.yellow;
+      case Connect4SquareState.yellow:
+        return Connect4SquareState.red;
+    }
+  }
+}
