@@ -60,7 +60,7 @@ class TTTFsm {
     outputs.clear();
     gameState.nowUtc = inputs.nowUtc;
 
-    if (inputs is TTTGameConfigInput) {
+    if (inputs is TurnBasedGameConfigFsmInput) {
       _processGameConfiguration(inputs);
     } else if (inputs is TTTSettingsChangeInput) {
       _processSettingsChange(inputs);
@@ -92,7 +92,7 @@ class TTTFsm {
   }
 
   // Reset the game board with the new configuration
-  void _processGameConfiguration(TTTGameConfigInput inputs) {
+  void _processGameConfiguration(TurnBasedGameConfigFsmInput inputs) {
     log('Processing game configuration: ${inputs.configuration}');
     gameState.processNewGameConfiguration(inputs.configuration, inputs.nowUtc);
     _updateEngineDifficulty();

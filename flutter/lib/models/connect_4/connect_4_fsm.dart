@@ -61,7 +61,7 @@ class Connect4FSM {
     outputs.clear();
     gameState.nowUtc = inputs.nowUtc;
 
-    if (inputs is Connect4GameConfigInput) {
+    if (inputs is TurnBasedGameConfigFsmInput) {
       _processGameConfiguration(inputs);
     } else if (inputs is Connect4SettingsChangeInput) {
       _processSettingsChange(inputs);
@@ -93,7 +93,7 @@ class Connect4FSM {
   }
 
   // Reset the game board with the new configuration
-  void _processGameConfiguration(Connect4GameConfigInput input) {
+  void _processGameConfiguration(TurnBasedGameConfigFsmInput input) {
     log('Processing game configuration: ${input.configuration}');
     gameState.processNewGameConfiguration(input.configuration, input.nowUtc);
     _updateEngineDifficulty();

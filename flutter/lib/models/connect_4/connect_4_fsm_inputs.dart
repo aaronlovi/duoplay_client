@@ -1,15 +1,5 @@
-import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
-
-class Connect4GameConfigInput extends TurnBasedGameFsmInputBase {
-  final TurnBasedGameConfiguration configuration;
-
-  Connect4GameConfigInput({required super.nowUtc, required this.configuration});
-
-  @override
-  String toString() => "Connect4GameConfigInput[now:$nowUtc,config:$configuration]";
-}
 
 class Connect4PlayerMoveInput extends TurnBasedGameFsmInputBase {
   final int column;
