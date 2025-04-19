@@ -1,19 +1,19 @@
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
-class Connect4GameConfiguration {
+class TurnBasedGameConfiguration {
   TurnBasedGameCellState enginePlayer;
   Duration betweenGamesWaitTime;
   Duration? engineMoveWaitTime;
   String difficulty;
 
-  Connect4GameConfiguration({
+  TurnBasedGameConfiguration({
     required this.enginePlayer,
     required this.betweenGamesWaitTime,
     this.engineMoveWaitTime,
     this.difficulty = 'beginner',
   });
 
-  Connect4GameConfiguration.defaults()
+  TurnBasedGameConfiguration.defaults()
       : enginePlayer = TurnBasedGameCellState.player2,
         betweenGamesWaitTime = Duration(seconds: 7),
         engineMoveWaitTime = Duration(seconds: 5),
@@ -23,5 +23,5 @@ class Connect4GameConfiguration {
 
   @override
   String toString() =>
-      "Connect4GameConfiguration[engine:$enginePlayer,betweenGamesWaitTime:$betweenGamesWaitTime,engineMoveWaitTime:$engineMoveWaitTime,difficulty:$difficulty]";
+      "TurnBasedGameConfiguration[engine:$enginePlayer,betweenGamesWaitTime:$betweenGamesWaitTime,engineMoveWaitTime:$engineMoveWaitTime,difficulty:$difficulty]";
 }

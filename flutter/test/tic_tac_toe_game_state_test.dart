@@ -1,13 +1,13 @@
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TicTacToeGameState edge cases', () {
-    late TTTGameConfiguration config;
+    late TurnBasedGameConfiguration config;
     setUp(() {
-      config = TTTGameConfiguration(
+      config = TurnBasedGameConfiguration(
         enginePlayer: TurnBasedGameCellState.player2,
         betweenGamesWaitTime: Duration(seconds: 7),
       );

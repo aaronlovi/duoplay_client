@@ -1,6 +1,6 @@
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_constants.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 class TicTacToeGameState {
@@ -14,7 +14,7 @@ class TicTacToeGameState {
   DateTime nowUtc;
   DateTime? nextGameTimeUtc;
   DateTime? engineMoveTimeUtc;
-  TTTGameConfiguration configuration;
+  TurnBasedGameConfiguration configuration;
   String nextGameEngineDifficulty;
 
   // Made the constructor public to allow external instantiation for simulation purposes
@@ -41,7 +41,7 @@ class TicTacToeGameState {
   );
 
   factory TicTacToeGameState.initial(
-    TTTGameConfiguration cfg, {
+    TurnBasedGameConfiguration cfg, {
     DateTime? nowUtc,
   }) => TicTacToeGameState._(
     List<TurnBasedGameCellState>.filled(
@@ -199,7 +199,7 @@ class TicTacToeGameState {
     return Result.success();
   }
 
-  void processNewGameConfiguration(TTTGameConfiguration cfg, DateTime nowUtc) {
+  void processNewGameConfiguration(TurnBasedGameConfiguration cfg, DateTime nowUtc) {
     configuration = cfg;
     this.nowUtc = nowUtc;
   }

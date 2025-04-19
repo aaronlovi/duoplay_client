@@ -1,11 +1,10 @@
 import 'package:duoplay/models/connect_4/connect_4_fsm.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:duoplay/services/game_service_contract.dart';
 import 'package:duoplay/services/mock_game_service.dart';
@@ -29,7 +28,7 @@ Future<void> setupLocator() async {
   getIt.registerSingleton<TTTGameUtils>(TTTGameUtils());
   getIt.registerLazySingleton<TTTFsm>(
     () => TTTFsm(
-      TTTGameConfiguration(
+      TurnBasedGameConfiguration(
         enginePlayer: TurnBasedGameCellState.player2,
         betweenGamesWaitTime: Duration(seconds: tttGameDelay),
         engineMoveWaitTime: Duration(seconds: tttMoveDelay),
@@ -44,7 +43,7 @@ Future<void> setupLocator() async {
   getIt.registerSingleton<Connect4GameUtils>(Connect4GameUtils());
   getIt.registerLazySingleton<Connect4FSM>(
     () => Connect4FSM(
-      Connect4GameConfiguration(
+      TurnBasedGameConfiguration(
         enginePlayer: TurnBasedGameCellState.player2,
         betweenGamesWaitTime: Duration(seconds: connect4GameDelay),
         engineMoveWaitTime: Duration(seconds: connect4MoveDelay),

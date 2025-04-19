@@ -4,10 +4,10 @@ import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/engines/connect_4/connect_4_engine_factory.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_inputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
@@ -31,7 +31,7 @@ class Connect4FSM {
   final _Connect4FsmUpdateContext _context;
   late Connect4EngineContract _engine;
 
-  Connect4FSM(Connect4GameConfiguration configuration)
+  Connect4FSM(TurnBasedGameConfiguration configuration)
     : gameState = Connect4GameState.initial(configuration),
       _outputs = Connect4OutputContainer(outputs: <TurnBasedGameFsmOutputBase>[]),
       _context = _Connect4FsmUpdateContext() {

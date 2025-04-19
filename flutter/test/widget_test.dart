@@ -1,13 +1,12 @@
-// Tests for the tic-tac-toe implementation
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TicTacToeGameState', () {
     test('validateMove detects invalid moves', () {
-      final config = TTTGameConfiguration.defaults();
+      final config = TurnBasedGameConfiguration.defaults();
       final gameState = TicTacToeGameState.initial(config);
 
       // Test out-of-bounds move
@@ -23,7 +22,7 @@ void main() {
     });
 
     test('Simultaneous win and draw conditions', () {
-      final config = TTTGameConfiguration.defaults();
+      final config = TurnBasedGameConfiguration.defaults();
       final gameState = TicTacToeGameState.initial(config);
 
       // Set up a board state where the last move results in both a win and a full board

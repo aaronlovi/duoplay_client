@@ -1,11 +1,11 @@
-import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 class Connect4StartGameOutput implements TurnBasedGameFsmOutputBase {
-  final Connect4GameConfiguration configuration;
+  final TurnBasedGameConfiguration configuration;
 
   Connect4StartGameOutput(this.configuration);
 

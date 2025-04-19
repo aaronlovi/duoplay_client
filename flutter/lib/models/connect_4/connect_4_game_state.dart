@@ -1,7 +1,7 @@
 import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_constants.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 class Connect4GameState {
@@ -16,7 +16,7 @@ class Connect4GameState {
   DateTime nowUtc;
   DateTime? nextGameTimeUtc;
   DateTime? engineMoveTimeUtc;
-  Connect4GameConfiguration configuration;
+  TurnBasedGameConfiguration configuration;
   String nextGameEngineDifficulty;
 
   Connect4GameState(
@@ -42,7 +42,7 @@ class Connect4GameState {
   );
 
   factory Connect4GameState.initial(
-    Connect4GameConfiguration cfg, {
+    TurnBasedGameConfiguration cfg, {
     DateTime? nowUtc,
   }) => Connect4GameState._(
     List.generate(rows, (_) => List.filled(columns, TurnBasedGameCellState.empty)),
@@ -179,7 +179,7 @@ class Connect4GameState {
     return Result.success();
   }
 
-  void processNewGameConfiguration(Connect4GameConfiguration cfg, DateTime nowUtc) {
+  void processNewGameConfiguration(TurnBasedGameConfiguration cfg, DateTime nowUtc) {
     configuration = cfg;
     this.nowUtc = nowUtc;
   }

@@ -1,15 +1,15 @@
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_beginner_engine.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_expert_engine.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_intermediate_engine.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TicTacToe AI difficulty modes', () {
     test('Beginner: makes winning move if available, otherwise random', () {
-      final config = TTTGameConfiguration(
+      final config = TurnBasedGameConfiguration(
         enginePlayer: TurnBasedGameCellState.player1,
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'beginner',
@@ -44,7 +44,7 @@ void main() {
     });
 
     test('Intermediate: blocks opponent win if possible', () {
-      final config = TTTGameConfiguration(
+      final config = TurnBasedGameConfiguration(
         enginePlayer: TurnBasedGameCellState.player2,
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'intermediate',
@@ -79,7 +79,7 @@ void main() {
     });
 
     test('Expert: always plays perfect (center if available)', () {
-      final config = TTTGameConfiguration(
+      final config = TurnBasedGameConfiguration(
         enginePlayer: TurnBasedGameCellState.player1,
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'expert',
@@ -114,7 +114,7 @@ void main() {
     test(
       'Expert: O does not play upper-middle after X picks upper-left (should not play a losing move)',
       () {
-        final config = TTTGameConfiguration(
+        final config = TurnBasedGameConfiguration(
           enginePlayer: TurnBasedGameCellState.player2,
           betweenGamesWaitTime: Duration(seconds: 1),
           difficulty: 'expert',

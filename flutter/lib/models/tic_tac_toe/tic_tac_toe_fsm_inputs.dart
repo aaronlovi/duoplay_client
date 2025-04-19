@@ -1,4 +1,4 @@
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 abstract class TTTInputBase {
@@ -8,7 +8,7 @@ abstract class TTTInputBase {
 }
 
 class TTTGameConfigInput extends TTTInputBase {
-  TTTGameConfiguration configuration;
+  TurnBasedGameConfiguration configuration;
 
   TTTGameConfigInput({required super.nowUtc, required this.configuration});
 
