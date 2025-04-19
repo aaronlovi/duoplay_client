@@ -3,6 +3,7 @@ import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/screens/connect_4/connect_4_game_screen.dart';
+import 'package:duoplay/screens/connect_4/connect_4_settings_loader.dart';
 import 'package:duoplay/screens/game_list_screen.dart';
 import 'package:duoplay/screens/tic_tac_toe/tic_tac_toe_game_screen.dart';
 import 'package:duoplay/screens/tic_tac_toe/tic_tac_toe_settings_loader.dart';
@@ -37,12 +38,17 @@ class MyApp extends StatelessWidget {
               ),
             ),
         '/tic-tac-toe/settings': (context) => const TicTacToeSettingsLoader(),
-        '/connect-4': (context) => Connect4GameScreen(
-          gameObject: GetIt.I<Connect4GameContainer>(),
-          engine: Connect4EngineFactory.createEngine(
-            GetIt.I<Connect4GameContainer>().gameState.configuration.difficulty,
-          ),
-        ),
+        '/connect-4':
+            (context) => Connect4GameScreen(
+              gameObject: GetIt.I<Connect4GameContainer>(),
+              engine: Connect4EngineFactory.createEngine(
+                GetIt.I<Connect4GameContainer>()
+                    .gameState
+                    .configuration
+                    .difficulty,
+              ),
+            ),
+        '/connect-4/settings': (context) => const Connect4SettingsLoader(),
       },
     );
   }

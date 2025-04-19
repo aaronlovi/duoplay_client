@@ -1,16 +1,16 @@
-import 'dart:math';
 import 'dart:async';
+import 'dart:math';
+
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
+import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
+import 'package:duoplay/models/connect_4/connect_4_enums.dart';
 import 'package:duoplay/models/connect_4/connect_4_error_handling.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_inputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
-import 'package:duoplay/models/connect_4/connect_4_enums.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -50,54 +50,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () async {
-                final prevDifficulty =
-                    _gameObject.gameState.configuration.difficulty;
-                final int prevBetweenMoveDelay =
-                    _gameObject
-                        .gameState
-                        .configuration
-                        .engineMoveWaitTime
-                        ?.inSeconds ??
-                    1;
-                final int prevBetweenGameDelay =
-                    _gameObject
-                        .gameState
-                        .configuration
-                        .betweenGamesWaitTime
-                        .inSeconds;
-
-                final navigator = Navigator.of(context);
-                final scaffoldMessenger = ScaffoldMessenger.of(context);
-                await navigator.pushNamed('/connect-4/settings');
-                if (!mounted) return;
-                final prefs = await SharedPreferences.getInstance();
-                final newDifficulty =
-                    prefs.getString('connect4_ai_difficulty') ?? prevDifficulty;
-                if (newDifficulty != prevDifficulty) {
-                  _gameObject.postInput(
-                    Connect4SettingsChangeInput(
-                      newDifficulty: newDifficulty,
-                      betweenMoveDelaySeconds: prevBetweenMoveDelay,
-                      betweenGameDelaySeconds: prevBetweenGameDelay,
-                      nowUtc: DateTime.now().toUtc(),
-                    ),
-                  );
-                  if (!_gameObject.gameState.isGameOver) {
-                    final current = prevDifficulty;
-                    final next = newDifficulty;
-                    final msg =
-                        'Current engine: $current\nNext game: $next\nEngine will change at next game.';
-                    scaffoldMessenger.showSnackBar(
-                      SnackBar(content: Text(msg)),
-                    );
-                  }
-                  setState(() => {});
-                }
-              },
-              child: const Text('Settings'),
-            ),
+            child: _getSettingsButton(),
           ),
           Expanded(child: _getBody()),
           Container(
@@ -114,6 +67,46 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
       ),
     );
   }
+
+  Widget _getSettingsButton() => ElevatedButton(
+    onPressed: () async {
+      final prevDifficulty = _gameObject.gameState.configuration.difficulty;
+      final int prevBetweenMoveDelay =
+          _gameObject.gameState.configuration.engineMoveWaitTime?.inSeconds ??
+          1;
+      final int prevBetweenGameDelay =
+          _gameObject.gameState.configuration.betweenGamesWaitTime.inSeconds;
+
+      final navigator = Navigator.of(context);
+      final scaffoldMessenger = ScaffoldMessenger.of(context);
+      await navigator.pushNamed('/connect-4/settings');
+      if (!mounted) return;
+      final prefs = await SharedPreferences.getInstance();
+      final newDifficulty =
+          prefs.getString('connect4_ai_difficulty') ?? prevDifficulty;
+      if (newDifficulty != prevDifficulty) {
+        // Update FSM for next game using postInput and Connect4SettingsChangeInput
+        _gameObject.postInput(
+          Connect4SettingsChangeInput(
+            newDifficulty: newDifficulty,
+            betweenMoveDelaySeconds: prevBetweenMoveDelay,
+            betweenGameDelaySeconds: prevBetweenGameDelay,
+            nowUtc: DateTime.now().toUtc(),
+          ),
+        );
+        // Show toast if game is in progress
+        if (!_gameObject.gameState.isGameOver) {
+          final current = prevDifficulty;
+          final next = newDifficulty;
+          final msg =
+              'Current engine: $current\nNext game: $next\nEngine will change at next game.';
+          scaffoldMessenger.showSnackBar(SnackBar(content: Text(msg)));
+        }
+        setState(() => {});
+      }
+    },
+    child: const Text('Settings'),
+  );
 
   Widget _getBody() => Center(
     child: AspectRatio(
@@ -144,8 +137,11 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     // Handle the tap using the FSM
     if (!_gameObject.isHumanPlayerToMove) return;
 
+    // Calculate the column from the index
+    final column = index % Connect4Board.columns;
+
     final inp = Connect4PlayerMoveInput(
-      column: index,
+      column: column, // Use the calculated column
       player: _gameObject.humanPlayer,
       nowUtc: DateTime.now().toUtc(),
     );
@@ -159,8 +155,8 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
 
   Widget _getCellContents(int index) => Center(
     child: Text(
-      _gameObject.board[index ~/ 7][index % 7].toString(),
-      style: const TextStyle(fontSize: 32),
+      _gameObject.board[index ~/ 7][index % 7].toShortString(),
+      style: const TextStyle(fontSize: 18),
     ),
   );
 
@@ -204,6 +200,19 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
         }
       }
     });
+
+    if (outputs.nextTimeout == null) return;
+
+    final now = DateTime.now().toUtc();
+    Duration duration = outputs.nextTimeout!.difference(now);
+    if (duration == Duration.zero || duration.isNegative) {
+      duration = Duration(seconds: 1);
+    }
+    Timer(duration, () {
+      final updateTimeInput = Connect4UpdateTime(nowUtc: DateTime.now().toUtc());
+      final newOutputs = _gameObject.postInput(updateTimeInput);
+      _processOutputs(newOutputs); // Process the outputs from the timer
+    });
   }
 }
 
@@ -232,7 +241,7 @@ class _BoardDimensions {
 }
 
 /// A stateful widget that represents the Connect 4 game board.
-/// 
+///
 /// This widget creates a 7 × 6 grid layout with circular placeholders
 /// for empty slots. It supports animated chip drops and updates the
 /// board state dynamically. The widget is reusable and manages its
@@ -241,7 +250,8 @@ class Connect4Board extends StatefulWidget {
   static const int columns = 7; // Number of columns in the grid
   static const int rows = 6; // Number of rows in the grid
   static const double spacing = 4.0; // Spacing between grid cells
-  static const int droppingChipAnimationMs = 50; // Animation duration for each step of the dropping chip
+  static const int droppingChipAnimationMs =
+      50; // Animation duration for each step of the dropping chip
 
   const Connect4Board({super.key});
 
@@ -263,7 +273,9 @@ class _Connect4BoardState extends State<Connect4Board> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final dimensions = _BoardDimensions.calculateBoardDimensions(constraints);
+        final dimensions = _BoardDimensions.calculateBoardDimensions(
+          constraints,
+        );
 
         return Column(
           children: [
@@ -287,7 +299,7 @@ class _Connect4BoardState extends State<Connect4Board> {
       },
     );
   }
-  
+
   Widget _buildGrid(double cellSize) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -311,7 +323,9 @@ class _Connect4BoardState extends State<Connect4Board> {
   }
 
   Widget _buildAnimatedChip(double cellSize) {
-    if (_droppingChipColumn == null || _droppingChipRow == null || _droppingChipColor == null) {
+    if (_droppingChipColumn == null ||
+        _droppingChipRow == null ||
+        _droppingChipColor == null) {
       return const SizedBox.shrink();
     }
 
@@ -324,7 +338,9 @@ class _Connect4BoardState extends State<Connect4Board> {
         width: cellSize,
         height: cellSize,
         decoration: BoxDecoration(
-          color: _getSquareColor(_droppingChipColor!), // Use the correct chip color
+          color: _getSquareColor(
+            _droppingChipColor!,
+          ), // Use the correct chip color
           shape: BoxShape.circle,
         ),
       ),
@@ -348,7 +364,8 @@ class _Connect4BoardState extends State<Connect4Board> {
                   child: const Text('R'),
                 ),
                 ElevatedButton(
-                  onPressed: () => _dropChip(column, Connect4SquareState.yellow),
+                  onPressed:
+                      () => _dropChip(column, Connect4SquareState.yellow),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.yellow,
                     minimumSize: Size(cellSize, cellSize / 2),
@@ -380,7 +397,9 @@ class _Connect4BoardState extends State<Connect4Board> {
 
     // Simulate the falling animation by incrementally updating the row
     Future.doWhile(() async {
-      await Future.delayed(Duration(milliseconds: Connect4Board.droppingChipAnimationMs));
+      await Future.delayed(
+        Duration(milliseconds: Connect4Board.droppingChipAnimationMs),
+      );
       if (_droppingChipRow! < row) {
         setState(() {
           _droppingChipRow = _droppingChipRow! + 1;

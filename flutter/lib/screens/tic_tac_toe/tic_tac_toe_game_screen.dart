@@ -47,56 +47,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () async {
-                final prevDifficulty =
-                    _gameObject.gameState.configuration.difficulty;
-                final int prevBetweenMoveDelay =
-                    _gameObject
-                        .gameState
-                        .configuration
-                        .engineMoveWaitTime
-                        ?.inSeconds ??
-                    1;
-                final int prevBetweenGameDelay =
-                    _gameObject
-                        .gameState
-                        .configuration
-                        .betweenGamesWaitTime
-                        .inSeconds;
-
-                final navigator = Navigator.of(context);
-                final scaffoldMessenger = ScaffoldMessenger.of(context);
-                await navigator.pushNamed('/tic-tac-toe/settings');
-                if (!mounted) return;
-                final prefs = await SharedPreferences.getInstance();
-                final newDifficulty =
-                    prefs.getString('ttt_ai_difficulty') ?? prevDifficulty;
-                if (newDifficulty != prevDifficulty) {
-                  // Update FSM for next game using postInput and TTTSetEngineDifficultyInput
-                  _gameObject.postInput(
-                    TTTSettingsChangeInput(
-                      newDifficulty: newDifficulty,
-                      betweenMoveDelaySeconds: prevBetweenMoveDelay,
-                      betweenGameDelaySeconds: prevBetweenGameDelay,
-                      nowUtc: DateTime.now().toUtc(),
-                    ),
-                  );
-                  // Show toast if game is in progress
-                  if (!_gameObject.gameState.isGameOver) {
-                    final current = prevDifficulty;
-                    final next = newDifficulty;
-                    final msg =
-                        'Current engine: $current\nNext game: $next\nEngine will change at next game.';
-                    scaffoldMessenger.showSnackBar(
-                      SnackBar(content: Text(msg)),
-                    );
-                  }
-                  setState(() => {});
-                }
-              },
-              child: const Text('Settings'),
-            ),
+            child: _getSettingsButton(context),
           ),
           Expanded(child: _getBody()),
           Container(
@@ -113,6 +64,46 @@ class TTTGameScreenState extends State<TTTGameScreen> {
       ),
     );
   }
+
+  ElevatedButton _getSettingsButton(BuildContext context) => ElevatedButton(
+    onPressed: () async {
+      final prevDifficulty = _gameObject.gameState.configuration.difficulty;
+      final int prevBetweenMoveDelay =
+          _gameObject.gameState.configuration.engineMoveWaitTime?.inSeconds ??
+          1;
+      final int prevBetweenGameDelay =
+          _gameObject.gameState.configuration.betweenGamesWaitTime.inSeconds;
+
+      final navigator = Navigator.of(context);
+      final scaffoldMessenger = ScaffoldMessenger.of(context);
+      await navigator.pushNamed('/tic-tac-toe/settings');
+      if (!mounted) return;
+      final prefs = await SharedPreferences.getInstance();
+      final newDifficulty =
+          prefs.getString('ttt_ai_difficulty') ?? prevDifficulty;
+      if (newDifficulty != prevDifficulty) {
+        // Update FSM for next game using postInput and TTTSetEngineDifficultyInput
+        _gameObject.postInput(
+          TTTSettingsChangeInput(
+            newDifficulty: newDifficulty,
+            betweenMoveDelaySeconds: prevBetweenMoveDelay,
+            betweenGameDelaySeconds: prevBetweenGameDelay,
+            nowUtc: DateTime.now().toUtc(),
+          ),
+        );
+        // Show toast if game is in progress
+        if (!_gameObject.gameState.isGameOver) {
+          final current = prevDifficulty;
+          final next = newDifficulty;
+          final msg =
+              'Current engine: $current\nNext game: $next\nEngine will change at next game.';
+          scaffoldMessenger.showSnackBar(SnackBar(content: Text(msg)));
+        }
+        setState(() => {});
+      }
+    },
+    child: const Text('Settings'),
+  );
 
   Widget _getBody() => Center(
     child: AspectRatio(
