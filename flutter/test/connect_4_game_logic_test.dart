@@ -167,4 +167,42 @@ void main() {
       expect(winner, Connect4SquareState.yellow);
     });
   });
+
+  group('Connect4GameLogic - Draw Detection', () {
+    test('Detect draw on a completely filled board with no winner', () {
+      // Arrange: Create a full board with no winner
+      final board = Connect4GameLogic.parseBoard('''
+       Y R Y R Y Y R 
+       R R Y R R R Y 
+       Y Y R Y Y R Y 
+       Y R R Y R R Y 
+       Y Y R R Y Y R 
+       R R Y Y R Y R 
+      ''');
+
+      // Act: Check if the board is a draw
+      final isDraw = Connect4GameLogic.isDraw(board);
+
+      // Assert: The board should be a draw
+      expect(isDraw, isTrue);
+    });
+
+    test('Detect non-draw on a partially filled board', () {
+      // Arrange: Create a partially filled board
+      final board = Connect4GameLogic.parseBoard('''
+       Y R Y R Y Y R 
+       R R Y R R R Y 
+       Y Y R Y Y R Y 
+       Y R R Y R R Y 
+       Y Y R R Y Y R 
+       R R Y Y R Y .
+      ''');
+
+      // Act: Check if the board is a draw
+      final isDraw = Connect4GameLogic.isDraw(board);
+
+      // Assert: The board should not be a draw
+      expect(isDraw, isFalse);
+    });
+  });
 }
