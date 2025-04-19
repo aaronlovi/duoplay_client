@@ -30,11 +30,11 @@
 | **C.1.5.1** | *Beginner*: random legal column; if a winning move exists, take it. | Complete |
 | **C.1.5.2** | *Intermediate*: winning move → block opponent win → random. | Complete |
 | **C.1.5.3** | *Expert*: minimax with alpha‑beta pruning and iterative deepening. | Pending |
-| **C.1.5.3.1** | Define evaluation metrics for the static board evaluator (e.g., center weighting, potential connections). | Pending |
+| **C.1.5.3.1** | Define evaluation metrics for the static board evaluator (e.g., center weighting, potential connections). | Complete |
 | **C.1.5.3.1.1** | Implement center weighting metric. | Complete |
 | **C.1.5.3.1.2** | Implement potential connections metric. | Complete |
 | **C.1.5.3.1.3** | Test and validate the static board evaluator. | Complete |
-| **C.1.5.3.2** | Add minimax with alpha-beta pruning (fixed depth). | Pending |
+| **C.1.5.3.2** | Add minimax with alpha-beta pruning (fixed depth). | Complete |
 | **C.1.5.3.2.1** | Implement minimax algorithm. | Complete |
 | **C.1.5.3.2.2** | Add alpha-beta pruning to minimax. | Complete |
 | **C.1.5.3.2.3** | Write unit tests for minimax with alpha-beta pruning. | Complete |
