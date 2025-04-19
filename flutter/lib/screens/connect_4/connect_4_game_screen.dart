@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
-import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';

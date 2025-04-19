@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
-import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/mini_max_result.dart';
 import 'package:duoplay/models/result.dart';

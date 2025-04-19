@@ -1,4 +1,4 @@
-import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 

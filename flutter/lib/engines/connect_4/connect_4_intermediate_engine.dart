@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
