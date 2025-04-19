@@ -19,9 +19,7 @@ class Connect4GameConfiguration {
         engineMoveWaitTime = Duration(seconds: 5),
         difficulty = 'beginner';
 
-  void changeSides() => enginePlayer = enginePlayer == Connect4SquareState.red
-      ? Connect4SquareState.yellow
-      : Connect4SquareState.red;
+  void changeSides() => enginePlayer = enginePlayer.getOpponent();
 
   @override
   String toString() =>

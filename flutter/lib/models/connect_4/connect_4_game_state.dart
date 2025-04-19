@@ -1,3 +1,4 @@
+import 'package:duoplay/models/connect_4/connect_4_constants.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/connect_4/connect_4_enums.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
@@ -195,7 +196,7 @@ class Connect4GameState {
     engineMoveTimeUtc =
         configuration.enginePlayer == currentPlayer
             ? nowUtc.add(
-                configuration.engineMoveWaitTime ?? Duration(seconds: 2),
+                configuration.engineMoveWaitTime ?? Connect4Constants.defaultEngineMoveWaitTime,
               )
             : null;
   }
