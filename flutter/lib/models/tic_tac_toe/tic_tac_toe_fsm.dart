@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_inputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
@@ -62,7 +61,7 @@ class TTTFsm {
 
     if (inputs is TurnBasedGameConfigFsmInput) {
       _processGameConfiguration(inputs);
-    } else if (inputs is TTTSettingsChangeInput) {
+    } else if (inputs is TurnBasedGameSettingsChangeFsmInput) {
       _processSettingsChange(inputs);
     } else if (inputs is TurnBasedGamePlayerMoveFsmInput) {
       _processPlayerMove(inputs);
@@ -80,7 +79,7 @@ class TTTFsm {
     log('[FSM] Transition: newState=${gameState.toString()}');
   }
 
-  void _processSettingsChange(TTTSettingsChangeInput inputs) {
+  void _processSettingsChange(TurnBasedGameSettingsChangeFsmInput inputs) {
     gameState.nextGameEngineDifficulty = inputs.newDifficulty;
     if (gameState.isBetweenGames) _updateEngineDifficulty();
     gameState.configuration.betweenGamesWaitTime = Duration(

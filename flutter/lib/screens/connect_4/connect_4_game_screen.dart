@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
-import 'package:duoplay/models/connect_4/connect_4_fsm_inputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
@@ -88,9 +87,9 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
       final newDifficulty =
           prefs.getString('connect4_ai_difficulty') ?? prevDifficulty;
       if (newDifficulty != prevDifficulty) {
-        // Update FSM for next game using postInput and Connect4SettingsChangeInput
+        // Update FSM for next game using postInput and TurnBasedGameSettingsChangeFsmInput
         _gameObject.postInput(
-          Connect4SettingsChangeInput(
+          TurnBasedGameSettingsChangeFsmInput(
             newDifficulty: newDifficulty,
             betweenMoveDelaySeconds: prevBetweenMoveDelay,
             betweenGameDelaySeconds: prevBetweenGameDelay,

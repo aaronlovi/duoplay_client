@@ -1,5 +1,5 @@
-import 'package:duoplay/models/connect_4/connect_4_fsm_inputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,7 +62,7 @@ class _Connect4SettingsScreenState extends State<Connect4SettingsScreen> {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setString('connect4_ai_difficulty', value);
                   _gameContainer.postInput(
-                    Connect4SettingsChangeInput(
+                    TurnBasedGameSettingsChangeFsmInput(
                       newDifficulty: value,
                       betweenMoveDelaySeconds: _moveDelay,
                       betweenGameDelaySeconds: _gameDelay,
@@ -89,7 +89,7 @@ class _Connect4SettingsScreenState extends State<Connect4SettingsScreen> {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setInt('connect4_move_delay', value);
                   _gameContainer.postInput(
-                    Connect4SettingsChangeInput(
+                    TurnBasedGameSettingsChangeFsmInput(
                       newDifficulty: _selectedDifficulty,
                       betweenMoveDelaySeconds: value,
                       betweenGameDelaySeconds: _gameDelay,
@@ -116,7 +116,7 @@ class _Connect4SettingsScreenState extends State<Connect4SettingsScreen> {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setInt('connect4_game_delay', value);
                   _gameContainer.postInput(
-                    Connect4SettingsChangeInput(
+                    TurnBasedGameSettingsChangeFsmInput(
                       newDifficulty: _selectedDifficulty,
                       betweenMoveDelaySeconds: _moveDelay,
                       betweenGameDelaySeconds: value,

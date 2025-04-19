@@ -1,5 +1,5 @@
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_inputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,7 +62,7 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setString('ttt_ai_difficulty', value);
                   _gameContainer.postInput(
-                    TTTSettingsChangeInput(
+                    TurnBasedGameSettingsChangeFsmInput(
                       newDifficulty: value,
                       betweenMoveDelaySeconds: _moveDelay,
                       betweenGameDelaySeconds: _gameDelay,
@@ -89,7 +89,7 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setInt('ttt_move_delay', value);
                   _gameContainer.postInput(
-                    TTTSettingsChangeInput(
+                    TurnBasedGameSettingsChangeFsmInput(
                       newDifficulty: _selectedDifficulty,
                       betweenMoveDelaySeconds: value,
                       betweenGameDelaySeconds: _gameDelay,
@@ -116,7 +116,7 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.setInt('ttt_game_delay', value);
                   _gameContainer.postInput(
-                    TTTSettingsChangeInput(
+                    TurnBasedGameSettingsChangeFsmInput(
                       newDifficulty: _selectedDifficulty,
                       betweenMoveDelaySeconds: _moveDelay,
                       betweenGameDelaySeconds: value,

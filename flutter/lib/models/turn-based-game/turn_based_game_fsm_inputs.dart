@@ -52,3 +52,20 @@ class TurnBasedGameUpdateTimeFsmInput extends TurnBasedGameFsmInputBase {
   @override
   String toString() => "TurnBasedGameUpdateTimeFsmInput[now:$nowUtc]";
 }
+
+class TurnBasedGameSettingsChangeFsmInput extends TurnBasedGameFsmInputBase {
+  final String newDifficulty;
+  final int betweenMoveDelaySeconds;
+  final int betweenGameDelaySeconds;
+
+  TurnBasedGameSettingsChangeFsmInput({
+    required this.newDifficulty,
+    required this.betweenMoveDelaySeconds,
+    required this.betweenGameDelaySeconds,
+    required super.nowUtc,
+  });
+
+  @override
+  String toString() =>
+      'TTTSetEngineDifficultyInput[newDifficulty:$newDifficulty,betweenMoveDelaySeconds:$betweenMoveDelaySeconds,betweenGameDelaySeconds:$betweenGameDelaySeconds]';
+}

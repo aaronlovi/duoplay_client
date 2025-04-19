@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/engines/connect_4/connect_4_engine_factory.dart';
-import 'package:duoplay/models/connect_4/connect_4_fsm_inputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
@@ -63,7 +62,7 @@ class Connect4FSM {
 
     if (inputs is TurnBasedGameConfigFsmInput) {
       _processGameConfiguration(inputs);
-    } else if (inputs is Connect4SettingsChangeInput) {
+    } else if (inputs is TurnBasedGameSettingsChangeFsmInput) {
       _processSettingsChange(inputs);
     } else if (inputs is TurnBasedGamePlayerMoveFsmInput) {
       _processPlayerMove(inputs);
@@ -81,7 +80,7 @@ class Connect4FSM {
     log('[FSM] Transition: newState=${gameState.toString()}');
   }
 
-  void _processSettingsChange(Connect4SettingsChangeInput inputs) {
+  void _processSettingsChange(TurnBasedGameSettingsChangeFsmInput inputs) {
     gameState.nextGameEngineDifficulty = inputs.newDifficulty;
     if (gameState.isBetweenGames) _updateEngineDifficulty();
     gameState.configuration.betweenGamesWaitTime = Duration(

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_inputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
@@ -89,7 +88,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
       if (newDifficulty != prevDifficulty) {
         // Update FSM for next game using postInput and TTTSetEngineDifficultyInput
         _gameObject.postInput(
-          TTTSettingsChangeInput(
+          TurnBasedGameSettingsChangeFsmInput(
             newDifficulty: newDifficulty,
             betweenMoveDelaySeconds: prevBetweenMoveDelay,
             betweenGameDelaySeconds: prevBetweenGameDelay,
