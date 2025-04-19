@@ -108,27 +108,29 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
 
   Widget _getBody() => Center(
     child: AspectRatio(
-      aspectRatio: 1, // Ensures the grid is square
+      aspectRatio: 7 / 6, // 7 columns and 6 rows for the Connect 4 board
       child: _getGameGrid(),
     ),
   );
 
-  Widget _getGameGrid() => GridView.builder(
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 7, // 7 columns for the Connect 4 board
-      crossAxisSpacing: 4, // Space between columns
-      mainAxisSpacing: 4, // Space between rows
-    ),
-    itemCount: 42, // 6x7 grid = 42 cells
-    itemBuilder: (context, index) {
-      return GestureDetector(
-        onTap: () => _handleCellTap(index),
-        child: Container(
-          decoration: _getCellBorder(),
+  Widget _getGameGrid() => Container(
+    color: const Color(0xFFFFE082), // Softer yellow for the grid background
+    padding: const EdgeInsets.all(8.0), // Add padding for the margin effect
+    child: GridView.builder(
+      physics: const NeverScrollableScrollPhysics(), // Prevent scrolling
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 7, // 7 columns for the Connect 4 board
+        crossAxisSpacing: 4, // Space between columns
+        mainAxisSpacing: 4, // Space between rows
+      ),
+      itemCount: 42, // 6x7 grid = 42 cells
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () => _handleCellTap(index),
           child: _getCellContents(index),
-        ),
-      );
-    },
+        );
+      },
+    ),
   );
 
   void _handleCellTap(int index) {
@@ -147,16 +149,37 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     _processOutputs(outputs);
   }
 
-  BoxDecoration _getCellBorder() => BoxDecoration(
-    border: Border.all(color: Colors.black), // Cell borders
-  );
+  Widget _getCellContents(int index) {
+    final cellState = _gameObject.board[index ~/ 7][index % 7];
+    final color = _getCellColor(cellState);
 
-  Widget _getCellContents(int index) => Center(
-    child: Text(
-      _gameObject.board[index ~/ 7][index % 7].toShortString(),
-      style: const TextStyle(fontSize: 18),
-    ),
-  );
+    return Container(
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle, // Circular cells
+        color: Colors.white, // Background color for empty cells
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4.0), // Padding inside the circle
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color, // Color based on the cell state
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color _getCellColor(Connect4SquareState state) {
+    switch (state) {
+      case Connect4SquareState.red:
+        return Colors.red;
+      case Connect4SquareState.yellow:
+        return Colors.yellow;
+      default:
+        return Colors.transparent; // Empty cells
+    }
+  }
 
   void _processOutputs(Connect4OutputContainer outputs) {
     setState(() {
