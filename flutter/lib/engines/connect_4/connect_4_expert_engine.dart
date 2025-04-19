@@ -14,7 +14,7 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     Connect4SquareState chipColor = currentState.currentPlayer;
 
     // Use minimax as the primary decision-making mechanism
-    const depthLimit = 4; // Set a fixed depth limit for minimax
+    const depthLimit = 5; // Set a fixed depth limit for minimax
     final minimaxResult = minimaxWithAlphaBeta(
       board,
       depthLimit,

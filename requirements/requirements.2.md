@@ -36,8 +36,8 @@
 | **C.1.5.3.1.3** | Test and validate the static board evaluator. | Complete |
 | **C.1.5.3.2** | Add minimax with alpha-beta pruning (fixed depth). | Pending |
 | **C.1.5.3.2.1** | Implement minimax algorithm. | Complete |
-| **C.1.5.3.2.2** | Add alpha-beta pruning to minimax. | Pending |
-| **C.1.5.3.2.3** | Write unit tests for minimax with alpha-beta pruning. | Pending |
+| **C.1.5.3.2.2** | Add alpha-beta pruning to minimax. | Complete |
+| **C.1.5.3.2.3** | Write unit tests for minimax with alpha-beta pruning. | Complete |
 | **C.1.5.3.3** | Add iterative deepening with a time cap (≤ 500 ms). | Pending |
 | **C.1.5.3.3.1** | Implement iterative deepening logic. | Pending |
 | **C.1.5.3.3.2** | Add timer mechanism to enforce the time cap. | Pending |

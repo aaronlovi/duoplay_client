@@ -33,4 +33,54 @@ void main() {
       expect(score, greaterThan(0)); // Ensure open sequences contribute to score
     });
   });
+
+  group('Connect4ExpertEngine - Minimax with Alpha-Beta Pruning', () {
+    final engine = Connect4ExpertEngine();
+
+    test('Alpha-beta pruning avoids unnecessary branches', () {
+      final board = List.generate(
+        6,
+        (_) => List.generate(7, (_) => Connect4SquareState.empty),
+      );
+      board[5][0] = Connect4SquareState.red;
+      board[5][1] = Connect4SquareState.red;
+      board[5][2] = Connect4SquareState.red;
+      board[5][3] = Connect4SquareState.empty; // Winning move
+
+      final result = engine.minimaxWithAlphaBeta(
+        board,
+        4, // Depth limit
+        true,
+        Connect4SquareState.red,
+        -10000,
+        10000,
+      );
+
+      expect(result.move, equals(3)); // Ensure the winning move is selected
+      expect(result.score, greaterThan(0)); // Positive score for a win
+    });
+
+    test('Alpha-beta pruning blocks opponent win', () {
+      final board = List.generate(
+        6,
+        (_) => List.generate(7, (_) => Connect4SquareState.empty),
+      );
+      board[5][0] = Connect4SquareState.yellow;
+      board[5][1] = Connect4SquareState.yellow;
+      board[5][2] = Connect4SquareState.yellow;
+      board[5][3] = Connect4SquareState.empty; // Blocking move
+
+      final result = engine.minimaxWithAlphaBeta(
+        board,
+        4, // Depth limit
+        true,
+        Connect4SquareState.red,
+        -10000,
+        10000,
+      );
+
+      expect(result.move, equals(3)); // Ensure the blocking move is selected
+      expect(result.score, lessThan(1000)); // Score should not indicate a win
+    });
+  });
 }
