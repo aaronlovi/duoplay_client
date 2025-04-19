@@ -36,15 +36,15 @@
 | **C.1.5.3.4** | Add transposition table with Zobrist hashing. | Pending |
 | **C.1.5.4** | Place engine code in `ai/connect4/` directory mirroring tic‑tac‑toe structure. | Pending |
 | **C.1.6** | **Settings screen** (`connect4_settings_screen.dart`) accessible via a “Settings” button on the game screen. | Pending |
-| **C.1.6.1** | Allow users to pick AI difficulty (Beginner, Intermediate, Expert) with a segmented button. | Pending |
-| **C.1.6.2** | Add integer pickers (0 – 10 s) for **time between moves** and **time between games**. | Pending |
-| **C.1.6.3** | Persist all Connect 4 settings using `SharedPreferences`. | Pending |
-| **C.1.6.4** | Changing settings mid‑game applies next game only; show a toast summarizing current vs. next engine. | Pending |
-| **C.1.6.5** | Provide a settings **migration routine** to apply sensible defaults on first run or after app update. | Pending |
-| **C.1.7** | Display a **status bar** showing: engine name, player chip color (Red/Yellow), and move timer countdown (if enabled). | Pending |
-| **C.1.8** | Add detailed **logging** for FSM transitions and AI decisions. | Pending |
-| **C.1.8.1** | Define FSM transition log wrapper (suppressed in `kReleaseMode`). | Pending |
-| **C.1.8.2** | Emit AI decision log as JSON blob per move (board hash, depth, chosen column, eval score). | Pending |
+| **C.1.6.1** | Allow users to pick AI difficulty (Beginner, Intermediate, Expert) with a segmented button. | Complete |
+| **C.1.6.2** | Add integer pickers (0 – 10 s) for **time between moves** and **time between games**. | Complete |
+| **C.1.6.3** | Persist all Connect 4 settings using `SharedPreferences`. | Complete |
+| **C.1.6.4** | Changing settings mid‑game applies next game only; show a toast summarizing current vs. next engine. | Complete |
+| **C.1.6.5** | Provide a settings **migration routine** to apply sensible defaults on first run or after app update. | Complete |
+| **C.1.7** | Display a **status bar** showing: engine name, player chip color (Red/Yellow), and move timer countdown (if enabled). | Complete |
+| **C.1.8** | Add detailed **logging** for FSM transitions and AI decisions. | Complete |
+| **C.1.8.1** | Define FSM transition log wrapper (suppressed in `kReleaseMode`). | Complete |
+| **C.1.8.2** | Emit AI decision log as JSON blob per move (board hash, depth, chosen column, eval score). | Complete |
 | **C.1.9** | Provide **unit tests** using `flutter_test`. | Pending |
 | **C.1.9.1** | Illegal column selection (full column). | Pending |
 | **C.1.9.2** | All four win directions, including edge diagonals. | Pending |
