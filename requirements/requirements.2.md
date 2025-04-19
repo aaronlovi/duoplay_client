@@ -31,7 +31,7 @@
 | **C.1.5.2** | *Intermediate*: winning move → block opponent win → random. | Complete |
 | **C.1.5.3** | *Expert*: minimax with alpha‑beta pruning and iterative deepening. | Pending |
 | **C.1.5.3.1** | Define evaluation metrics for the static board evaluator (e.g., center weighting, potential connections). | Pending |
-| **C.1.5.3.1.1** | Implement center weighting metric. | Pending |
+| **C.1.5.3.1.1** | Implement center weighting metric. | Complete |
 | **C.1.5.3.1.2** | Implement potential connections metric. | Pending |
 | **C.1.5.3.1.3** | Test and validate the static board evaluator. | Pending |
 | **C.1.5.3.2** | Add minimax with alpha-beta pruning (fixed depth). | Pending |
