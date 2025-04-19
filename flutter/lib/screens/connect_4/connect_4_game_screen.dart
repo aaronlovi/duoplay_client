@@ -8,6 +8,7 @@ import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
@@ -157,8 +158,8 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     // Calculate the column from the index
     final column = index % Connect4GameLogic.columns;
 
-    final inp = Connect4PlayerMoveInput(
-      column: column, // Use the calculated column
+    final inp = TurnBasedGamePlayerMoveFsmInput(
+      index: column, // Use the calculated column
       player: _gameObject.humanPlayer,
       nowUtc: DateTime.now().toUtc(),
     );
@@ -228,9 +229,9 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
             continue;
           }
           final newOutputs = _gameObject.postInput(
-            Connect4EngineMoveInput(
+            TurnBasedGameEngineMoveFsmInput(
               nowUtc: DateTime.now().toUtc(),
-              column: res.value!,
+              index: res.value!,
               enginePlayer: _gameObject.enginePlayer,
             ),
           );

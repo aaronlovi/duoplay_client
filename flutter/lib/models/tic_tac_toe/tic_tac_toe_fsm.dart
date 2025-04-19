@@ -64,9 +64,9 @@ class TTTFsm {
       _processGameConfiguration(inputs);
     } else if (inputs is TTTSettingsChangeInput) {
       _processSettingsChange(inputs);
-    } else if (inputs is TTTPlayerMoveInput) {
+    } else if (inputs is TurnBasedGamePlayerMoveFsmInput) {
       _processPlayerMove(inputs);
-    } else if (inputs is TTTEngineMoveInput) {
+    } else if (inputs is TurnBasedGameEngineMoveFsmInput) {
       _processEngineMove(inputs);
     } else if (inputs is TTTUpdateTime) {
       // Nothing to do here
@@ -99,7 +99,7 @@ class TTTFsm {
     _outputs.outputs.add(TurnBasedGameStartGameFsmOutput(inputs.configuration));
   }
 
-  void _processPlayerMove(TTTPlayerMoveInput inputs) {
+  void _processPlayerMove(TurnBasedGamePlayerMoveFsmInput inputs) {
     log(
       'Processing player move: index=${inputs.index}, player=${inputs.player}',
     );
@@ -134,7 +134,7 @@ class TTTFsm {
     }
   }
 
-  void _processEngineMove(TTTEngineMoveInput inputs) {
+  void _processEngineMove(TurnBasedGameEngineMoveFsmInput inputs) {
     log(
       'Processing engine move: index=${inputs.index}, enginePlayer=${inputs.enginePlayer}',
     );

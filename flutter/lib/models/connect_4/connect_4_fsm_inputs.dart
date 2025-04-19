@@ -1,33 +1,4 @@
 import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
-
-class Connect4PlayerMoveInput extends TurnBasedGameFsmInputBase {
-  final int column;
-  final TurnBasedGameCellState player;
-
-  Connect4PlayerMoveInput({
-    required super.nowUtc,
-    required this.column,
-    required this.player,
-  });
-
-  @override
-  String toString() => "Connect4PlayerMoveInput[now:$nowUtc,column:$column,player:$player]";
-}
-
-class Connect4EngineMoveInput extends TurnBasedGameFsmInputBase {
-  final int column;
-  final TurnBasedGameCellState enginePlayer;
-
-  Connect4EngineMoveInput({
-    required super.nowUtc,
-    required this.column,
-    required this.enginePlayer,
-  });
-
-  @override
-  String toString() => "Connect4EngineMoveInput[now:$nowUtc,column:$column,enginePlayer:$enginePlayer]";
-}
 
 class Connect4UpdateTime extends TurnBasedGameFsmInputBase {
   Connect4UpdateTime({required super.nowUtc});

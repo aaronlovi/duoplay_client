@@ -7,6 +7,7 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
@@ -138,7 +139,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
     // Handle the tap using the FSM
     if (!_gameObject.isHumanPlayerToMove) return;
 
-    final inp = TTTPlayerMoveInput(
+    final inp = TurnBasedGamePlayerMoveFsmInput(
       index: index,
       player: _gameObject.humanPlayer,
       nowUtc: DateTime.now().toUtc(),
@@ -188,7 +189,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
             continue;
           }
           final newOutputs = _gameObject.postInput(
-            TTTEngineMoveInput(
+            TurnBasedGameEngineMoveFsmInput(
               nowUtc: DateTime.now().toUtc(),
               index: res.value!,
               enginePlayer: _gameObject.enginePlayer,

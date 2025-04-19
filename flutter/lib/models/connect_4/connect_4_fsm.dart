@@ -65,9 +65,9 @@ class Connect4FSM {
       _processGameConfiguration(inputs);
     } else if (inputs is Connect4SettingsChangeInput) {
       _processSettingsChange(inputs);
-    } else if (inputs is Connect4PlayerMoveInput) {
+    } else if (inputs is TurnBasedGamePlayerMoveFsmInput) {
       _processPlayerMove(inputs);
-    } else if (inputs is Connect4EngineMoveInput) {
+    } else if (inputs is TurnBasedGameEngineMoveFsmInput) {
       _processEngineMove(inputs);
     } else if (inputs is Connect4UpdateTime) {
       // No action needed
@@ -100,9 +100,9 @@ class Connect4FSM {
     _outputs.outputs.add(TurnBasedGameStartGameFsmOutput(input.configuration));
   }
 
-  void _processPlayerMove(Connect4PlayerMoveInput inputs) {
+  void _processPlayerMove(TurnBasedGamePlayerMoveFsmInput inputs) {
     log(
-      'Processing player move: column=${inputs.column}, player=${inputs.player}',
+      'Processing player move: column=${inputs.index}, player=${inputs.player}',
     );
     if (inputs.player == gameState.configuration.enginePlayer ||
         inputs.player == TurnBasedGameCellState.empty) {
@@ -118,14 +118,14 @@ class Connect4FSM {
       return;
     }
 
-    res = gameState.makeMove(inputs.column, inputs.player);
+    res = gameState.makeMove(inputs.index, inputs.player);
     if (res.isFailure) {
       log('Move failed: ${res.errorCode}');
       _appendErrorResult(res);
       return;
     }
 
-    log('Move successful: column=${inputs.column}, player=${inputs.player}');
+    log('Move successful: column=${inputs.index}, player=${inputs.player}');
     _outputs.outputs.add(Connect4NewBoardOutput(gameState: gameState));
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
@@ -138,9 +138,9 @@ class Connect4FSM {
     }
   }
 
-  void _processEngineMove(Connect4EngineMoveInput inputs) {
+  void _processEngineMove(TurnBasedGameEngineMoveFsmInput inputs) {
     log(
-      'Processing engine move: column=${inputs.column}, enginePlayer=${inputs.enginePlayer}',
+      'Processing engine move: column=${inputs.index}, enginePlayer=${inputs.enginePlayer}',
     );
     if (inputs.enginePlayer != gameState.configuration.enginePlayer ||
         inputs.enginePlayer == TurnBasedGameCellState.empty) {
