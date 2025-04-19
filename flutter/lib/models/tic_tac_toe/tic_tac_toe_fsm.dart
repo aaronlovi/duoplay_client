@@ -95,7 +95,7 @@ class TTTFsm {
     log('Processing game configuration: ${inputs.configuration}');
     gameState.processNewGameConfiguration(inputs.configuration, inputs.nowUtc);
     _updateEngineDifficulty();
-    _outputs.outputs.add(TTTStartGameOutput(inputs.configuration));
+    _outputs.outputs.add(TurnBasedGameStartGameFsmOutput(inputs.configuration));
   }
 
   void _processPlayerMove(TTTPlayerMoveInput inputs) {
@@ -212,7 +212,7 @@ class TTTFsm {
       log(
         '[FSM] Transition: after setupNextGame, newState=${gameState.toString()}',
       );
-      _outputs.outputs.add(TTTStartGameOutput(gameState.configuration));
+      _outputs.outputs.add(TurnBasedGameStartGameFsmOutput(gameState.configuration));
     }
 
     if (_context.addDoEngineMoveOutput) {

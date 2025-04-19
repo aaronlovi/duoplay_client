@@ -96,7 +96,7 @@ class Connect4FSM {
     log('Processing game configuration: ${input.configuration}');
     gameState.processNewGameConfiguration(input.configuration, input.nowUtc);
     _updateEngineDifficulty();
-    _outputs.outputs.add(Connect4StartGameOutput(input.configuration));
+    _outputs.outputs.add(TurnBasedGameStartGameFsmOutput(input.configuration));
   }
 
   void _processPlayerMove(Connect4PlayerMoveInput inputs) {
@@ -219,7 +219,7 @@ class Connect4FSM {
       log(
         '[FSM] Transition: after setupNextGame, newState=${gameState.toString()}',
       );
-      _outputs.outputs.add(Connect4StartGameOutput(gameState.configuration));
+      _outputs.outputs.add(TurnBasedGameStartGameFsmOutput(gameState.configuration));
     }
 
     if (_context.addDoEngineMoveOutput) {

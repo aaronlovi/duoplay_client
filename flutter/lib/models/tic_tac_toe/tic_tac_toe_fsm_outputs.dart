@@ -1,17 +1,7 @@
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
-import 'package:duoplay/models/turn-based-game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
-
-class TTTStartGameOutput implements TurnBasedGameFsmOutputBase {
-  TurnBasedGameConfiguration configuration;
-
-  TTTStartGameOutput(this.configuration);
-
-  @override
-  String toString() => 'TTTStartGameOutput[configuration: $configuration]';
-}
 
 class TTTNewBoardOutput implements TurnBasedGameFsmOutputBase {
   TicTacToeGameState gameState;

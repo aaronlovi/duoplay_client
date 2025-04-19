@@ -7,6 +7,7 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -172,7 +173,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
           // Not much to do here. New state will redraw the screen
         } else if (item is TTTGameOverOutput) {
           // Show some game over stuff here
-        } else if (item is TTTStartGameOutput) {
+        } else if (item is TurnBasedGameStartGameFsmOutput) {
           // Show some start game stuff here
         } else if (item is TTTDoEngineMoveOutput) {
           GenericResult<int> res = _engine.getNextMove(_gameObject.gameState);

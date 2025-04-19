@@ -8,6 +8,7 @@ import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -208,7 +209,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(errorMessage)));
-        } else if (item is Connect4StartGameOutput) {
+        } else if (item is TurnBasedGameStartGameFsmOutput) {
           // Show some start game stuff here
         } else if (item is Connect4NewBoardOutput) {
           // Not much to do here. New state will redraw the screen
