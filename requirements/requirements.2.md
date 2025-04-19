@@ -33,7 +33,7 @@
 | **C.1.5.3.1** | Define evaluation metrics for the static board evaluator (e.g., center weighting, potential connections). | Pending |
 | **C.1.5.3.1.1** | Implement center weighting metric. | Complete |
 | **C.1.5.3.1.2** | Implement potential connections metric. | Complete |
-| **C.1.5.3.1.3** | Test and validate the static board evaluator. | Pending |
+| **C.1.5.3.1.3** | Test and validate the static board evaluator. | Complete |
 | **C.1.5.3.2** | Add minimax with alpha-beta pruning (fixed depth). | Pending |
 | **C.1.5.3.2.1** | Implement minimax algorithm. | Pending |
 | **C.1.5.3.2.2** | Add alpha-beta pruning to minimax. | Pending |

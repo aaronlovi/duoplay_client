@@ -52,8 +52,8 @@ class Connect4ExpertEngine implements Connect4EngineContract {
       }
       
       // Evaluate the board using the center weighting and potential connections metrics
-      int score = _evaluateCenterWeighting(simulatedBoard, chipColor) +
-          _evaluatePotentialConnections(simulatedBoard, chipColor);
+      int score = evaluateCenterWeighting(simulatedBoard, chipColor) +
+          evaluatePotentialConnections(simulatedBoard, chipColor);
 
       if (score > bestScore) {
         bestScore = score;
@@ -78,7 +78,7 @@ class Connect4ExpertEngine implements Connect4EngineContract {
   }
 
   // Center weighting metric: prioritize moves closer to the center of the board
-  int _evaluateCenterWeighting(
+  int evaluateCenterWeighting(
     List<List<Connect4SquareState>> board,
     Connect4SquareState chipColor,
   ) {
@@ -98,7 +98,7 @@ class Connect4ExpertEngine implements Connect4EngineContract {
   }
 
   // Potential connections metric: evaluate open sequences of 2 or 3 chips
-  int _evaluatePotentialConnections(
+  int evaluatePotentialConnections(
     List<List<Connect4SquareState>> board,
     Connect4SquareState chipColor,
   ) {
