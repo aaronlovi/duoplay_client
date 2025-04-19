@@ -1,7 +1,7 @@
-import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 
 class Connect4OutputContainer {
-  final List<Connect4OutputBase> outputs;
+  final List<TurnBasedGameFsmOutputBase> outputs;
   DateTime? nextTimeout;
 
   Connect4OutputContainer({required this.outputs, this.nextTimeout});

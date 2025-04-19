@@ -1,11 +1,10 @@
 import 'package:duoplay/models/connect_4/connect_4_game_configuration.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
-abstract class Connect4OutputBase {}
-
-class Connect4StartGameOutput implements Connect4OutputBase {
+class Connect4StartGameOutput implements TurnBasedGameFsmOutputBase {
   final Connect4GameConfiguration configuration;
 
   Connect4StartGameOutput(this.configuration);
@@ -14,7 +13,7 @@ class Connect4StartGameOutput implements Connect4OutputBase {
   String toString() => 'Connect4StartGameOutput[configuration: $configuration]';
 }
 
-class Connect4NewBoardOutput implements Connect4OutputBase {
+class Connect4NewBoardOutput implements TurnBasedGameFsmOutputBase {
   Connect4GameState gameState;
 
   Connect4NewBoardOutput({required this.gameState});
@@ -23,7 +22,7 @@ class Connect4NewBoardOutput implements Connect4OutputBase {
   String toString() => 'Connect4NewBoardOutput[gameState: $gameState]';
 }
 
-class Connect4GameOverOutput implements Connect4OutputBase {
+class Connect4GameOverOutput implements TurnBasedGameFsmOutputBase {
   final TurnBasedGameCellState winner;
   final bool isDraw;
 
@@ -40,12 +39,12 @@ class Connect4GameOverOutput implements Connect4OutputBase {
   String toString() => 'Connect4GameOverOutput[winner: $winner, isDraw: $isDraw]';
 }
 
-class Connect4DoEngineMoveOutput implements Connect4OutputBase {
+class Connect4DoEngineMoveOutput implements TurnBasedGameFsmOutputBase {
   @override
   String toString() => 'Connect4DoEngineMoveOutput[]';
 }
 
-class Connect4ErrorOutput implements Connect4OutputBase {
+class Connect4ErrorOutput implements TurnBasedGameFsmOutputBase {
   final Result results;
 
   Connect4ErrorOutput({required this.results}) {

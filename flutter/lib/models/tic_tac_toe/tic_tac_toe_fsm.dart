@@ -8,6 +8,7 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
 class _TTTFsmUpdateContext {
@@ -32,7 +33,7 @@ class TTTFsm {
 
   TTTFsm(TTTGameConfiguration configuration)
     : gameState = TicTacToeGameState.initial(configuration),
-      _outputs = TTTOutputContainer(outputs: <TTTOutputBase>[]),
+      _outputs = TTTOutputContainer(outputs: <TurnBasedGameFsmOutputBase>[]),
       _context = _TTTFsmUpdateContext() {
     _engine = TTTEngineFactory.createEngine(configuration.difficulty);
   }

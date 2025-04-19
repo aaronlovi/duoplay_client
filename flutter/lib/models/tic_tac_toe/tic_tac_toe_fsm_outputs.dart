@@ -1,11 +1,10 @@
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_configuration.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn-based-game/turn_based_game_utils.dart';
 
-abstract class TTTOutputBase {}
-
-class TTTStartGameOutput implements TTTOutputBase {
+class TTTStartGameOutput implements TurnBasedGameFsmOutputBase {
   TTTGameConfiguration configuration;
 
   TTTStartGameOutput(this.configuration);
@@ -14,7 +13,7 @@ class TTTStartGameOutput implements TTTOutputBase {
   String toString() => 'TTTStartGameOutput[configuration: $configuration]';
 }
 
-class TTTNewBoardOutput implements TTTOutputBase {
+class TTTNewBoardOutput implements TurnBasedGameFsmOutputBase {
   TicTacToeGameState gameState;
 
   TTTNewBoardOutput({required this.gameState});
@@ -23,7 +22,7 @@ class TTTNewBoardOutput implements TTTOutputBase {
   String toString() => 'TTTNewBoardOutput[gameState: $gameState]';
 }
 
-class TTTGameOverOutput implements TTTOutputBase {
+class TTTGameOverOutput implements TurnBasedGameFsmOutputBase {
   TurnBasedGameCellState winner;
   bool isDraw;
 
@@ -40,12 +39,12 @@ class TTTGameOverOutput implements TTTOutputBase {
   String toString() => 'TTTGameOverOutput[winner: $winner, isDraw: $isDraw]';
 }
 
-class TTTDoEngineMoveOutput implements TTTOutputBase {
+class TTTDoEngineMoveOutput implements TurnBasedGameFsmOutputBase {
   @override
   String toString() => 'TTTDoEngineMoveOutput[]';
 }
 
-class TTTErrorOutput implements TTTOutputBase {
+class TTTErrorOutput implements TurnBasedGameFsmOutputBase {
   Result results;
 
   TTTErrorOutput({required this.results}) {
