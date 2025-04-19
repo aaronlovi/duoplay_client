@@ -83,4 +83,41 @@ void main() {
       expect(result.score, lessThan(1000)); // Score should not indicate a win
     });
   });
+
+  group('Connect4ExpertEngine - Iterative Deepening', () {
+    final engine = Connect4ExpertEngine();
+
+    test('Iterative deepening respects time cap', () {
+      final board = List.generate(
+        6,
+        (_) => List.generate(7, (_) => Connect4SquareState.empty),
+      );
+      board[5][0] = Connect4SquareState.red;
+      board[5][1] = Connect4SquareState.red;
+      board[5][2] = Connect4SquareState.red;
+      board[5][3] = Connect4SquareState.empty; // Winning move
+
+      final startTime = DateTime.now();
+      final result = engine.iterativeDeepening(board, Connect4SquareState.red, 500);
+      final elapsedTime = DateTime.now().difference(startTime).inMilliseconds;
+
+      expect(elapsedTime, lessThanOrEqualTo(500)); // Ensure time cap is respected
+      expect(result.move, equals(3)); // Ensure the winning move is selected
+    });
+
+    test('Iterative deepening finds best move within time cap', () {
+      final board = List.generate(
+        6,
+        (_) => List.generate(7, (_) => Connect4SquareState.empty),
+      );
+      board[5][0] = Connect4SquareState.yellow;
+      board[5][1] = Connect4SquareState.yellow;
+      board[5][2] = Connect4SquareState.yellow;
+      board[5][3] = Connect4SquareState.empty; // Blocking move
+
+      final result = engine.iterativeDeepening(board, Connect4SquareState.red, 500);
+
+      expect(result.move, equals(3)); // Ensure the blocking move is selected
+    });
+  });
 }

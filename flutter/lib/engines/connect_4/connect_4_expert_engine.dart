@@ -210,6 +210,10 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     }
 
     stopwatch.stop();
+
+    // Log the total time taken
+    developer.log('[AI][Expert] Iterative deepening completed in ${stopwatch.elapsedMilliseconds} ms');
+
     return bestResult ?? MinimaxResult(move: null, score: -10000); // Return the best result found
   }
 }
