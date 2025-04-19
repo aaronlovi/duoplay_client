@@ -45,3 +45,10 @@ class TurnBasedGameEngineMoveFsmInput extends TurnBasedGameFsmInputBase {
   String toString() =>
       "TurnBasedGameEngineMoveFsmInput[now:$nowUtc,index:$index,enginePlayer:$enginePlayer]";
 }
+
+class TurnBasedGameUpdateTimeFsmInput extends TurnBasedGameFsmInputBase {
+  TurnBasedGameUpdateTimeFsmInput({required super.nowUtc});
+
+  @override
+  String toString() => "TurnBasedGameUpdateTimeFsmInput[now:$nowUtc]";
+}

@@ -68,7 +68,7 @@ class TTTFsm {
       _processPlayerMove(inputs);
     } else if (inputs is TurnBasedGameEngineMoveFsmInput) {
       _processEngineMove(inputs);
-    } else if (inputs is TTTUpdateTime) {
+    } else if (inputs is TurnBasedGameUpdateTimeFsmInput) {
       // Nothing to do here
     }
 

@@ -1,12 +1,5 @@
 import 'package:duoplay/models/turn-based-game/turn_based_game_fsm_inputs.dart';
 
-class TTTUpdateTime extends TurnBasedGameFsmInputBase {
-  TTTUpdateTime({required super.nowUtc});
-
-  @override
-  String toString() => "TTTUpdateTime[now:$nowUtc]";
-}
-
 class TTTSettingsChangeInput extends TurnBasedGameFsmInputBase {
   final String newDifficulty;
   final int betweenMoveDelaySeconds;

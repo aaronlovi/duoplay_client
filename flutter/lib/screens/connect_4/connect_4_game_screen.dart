@@ -248,7 +248,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
       duration = Duration(seconds: 1);
     }
     Timer(duration, () {
-      final updateTimeInput = Connect4UpdateTime(nowUtc: DateTime.now().toUtc());
+      final updateTimeInput = TurnBasedGameUpdateTimeFsmInput(nowUtc: DateTime.now().toUtc());
       final newOutputs = _gameObject.postInput(updateTimeInput);
       _processOutputs(newOutputs); // Process the outputs from the timer
     });

@@ -69,7 +69,7 @@ class Connect4FSM {
       _processPlayerMove(inputs);
     } else if (inputs is TurnBasedGameEngineMoveFsmInput) {
       _processEngineMove(inputs);
-    } else if (inputs is Connect4UpdateTime) {
+    } else if (inputs is TurnBasedGameUpdateTimeFsmInput) {
       // No action needed
     }
 
