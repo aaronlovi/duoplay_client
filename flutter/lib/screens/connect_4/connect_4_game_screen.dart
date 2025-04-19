@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/engines/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_enums.dart';
-import 'package:duoplay/models/connect_4/connect_4_error_handling.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_inputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn-based-game.dart/turn_based_game.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -198,7 +198,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     setState(() {
       for (var item in outputs.outputs) {
         if (item is Connect4ErrorOutput) {
-          String errorMessage = connect4ErrorCodeToString(
+          String errorMessage = TurnBasedGame.errorCodeToString(
             item.results.errorCode,
             item.results.errorParameters,
           );
@@ -214,7 +214,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
         } else if (item is Connect4DoEngineMoveOutput) {
           GenericResult<int> res = _engine.getNextMove(_gameObject.gameState);
           if (res.isFailure) {
-            String errorMessage = connect4ErrorCodeToString(
+            String errorMessage = TurnBasedGame.errorCodeToString(
               res.errorCode,
               res.errorParameters,
             );

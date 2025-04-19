@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_cell_state.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_error_handling.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_inputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
+import 'package:duoplay/models/turn-based-game.dart/turn_based_game.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -158,7 +158,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
     setState(() {
       for (var item in outputs.outputs) {
         if (item is TTTErrorOutput) {
-          String errorMessage = tttErrorCodeToString(
+          String errorMessage = TurnBasedGame.errorCodeToString(
             item.results.errorCode,
             item.results.errorParameters,
           );
@@ -174,7 +174,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
         } else if (item is TTTDoEngineMoveOutput) {
           GenericResult<int> res = _engine.getNextMove(_gameObject.gameState);
           if (res.isFailure) {
-            String errorMessage = tttErrorCodeToString(
+            String errorMessage = TurnBasedGame.errorCodeToString(
               res.errorCode,
               res.errorParameters,
             );
