@@ -129,7 +129,7 @@ class Connect4FSM {
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(
-        Connect4GameOverOutput(
+        TurnBasedGameGameOverFsmOutput(
           winner: gameState.winner,
           isDraw: gameState.isDraw,
         ),
@@ -178,7 +178,7 @@ class Connect4FSM {
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(
-        Connect4GameOverOutput(
+        TurnBasedGameGameOverFsmOutput(
           winner: gameState.winner,
           isDraw: gameState.isDraw,
         ),

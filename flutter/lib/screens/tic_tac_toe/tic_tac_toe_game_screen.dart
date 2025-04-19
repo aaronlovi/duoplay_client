@@ -171,7 +171,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
           ).showSnackBar(SnackBar(content: Text(errorMessage)));
         } else if (item is TTTNewBoardOutput) {
           // Not much to do here. New state will redraw the screen
-        } else if (item is TTTGameOverOutput) {
+        } else if (item is TurnBasedGameGameOverFsmOutput) {
           // Show some game over stuff here
         } else if (item is TurnBasedGameStartGameFsmOutput) {
           // Show some start game stuff here

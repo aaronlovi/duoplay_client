@@ -213,7 +213,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
           // Show some start game stuff here
         } else if (item is Connect4NewBoardOutput) {
           // Not much to do here. New state will redraw the screen
-        } else if (item is Connect4GameOverOutput) {
+        } else if (item is TurnBasedGameGameOverFsmOutput) {
           // Show some game over stuff here
         } else if (item is Connect4DoEngineMoveOutput) {
           GenericResult<int> res = _engine.getNextMove(_gameObject.gameState);

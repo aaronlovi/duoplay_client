@@ -128,7 +128,7 @@ class TTTFsm {
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(
-        TTTGameOverOutput(winner: gameState.winner, isDraw: gameState.isDraw),
+        TurnBasedGameGameOverFsmOutput(winner: gameState.winner, isDraw: gameState.isDraw),
       );
     }
   }
@@ -174,7 +174,7 @@ class TTTFsm {
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(
-        TTTGameOverOutput(winner: gameState.winner, isDraw: gameState.isDraw),
+        TurnBasedGameGameOverFsmOutput(winner: gameState.winner, isDraw: gameState.isDraw),
       );
     }
   }
