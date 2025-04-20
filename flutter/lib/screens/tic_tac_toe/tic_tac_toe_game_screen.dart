@@ -56,21 +56,49 @@ class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
   }
 
   @override
-  Container getCellContents(int index) => Container(
-    decoration: BoxDecoration(
-      color: Colors.white, // Set the cell background color
-      border: Border.all(
-        color: gridColor,
-        width: 2.0,
-      ), // Add border to create grid effect
-    ),
-    child: _getCellInnerContents(index), // Add cell content
-  );
+  Container getCellContents(int index) {
+    final cellState = gameObject.board[index];
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white, // Set the cell background color
+        border: Border.all(
+          color: gridColor,
+          width: 2.0,
+        ), // Add border to create grid effect
+      ),
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final iconSize =
+              constraints.biggest.shortestSide *
+              0.6; // Calculate icon size dynamically
+          return _getCellInnerContents(
+            cellState,
+            iconSize,
+          ); // Pass the calculated size
+        },
+      ),
+    );
+  }
 
-  Widget _getCellInnerContents(int index) => Center(
-    child: Text(
-      gameUtils.cellStateToShortString(gameObject.board[index]),
-      style: const TextStyle(fontSize: 32),
-    ),
-  );
+  Widget _getCellInnerContents(
+    TurnBasedGameCellState cellState,
+    double iconSize,
+  ) {
+    switch (cellState) {
+      case TurnBasedGameCellState.player1:
+        return Icon(
+          Icons.close, // Use an "X" icon for player 1
+          color: Colors.red,
+          size: iconSize * 1.2,
+        );
+      case TurnBasedGameCellState.player2:
+        return Icon(
+          Icons.circle_outlined, // Use a circle icon for player 2
+          color: Colors.blue,
+          size: iconSize,
+        );
+      default:
+        return const SizedBox.shrink(); // Empty cell
+    }
+  }
 }
