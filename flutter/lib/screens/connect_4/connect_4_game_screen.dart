@@ -35,8 +35,8 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
   TurnBasedGameEngineContract get _engine => widget.engine;
   Connect4GameUtils get _gameUtils => widget.gameUtils;
   TurnBasedGameLogic get _gameLogic => widget.gameLogic;
-  bool get isPlayerRedTheEngine => _gameObject.isPlayerRedEngine;
-  bool get isPlayerYellowTheEngine => _gameObject.isPlayerYellowEngine;
+  bool get isPlayerRedTheEngine => _gameObject.isPlayer1Engine;
+  bool get isPlayerYellowTheEngine => _gameObject.isPlayer2Engine;
   bool get isHumanPlayerToMove => _gameObject.isHumanPlayerToMove;
 
   @override

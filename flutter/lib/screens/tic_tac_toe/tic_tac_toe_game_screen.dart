@@ -31,8 +31,8 @@ class TTTGameScreenState extends State<TTTGameScreen> {
   TTTGameContainer get _gameObject => widget.gameObject;
   TurnBasedGameEngineContract get _engine => widget.engine;
   TTTGameUtils get _gameUtils => widget.gameUtils;
-  bool get isPlayerXEngine => _gameObject.isPlayerXEngine;
-  bool get isPlayerOEngine => _gameObject.isPlayerOEngine;
+  bool get isPlayerXEngine => _gameObject.isPlayer1Engine;
+  bool get isPlayerOEngine => _gameObject.isPlayer2Engine;
   bool get isHumanPlayerToMove => _gameObject.isHumanPlayerToMove;
 
   @override
