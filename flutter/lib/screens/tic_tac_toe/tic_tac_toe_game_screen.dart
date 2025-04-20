@@ -1,12 +1,9 @@
-import 'dart:async';
-
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
-import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
+import 'package:duoplay/screens/turn_based_game_screen_base.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,58 +23,39 @@ class TTTGameScreen extends StatefulWidget {
   TTTGameScreenState createState() => TTTGameScreenState();
 }
 
-class TTTGameScreenState extends State<TTTGameScreen> {
-  TurnBasedGameContainer get _gameObject => widget.gameObject;
-  TurnBasedGameEngineContract get _engine => widget.engine;
-  TurnBasedGameUtils get _gameUtils => widget.gameUtils;
-  bool get isPlayerXEngine => _gameObject.isPlayer1Engine;
-  bool get isPlayerOEngine => _gameObject.isPlayer2Engine;
-  bool get isHumanPlayerToMove => _gameObject.isHumanPlayerToMove;
-
+class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
   @override
-  void initState() {
-    super.initState();
-  }
+  TurnBasedGameContainer get gameObject => widget.gameObject;
+  @override
+  TurnBasedGameEngineContract get engine => widget.engine;
+  @override
+  TurnBasedGameUtils get gameUtils => widget.gameUtils;
 
   @override
   Widget build(BuildContext context) {
-    final difficulty = _gameObject.gameState.configuration.difficulty;
-    final playerLetter =
-        _gameUtils
-            .cellStateToShortString(_gameObject.humanPlayer)
-            .toUpperCase();
     return Scaffold(
       appBar: AppBar(title: const Text('Tic-Tac-Toe')),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: _getSettingsButton(context),
+            child: buildSettingsButton(context),
           ),
-          Expanded(child: _getBody()),
-          Container(
-            width: double.infinity,
-            color: Colors.grey[200],
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              'Engine: $difficulty    You are: $playerLetter',
-              style: const TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          Expanded(child: buildGameGrid(context)),
+          buildStatusBar(context),
         ],
       ),
     );
   }
 
-  ElevatedButton _getSettingsButton(BuildContext context) => ElevatedButton(
+  @override
+  Widget buildSettingsButton(BuildContext context) => ElevatedButton(
     onPressed: () async {
-      final prevDifficulty = _gameObject.gameState.configuration.difficulty;
+      final prevDifficulty = gameObject.gameState.configuration.difficulty;
       final int prevBetweenMoveDelay =
-          _gameObject.gameState.configuration.engineMoveWaitTime?.inSeconds ??
-          1;
+          gameObject.gameState.configuration.engineMoveWaitTime?.inSeconds ?? 1;
       final int prevBetweenGameDelay =
-          _gameObject.gameState.configuration.betweenGamesWaitTime.inSeconds;
+          gameObject.gameState.configuration.betweenGamesWaitTime.inSeconds;
 
       final navigator = Navigator.of(context);
       final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -87,8 +65,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
       final newDifficulty =
           prefs.getString('ttt_ai_difficulty') ?? prevDifficulty;
       if (newDifficulty != prevDifficulty) {
-        // Update FSM for next game using postInput and TTTSetEngineDifficultyInput
-        _gameObject.postInput(
+        gameObject.postInput(
           TurnBasedGameSettingsChangeFsmInput(
             newDifficulty: newDifficulty,
             betweenMoveDelaySeconds: prevBetweenMoveDelay,
@@ -96,8 +73,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
             nowUtc: DateTime.now().toUtc(),
           ),
         );
-        // Show toast if game is in progress
-        if (!_gameObject.gameState.isGameOver) {
+        if (!gameObject.gameState.isGameOver) {
           final current = prevDifficulty;
           final next = newDifficulty;
           final msg =
@@ -110,109 +86,65 @@ class TTTGameScreenState extends State<TTTGameScreen> {
     child: const Text('Settings'),
   );
 
-  Widget _getBody() => Center(
+  @override
+  Widget buildGameGrid(BuildContext context) => Center(
     child: AspectRatio(
-      aspectRatio: 1, // Ensures the grid is square
-      child: _getGameGrid(),
-    ),
-  );
-
-  Widget _getGameGrid() => GridView.builder(
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 3, // 3 columns for the Tic-Tac-Toe board
-      crossAxisSpacing: 4, // Space between columns
-      mainAxisSpacing: 4, // Space between rows
-    ),
-    itemCount: 9, // 3x3 grid = 9 cells
-    itemBuilder: (context, index) {
-      return GestureDetector(
-        onTap: () => _handleCellTap(index),
-        child: Container(
-          decoration: _getCellBorder(),
-          child: _getCellContents(index),
+      aspectRatio: 1,
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 4,
+          mainAxisSpacing: 4,
         ),
-      );
-    },
+        itemCount: 9,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () => _handleCellTap(index),
+            child: Container(
+              decoration: _getCellBorder(),
+              child: _getCellContents(index),
+            ),
+          );
+        },
+      ),
+    ),
   );
 
-  void _handleCellTap(int index) {
-    // Handle the tap using the FSM
-    if (!_gameObject.isHumanPlayerToMove) return;
-
-    final inp = TurnBasedGamePlayerMoveFsmInput(
-      index: index,
-      player: _gameObject.humanPlayer,
-      nowUtc: DateTime.now().toUtc(),
+  @override
+  Widget buildStatusBar(BuildContext context) {
+    final difficulty = gameObject.gameState.configuration.difficulty;
+    final playerLetter =
+        gameUtils.cellStateToShortString(gameObject.humanPlayer).toUpperCase();
+    return Container(
+      width: double.infinity,
+      color: Colors.grey[200],
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Text(
+        'Engine: $difficulty    You are: $playerLetter',
+        style: const TextStyle(fontSize: 16),
+        textAlign: TextAlign.center,
+      ),
     );
-    TurnBasedGameOutputContainer outputs = _gameObject.postInput(inp);
-    _processOutputs(outputs);
   }
 
-  BoxDecoration _getCellBorder() => BoxDecoration(
-    border: Border.all(color: Colors.black), // Cell borders
-  );
+  void _handleCellTap(int index) {
+    if (!gameObject.isHumanPlayerToMove) return;
+    final inp = TurnBasedGamePlayerMoveFsmInput(
+      index: index,
+      player: gameObject.humanPlayer,
+      nowUtc: DateTime.now().toUtc(),
+    );
+    TurnBasedGameOutputContainer outputs = gameObject.postInput(inp);
+    processOutputs(outputs);
+  }
+
+  BoxDecoration _getCellBorder() =>
+      BoxDecoration(border: Border.all(color: Colors.black));
 
   Widget _getCellContents(int index) => Center(
     child: Text(
-      _gameUtils.cellStateToShortString(_gameObject.board[index]),
+      gameUtils.cellStateToShortString(gameObject.board[index]),
       style: const TextStyle(fontSize: 32),
     ),
   );
-
-  void _processOutputs(TurnBasedGameOutputContainer outputs) {
-    setState(() {
-      for (var item in outputs.outputs) {
-        if (item is TurnBasedGameErrorFsmOutput) {
-          String errorMessage = TurnBasedGameUtils.errorCodeToString(
-            item.results.errorCode,
-            item.results.errorParameters,
-          );
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(errorMessage)));
-        } else if (item is TurnBasedGameNewBoardFsmOutput) {
-          // Not much to do here. New state will redraw the screen
-        } else if (item is TurnBasedGameGameOverFsmOutput) {
-          // Show some game over stuff here
-        } else if (item is TurnBasedGameStartGameFsmOutput) {
-          // Show some start game stuff here
-        } else if (item is TurnBasedGameDoEngineMoveFsmOutput) {
-          GenericResult<int> res = _engine.getNextMove(_gameObject.gameState);
-          if (res.isFailure) {
-            String errorMessage = TurnBasedGameUtils.errorCodeToString(
-              res.errorCode,
-              res.errorParameters,
-            );
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(errorMessage)));
-            continue;
-          }
-          final newOutputs = _gameObject.postInput(
-            TurnBasedGameEngineMoveFsmInput(
-              nowUtc: DateTime.now().toUtc(),
-              index: res.value!,
-              enginePlayer: _gameObject.enginePlayer,
-            ),
-          );
-          _processOutputs(newOutputs);
-        }
-      }
-    });
-
-    if (outputs.nextTimeout == null) return;
-
-    final now = DateTime.now().toUtc();
-    Duration duration = outputs.nextTimeout!.difference(now);
-    if (duration == Duration.zero || duration.isNegative) {
-      duration = Duration(seconds: 1);
-    }
-    Timer(duration, () {
-      final updateTimeInput = TurnBasedGameUpdateTimeFsmInput(
-        nowUtc: DateTime.now().toUtc(),
-      );
-      final newOutputs = _gameObject.postInput(updateTimeInput);
-      _processOutputs(newOutputs); // Process the outputs from the timer
-    });
-  }
 }

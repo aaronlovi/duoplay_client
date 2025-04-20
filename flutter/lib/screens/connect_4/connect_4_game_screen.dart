@@ -1,13 +1,10 @@
-import 'dart:async';
-
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
-import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
+import 'package:duoplay/screens/turn_based_game_screen_base.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,59 +26,41 @@ class Connect4GameScreen extends StatefulWidget {
   Connect4GameScreenState createState() => Connect4GameScreenState();
 }
 
-class Connect4GameScreenState extends State<Connect4GameScreen> {
-  TurnBasedGameContainer get _gameObject => widget.gameObject;
-  TurnBasedGameEngineContract get _engine => widget.engine;
-  TurnBasedGameUtils get _gameUtils => widget.gameUtils;
-  TurnBasedGameLogic get _gameLogic => widget.gameLogic;
-  bool get isPlayerRedTheEngine => _gameObject.isPlayer1Engine;
-  bool get isPlayerYellowTheEngine => _gameObject.isPlayer2Engine;
-  bool get isHumanPlayerToMove => _gameObject.isHumanPlayerToMove;
-
+class Connect4GameScreenState
+    extends TurnBasedGameScreenBase<Connect4GameScreen> {
   @override
-  void initState() {
-    super.initState();
-  }
+  TurnBasedGameContainer get gameObject => widget.gameObject;
+  @override
+  TurnBasedGameEngineContract get engine => widget.engine;
+  @override
+  TurnBasedGameUtils get gameUtils => widget.gameUtils;
+  TurnBasedGameLogic get gameLogic => widget.gameLogic;
 
   @override
   Widget build(BuildContext context) {
-    final difficulty = _gameObject.gameState.configuration.difficulty;
-    final playerColor =
-        _gameUtils
-            .cellStateToShortString(_gameObject.humanPlayer)
-            .toUpperCase();
     return Scaffold(
       appBar: AppBar(title: const Text('Connect 4')),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: _getSettingsButton(),
+            child: buildSettingsButton(context),
           ),
-          Expanded(child: _getBody()),
-          Container(
-            width: double.infinity,
-            color: Colors.grey[200],
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              'Engine: $difficulty    You are: $playerColor',
-              style: const TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          Expanded(child: buildGameGrid(context)),
+          buildStatusBar(context),
         ],
       ),
     );
   }
 
-  Widget _getSettingsButton() => ElevatedButton(
+  @override
+  Widget buildSettingsButton(BuildContext context) => ElevatedButton(
     onPressed: () async {
-      final prevDifficulty = _gameObject.gameState.configuration.difficulty;
+      final prevDifficulty = gameObject.gameState.configuration.difficulty;
       final int prevBetweenMoveDelay =
-          _gameObject.gameState.configuration.engineMoveWaitTime?.inSeconds ??
-          1;
+          gameObject.gameState.configuration.engineMoveWaitTime?.inSeconds ?? 1;
       final int prevBetweenGameDelay =
-          _gameObject.gameState.configuration.betweenGamesWaitTime.inSeconds;
+          gameObject.gameState.configuration.betweenGamesWaitTime.inSeconds;
 
       final navigator = Navigator.of(context);
       final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -91,8 +70,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
       final newDifficulty =
           prefs.getString('connect4_ai_difficulty') ?? prevDifficulty;
       if (newDifficulty != prevDifficulty) {
-        // Update FSM for next game using postInput and TurnBasedGameSettingsChangeFsmInput
-        _gameObject.postInput(
+        gameObject.postInput(
           TurnBasedGameSettingsChangeFsmInput(
             newDifficulty: newDifficulty,
             betweenMoveDelaySeconds: prevBetweenMoveDelay,
@@ -100,8 +78,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
             nowUtc: DateTime.now().toUtc(),
           ),
         );
-        // Show toast if game is in progress
-        if (!_gameObject.gameState.isGameOver) {
+        if (!gameObject.gameState.isGameOver) {
           final current = prevDifficulty;
           final next = newDifficulty;
           final msg =
@@ -114,85 +91,87 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     child: const Text('Settings'),
   );
 
-  Widget _getBody() => Center(
+  @override
+  Widget buildGameGrid(BuildContext context) => Center(
     child: AspectRatio(
-      aspectRatio:
-          _gameLogic.columns /
-          _gameLogic.rows, // Use constants for aspect ratio
-      child: _getGameGrid(),
-    ),
-  );
-
-  Widget _getGameGrid() => Container(
-    color: const Color(0xFFFFE082), // Softer yellow for the grid background
-    padding: const EdgeInsets.all(8.0), // Add padding for the margin effect
-    child: LayoutBuilder(
-      builder: (context, constraints) {
-        final cellSize =
-            (constraints.maxWidth - (_gameLogic.columns - 1) * 4) /
-            _gameLogic.columns; // Calculate cell size
-        final gridHeight =
-            cellSize * _gameLogic.rows +
-            (_gameLogic.rows - 1) * 4; // Rows + spacing
-
-        return SizedBox(
-          height: gridHeight, // Constrain the height to the grid's content
-          child: ScrollConfiguration(
-            behavior: const ScrollBehavior().copyWith(
-              scrollbars: false,
-            ), // Disable scrollbars
-            child: GridView.builder(
-              physics:
-                  const NeverScrollableScrollPhysics(), // Prevent scrolling
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount:
-                    _gameLogic.columns, // Columns for the Connect 4 board
-                crossAxisSpacing: 4, // Space between columns
-                mainAxisSpacing: 4, // Space between rows
+      aspectRatio: gameLogic.columns / gameLogic.rows,
+      child: Container(
+        color: const Color(0xFFFFE082),
+        padding: const EdgeInsets.all(8.0),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final cellSize =
+                (constraints.maxWidth - (gameLogic.columns - 1) * 4) /
+                gameLogic.columns;
+            final gridHeight =
+                cellSize * gameLogic.rows + (gameLogic.rows - 1) * 4;
+            return SizedBox(
+              height: gridHeight,
+              child: ScrollConfiguration(
+                behavior: const ScrollBehavior().copyWith(scrollbars: false),
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: gameLogic.columns,
+                    crossAxisSpacing: 4,
+                    mainAxisSpacing: 4,
+                  ),
+                  itemCount: gameLogic.rows * gameLogic.columns,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () => _handleCellTap(index),
+                      child: _getCellContents(index),
+                    );
+                  },
+                ),
               ),
-              itemCount: _gameLogic.rows * _gameLogic.columns, // Total cells
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () => _handleCellTap(index),
-                  child: _getCellContents(index),
-                );
-              },
-            ),
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ),
     ),
   );
+
+  @override
+  Widget buildStatusBar(BuildContext context) {
+    final difficulty = gameObject.gameState.configuration.difficulty;
+    final playerColor =
+        gameUtils.cellStateToShortString(gameObject.humanPlayer).toUpperCase();
+    return Container(
+      width: double.infinity,
+      color: Colors.grey[200],
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Text(
+        'Engine: $difficulty    You are: $playerColor',
+        style: const TextStyle(fontSize: 16),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
 
   void _handleCellTap(int index) {
-    // Handle the tap using the FSM
-    if (!_gameObject.isHumanPlayerToMove) return;
-
+    if (!gameObject.isHumanPlayerToMove) return;
     final inp = TurnBasedGamePlayerMoveFsmInput(
-      index: index, // Use the calculated column
-      player: _gameObject.humanPlayer,
+      index: index,
+      player: gameObject.humanPlayer,
       nowUtc: DateTime.now().toUtc(),
     );
-    TurnBasedGameOutputContainer outputs = _gameObject.postInput(inp);
-    _processOutputs(outputs);
+    TurnBasedGameOutputContainer outputs = gameObject.postInput(inp);
+    processOutputs(outputs);
   }
 
   Widget _getCellContents(int index) {
-    final cellState = _gameObject.board[index];
+    final cellState = gameObject.board[index];
     final color = _getCellColor(cellState);
-
     return Container(
       decoration: const BoxDecoration(
-        shape: BoxShape.circle, // Circular cells
-        color: Colors.white, // Background color for empty cells
+        shape: BoxShape.circle,
+        color: Colors.white,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(4.0), // Padding inside the circle
+        padding: const EdgeInsets.all(4.0),
         child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color, // Color based on the cell state
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: color),
         ),
       ),
     );
@@ -205,64 +184,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
       case TurnBasedGameCellState.player2:
         return Colors.yellow;
       default:
-        return Colors.transparent; // Empty cells
+        return Colors.transparent;
     }
-  }
-
-  void _processOutputs(TurnBasedGameOutputContainer outputs) {
-    setState(() {
-      for (var item in outputs.outputs) {
-        if (item is TurnBasedGameErrorFsmOutput) {
-          String errorMessage = TurnBasedGameUtils.errorCodeToString(
-            item.results.errorCode,
-            item.results.errorParameters,
-          );
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(errorMessage)));
-        } else if (item is TurnBasedGameStartGameFsmOutput) {
-          // Show some start game stuff here
-        } else if (item is TurnBasedGameNewBoardFsmOutput) {
-          // Not much to do here. New state will redraw the screen
-        } else if (item is TurnBasedGameGameOverFsmOutput) {
-          // Show some game over stuff here
-        } else if (item is TurnBasedGameDoEngineMoveFsmOutput) {
-          GenericResult<int> res = _engine.getNextMove(_gameObject.gameState);
-          if (res.isFailure) {
-            String errorMessage = TurnBasedGameUtils.errorCodeToString(
-              res.errorCode,
-              res.errorParameters,
-            );
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(errorMessage)));
-            continue;
-          }
-          final newOutputs = _gameObject.postInput(
-            TurnBasedGameEngineMoveFsmInput(
-              nowUtc: DateTime.now().toUtc(),
-              index: res.value!,
-              enginePlayer: _gameObject.enginePlayer,
-            ),
-          );
-          _processOutputs(newOutputs);
-        }
-      }
-    });
-
-    if (outputs.nextTimeout == null) return;
-
-    final now = DateTime.now().toUtc();
-    Duration duration = outputs.nextTimeout!.difference(now);
-    if (duration == Duration.zero || duration.isNegative) {
-      duration = Duration(seconds: 1);
-    }
-    Timer(duration, () {
-      final updateTimeInput = TurnBasedGameUpdateTimeFsmInput(
-        nowUtc: DateTime.now().toUtc(),
-      );
-      final newOutputs = _gameObject.postInput(updateTimeInput);
-      _processOutputs(newOutputs); // Process the outputs from the timer
-    });
   }
 }
