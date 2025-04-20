@@ -45,7 +45,10 @@ class MyApp extends StatelessWidget {
               ),
               gameUtils: GetIt.I.get<TTTGameUtils>(),
             ),
-        '/tic-tac-toe/settings': (context) => const TicTacToeSettingsLoader(),
+        '/tic-tac-toe/settings':
+            (context) => TicTacToeSettingsLoader(
+              gameContainer: GetIt.I.get<TTTGameContainer>(),
+            ),
         '/connect-4':
             (context) => Connect4GameScreen(
               gameObject: GetIt.I.get<Connect4GameContainer>(),
@@ -59,7 +62,10 @@ class MyApp extends StatelessWidget {
               gameUtils: GetIt.I.get<Connect4GameUtils>(),
               gameLogic: Connect4GameLogic(),
             ),
-        '/connect-4/settings': (context) => const Connect4SettingsLoader(),
+        '/connect-4/settings':
+            (context) => Connect4SettingsLoader(
+              gameContainer: GetIt.I.get<Connect4GameContainer>(),
+            ),
       },
     );
   }

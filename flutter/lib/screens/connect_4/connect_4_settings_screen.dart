@@ -1,31 +1,31 @@
-import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Connect4SettingsScreen extends StatefulWidget {
   final String initialDifficulty;
+  final TurnBasedGameContainer gameContainer;
   final int initialMoveDelay;
   final int initialGameDelay;
 
   const Connect4SettingsScreen({
     super.key,
     required this.initialDifficulty,
+    required this.gameContainer,
     this.initialMoveDelay = 1,
     this.initialGameDelay = 1,
   });
 
   @override
-  State<Connect4SettingsScreen> createState() =>
-      _Connect4SettingsScreenState();
+  State<Connect4SettingsScreen> createState() => _Connect4SettingsScreenState();
 }
 
 class _Connect4SettingsScreenState extends State<Connect4SettingsScreen> {
   late String _selectedDifficulty;
   late int _moveDelay;
   late int _gameDelay;
-  late Connect4GameContainer _gameContainer;
+  TurnBasedGameContainer get _gameContainer => widget.gameContainer;
 
   @override
   void initState() {
@@ -33,7 +33,6 @@ class _Connect4SettingsScreenState extends State<Connect4SettingsScreen> {
     _selectedDifficulty = widget.initialDifficulty;
     _moveDelay = widget.initialMoveDelay;
     _gameDelay = widget.initialGameDelay;
-    _gameContainer = GetIt.I.get<Connect4GameContainer>();
   }
 
   @override

@@ -1,9 +1,12 @@
+import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'tic_tac_toe_settings_screen.dart';
 
 class TicTacToeSettingsLoader extends StatelessWidget {
-  const TicTacToeSettingsLoader({super.key});
+  final TurnBasedGameContainer gameContainer;
+
+  const TicTacToeSettingsLoader({super.key, required this.gameContainer});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +21,7 @@ class TicTacToeSettingsLoader extends StatelessWidget {
         final data = snapshot.data!;
         return TicTacToeSettingsScreen(
           initialDifficulty: data.difficulty,
+          gameContainer: gameContainer,
           initialMoveDelay: data.moveDelay,
           initialGameDelay: data.gameDelay,
         );

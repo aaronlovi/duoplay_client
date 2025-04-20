@@ -1,17 +1,18 @@
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TicTacToeSettingsScreen extends StatefulWidget {
   final String initialDifficulty;
+  final TurnBasedGameContainer gameContainer;
   final int initialMoveDelay;
   final int initialGameDelay;
 
   const TicTacToeSettingsScreen({
     super.key,
     required this.initialDifficulty,
+    required this.gameContainer,
     this.initialMoveDelay = 1,
     this.initialGameDelay = 1,
   });
@@ -25,7 +26,7 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
   late String _selectedDifficulty;
   late int _moveDelay;
   late int _gameDelay;
-  late TTTGameContainer _gameContainer;
+  TurnBasedGameContainer get _gameContainer => widget.gameContainer;
 
   @override
   void initState() {
@@ -33,7 +34,6 @@ class _TicTacToeSettingsScreenState extends State<TicTacToeSettingsScreen> {
     _selectedDifficulty = widget.initialDifficulty;
     _moveDelay = widget.initialMoveDelay;
     _gameDelay = widget.initialGameDelay;
-    _gameContainer = GetIt.I.get<TTTGameContainer>();
   }
 
   @override

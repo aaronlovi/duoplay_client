@@ -1,9 +1,12 @@
+import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'connect_4_settings_screen.dart';
 
 class Connect4SettingsLoader extends StatelessWidget {
-  const Connect4SettingsLoader({super.key});
+  final TurnBasedGameContainer gameContainer;
+
+  const Connect4SettingsLoader({super.key, required this.gameContainer});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +21,7 @@ class Connect4SettingsLoader extends StatelessWidget {
         final data = snapshot.data!;
         return Connect4SettingsScreen(
           initialDifficulty: data.difficulty,
+          gameContainer: gameContainer,
           initialMoveDelay: data.moveDelay,
           initialGameDelay: data.gameDelay,
         );
