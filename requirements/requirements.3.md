@@ -124,3 +124,109 @@ When working on the requirements in this document, follow this workflow:
 | **R.1.4.2** | Test the refactored screens to ensure functionality is preserved. | Complete |
 | **R.1.4.2.1** | Write unit tests for the base class. | Pending |
 | **R.1.4.2.2** | Write integration tests for the refactored game screens. | Pending |
+
+## Example: Implementing a New Game Using the Base Class
+
+To add a new turn-based game using the shared framework, follow these steps:
+
+1. **Create Game Logic and Models**
+   - Implement your game logic by extending `TurnBasedGameLogic`.
+   - Create any game-specific models or containers as needed.
+
+2. **Create the Game Screen**
+   - Create a new screen in `lib/screens/<your_game>/<your_game>_game_screen.dart`.
+   - Extend `TurnBasedGameScreenBase` in your screen's State class.
+   - Implement the required abstract methods:
+     - `buildSettingsButton(BuildContext context)`
+     - `buildGameGrid(BuildContext context)`
+     - `buildStatusBar(BuildContext context)`
+
+    ```dart
+    // Example: MyGameScreen
+    import 'package:flutter/material.dart';
+    import '../turn_based_game_screen_base.dart';
+    import '../turn_based_game_game_grid.dart';
+    import '../turn_based_game_settings_button.dart';
+    // ... import your game logic, container, and utils ...
+
+    class MyGameScreen extends StatefulWidget {
+    final TurnBasedGameContainer gameObject;
+    final TurnBasedGameEngineContract engine;
+    final TurnBasedGameUtils gameUtils;
+    final TurnBasedGameLogic gameLogic;
+
+    const MyGameScreen({
+        super.key,
+        required this.gameObject,
+        required this.engine,
+        required this.gameUtils,
+        required this.gameLogic,
+    });
+
+    @override
+    MyGameScreenState createState() => MyGameScreenState();
+    }
+
+    class MyGameScreenState extends TurnBasedGameScreenBase<MyGameScreen> {
+    @override
+    TurnBasedGameContainer get gameObject => widget.gameObject;
+    @override
+    TurnBasedGameEngineContract get engine => widget.engine;
+    @override
+    TurnBasedGameUtils get gameUtils => widget.gameUtils;
+    TurnBasedGameLogic get gameLogic => widget.gameLogic;
+
+    @override
+    Widget build(BuildContext context) {
+        return Scaffold(
+        appBar: AppBar(title: const Text('My Game')),
+        body: Column(
+            children: [
+            Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: buildSettingsButton(context),
+            ),
+            Expanded(child: buildGameGrid(context)),
+            buildStatusBar(context),
+            ],
+        ),
+        );
+    }
+
+    @override
+    Widget buildSettingsButton(BuildContext context) => SettingsButton(
+        onPressed: () async {
+        // ...settings navigation and update logic...
+        },
+        label: 'Settings',
+    );
+
+    @override
+    Widget buildGameGrid(BuildContext context) => Center(
+        child: GameGrid(
+        rows: gameLogic.rows,
+        columns: gameLogic.columns,
+        aspectRatio: gameLogic.columns / gameLogic.rows,
+        cellBuilder: (context, index) {
+            // ...return your cell widget...
+            return Container();
+        },
+        ),
+    );
+
+    @override
+    Widget buildStatusBar(BuildContext context) {
+        // ...return your status bar widget...
+        return Container();
+    }
+    }
+    ```
+
+3. **Register the New Game**
+
+   - Add your new game screen to the app's navigation/routes in `main.dart`.
+   - Register any required services or containers in your service locator.
+
+4. **Test and Iterate**
+
+   - Run `flutter analyze` and `flutter test` to ensure your new game integrates cleanly.
