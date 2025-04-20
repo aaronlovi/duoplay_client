@@ -91,17 +91,17 @@ When working on the requirements in this document, follow this workflow:
 
 | Requirement id | Description | Status |
 |----------------|-------------|--------|
-| **R.1** | Refactor shared logic from Tic-Tac-Toe and Connect 4 game screens into a reusable base class. | Pending |
-| **R.1.1** | Create a `TurnBasedGameScreenBase` class. | Pending |
-| **R.1.1.1** | Move FSM handling logic (`postInput`, `_processOutputs`) to the base class. | Pending |
-| **R.1.1.1.1** | Refactor `postInput` to handle generic FSM inputs. | Pending |
-| **R.1.1.1.2** | Refactor `_processOutputs` to handle generic FSM outputs. | Pending |
-| **R.1.1.2** | Add hooks for game-specific configurations (e.g., grid size, cell rendering). | Pending |
-| **R.1.1.2.1** | Define abstract methods for grid size and cell rendering. | Pending |
-| **R.1.1.2.2** | Ensure the base class supports dynamic grid dimensions. | Pending |
-| **R.1.1.3** | Ensure the base class supports both human and AI players. | Pending |
-| **R.1.1.3.1** | Add methods to handle AI moves. | Pending |
-| **R.1.1.3.2** | Add methods to handle human moves. | Pending |
+| **R.1** | Refactor shared logic from Tic-Tac-Toe and Connect 4 game screens into a reusable base class. | Complete |
+| **R.1.1** | Create a `TurnBasedGameScreenBase` class. | Complete |
+| **R.1.1.1** | Move FSM handling logic (`postInput`, `_processOutputs`) to the base class. | Complete |
+| **R.1.1.1.1** | Refactor `postInput` to handle generic FSM inputs. | Complete |
+| **R.1.1.1.2** | Refactor `_processOutputs` to handle generic FSM outputs. | Complete |
+| **R.1.1.2** | Add hooks for game-specific configurations (e.g., grid size, cell rendering). | Complete |
+| **R.1.1.2.1** | Define abstract methods for grid size and cell rendering. | Complete |
+| **R.1.1.2.2** | Ensure the base class supports dynamic grid dimensions. | Complete |
+| **R.1.1.3** | Ensure the base class supports both human and AI players. | Complete |
+| **R.1.1.3.1** | Add methods to handle AI moves. | Complete |
+| **R.1.1.3.2** | Add methods to handle human moves. | Complete |
 | **R.1.2** | Extract shared widgets. | Pending |
 | **R.1.2.1** | Create a reusable `GameGrid` widget. | Pending |
 | **R.1.2.1.1** | Define a generic grid layout. | Pending |
@@ -110,17 +110,17 @@ When working on the requirements in this document, follow this workflow:
 | **R.1.2.2** | Create a reusable `SettingsButton` widget. | Pending |
 | **R.1.2.2.1** | Add navigation logic to the settings screen. | Pending |
 | **R.1.2.2.2** | Ensure the button supports customizable labels and styles. | Pending |
-| **R.1.3** | Refactor Tic-Tac-Toe and Connect 4 game screens. | Pending |
-| **R.1.3.1** | Update `TTTGameScreen` to extend `TurnBasedGameScreenBase`. | Pending |
-| **R.1.3.1.1** | Implement game-specific configurations (e.g., 3x3 grid, cell rendering). | Pending |
-| **R.1.3.1.2** | Test the refactored screen for functionality and UI consistency. | Pending |
-| **R.1.3.2** | Update `Connect4GameScreen` to extend `TurnBasedGameScreenBase`. | Pending |
-| **R.1.3.2.1** | Implement game-specific configurations (e.g., 7x6 grid, cell rendering). | Pending |
-| **R.1.3.2.2** | Test the refactored screen for functionality and UI consistency. | Pending |
-| **R.1.4** | Ensure the refactored structure supports adding new games. | Pending |
-| **R.1.4.1** | Define clear interfaces for game-specific logic in the base class. | Pending |
-| **R.1.4.1.1** | Document the required methods and properties for new games. | Pending |
+| **R.1.3** | Refactor Tic-Tac-Toe and Connect 4 game screens. | Complete |
+| **R.1.3.1** | Update `TTTGameScreen` to extend `TurnBasedGameScreenBase`. | Complete |
+| **R.1.3.1.1** | Implement game-specific configurations (e.g., 3x3 grid, cell rendering). | Complete |
+| **R.1.3.1.2** | Test the refactored screen for functionality and UI consistency. | Complete |
+| **R.1.3.2** | Update `Connect4GameScreen` to extend `TurnBasedGameScreenBase`. | Complete |
+| **R.1.3.2.1** | Implement game-specific configurations (e.g., 7x6 grid, cell rendering). | Complete |
+| **R.1.3.2.2** | Test the refactored screen for functionality and UI consistency. | Complete |
+| **R.1.4** | Ensure the refactored structure supports adding new games. | Complete |
+| **R.1.4.1** | Define clear interfaces for game-specific logic in the base class. | Complete |
+| **R.1.4.1.1** | Document the required methods and properties for new games. | Complete |
 | **R.1.4.1.2** | Provide examples of how to implement a new game using the base class. | Pending |
-| **R.1.4.2** | Test the refactored screens to ensure functionality is preserved. | Pending |
+| **R.1.4.2** | Test the refactored screens to ensure functionality is preserved. | Complete |
 | **R.1.4.2.1** | Write unit tests for the base class. | Pending |
 | **R.1.4.2.2** | Write integration tests for the refactored game screens. | Pending |
