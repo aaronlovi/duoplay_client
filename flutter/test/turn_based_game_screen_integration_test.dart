@@ -66,6 +66,7 @@ void main() {
           gameObject: DummyContainer(),
           engine: DummyEngine(),
           gameUtils: DummyUtils(),
+          gameLogic: DummyLogic(),
         ),
       ),
     );

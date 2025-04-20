@@ -1,6 +1,7 @@
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:duoplay/screens/turn_based_game_game_grid.dart';
@@ -11,12 +12,14 @@ class TTTGameScreen extends StatefulWidget {
   final TurnBasedGameContainer gameObject;
   final TurnBasedGameEngineContract engine;
   final TurnBasedGameUtils gameUtils;
+  final TurnBasedGameLogic gameLogic;
 
   const TTTGameScreen({
     super.key,
     required this.gameObject,
     required this.engine,
     required this.gameUtils,
+    required this.gameLogic,
   });
 
   @override
@@ -30,6 +33,7 @@ class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
   TurnBasedGameEngineContract get engine => widget.engine;
   @override
   TurnBasedGameUtils get gameUtils => widget.gameUtils;
+  TurnBasedGameLogic get gameLogic => widget.gameLogic;
   @override
   String get appBarTitle => 'Tic-Tac-Toe';
 
@@ -48,9 +52,9 @@ class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
   @override
   Widget buildGameGrid(BuildContext context) => Center(
     child: GameGrid(
-      rows: 3,
-      columns: 3,
-      aspectRatio: 1,
+      rows: gameLogic.rows,
+      columns: gameLogic.columns,
+      aspectRatio: gameLogic.columns / gameLogic.rows,
       cellBuilder: (context, index) {
         return GestureDetector(
           onTap: () => _handleCellTap(index),

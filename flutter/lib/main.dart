@@ -4,6 +4,7 @@ import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
 import 'package:duoplay/screens/connect_4/connect_4_game_screen.dart';
 import 'package:duoplay/screens/connect_4/connect_4_settings_loader.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
                     .difficulty,
               ),
               gameUtils: GetIt.I.get<TTTGameUtils>(),
+              gameLogic: TTTGameLogic(),
             ),
         '/tic-tac-toe/settings':
             (context) => TicTacToeSettingsLoader(
