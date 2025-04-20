@@ -4,9 +4,9 @@ import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -145,7 +145,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
       player: _gameObject.humanPlayer,
       nowUtc: DateTime.now().toUtc(),
     );
-    TTTOutputContainer outputs = _gameObject.postInput(inp);
+    TurnBasedGameOutputContainer outputs = _gameObject.postInput(inp);
     _processOutputs(outputs);
   }
 
@@ -160,7 +160,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
     ),
   );
 
-  void _processOutputs(TTTOutputContainer outputs) {
+  void _processOutputs(TurnBasedGameOutputContainer outputs) {
     setState(() {
       for (var item in outputs.outputs) {
         if (item is TurnBasedGameErrorFsmOutput) {

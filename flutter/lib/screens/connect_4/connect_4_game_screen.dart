@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
-import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -174,7 +174,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
       player: _gameObject.humanPlayer,
       nowUtc: DateTime.now().toUtc(),
     );
-    Connect4OutputContainer outputs = _gameObject.postInput(inp);
+    TurnBasedGameOutputContainer outputs = _gameObject.postInput(inp);
     _processOutputs(outputs);
   }
 
@@ -210,7 +210,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     }
   }
 
-  void _processOutputs(Connect4OutputContainer outputs) {
+  void _processOutputs(TurnBasedGameOutputContainer outputs) {
     setState(() {
       for (var item in outputs.outputs) {
         if (item is TurnBasedGameErrorFsmOutput) {

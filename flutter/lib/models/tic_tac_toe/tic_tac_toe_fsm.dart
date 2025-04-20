@@ -4,24 +4,26 @@ import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_update_context.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class TTTFsm {
   TicTacToeGameState gameState;
-  final TTTOutputContainer _outputs;
+  final TurnBasedGameOutputContainer _outputs;
   final TurnBasedGameFsmUpdateContext _context;
   late TTTEngineContract _engine;
 
   TTTFsm(TurnBasedGameConfiguration configuration, TurnBasedGameLogic gameLogic)
     : gameState = TicTacToeGameState.initial(configuration, gameLogic),
-      _outputs = TTTOutputContainer(outputs: <TurnBasedGameFsmOutputBase>[]),
+      _outputs = TurnBasedGameOutputContainer(
+        outputs: <TurnBasedGameFsmOutputBase>[],
+      ),
       _context = TurnBasedGameFsmUpdateContext() {
     _engine = TTTEngineFactory.createEngine(configuration.difficulty);
   }
@@ -36,7 +38,10 @@ class TTTFsm {
   TurnBasedGameCellState get enginePlayer => gameState.enginePlayer;
   String get nextGameDifficulty => gameState.nextGameEngineDifficulty;
 
-  void update(TurnBasedGameFsmInputBase inputs, TTTOutputContainer outputs) {
+  void update(
+    TurnBasedGameFsmInputBase inputs,
+    TurnBasedGameOutputContainer outputs,
+  ) {
     final prevState = gameState.toString();
     final inputType = inputs.runtimeType.toString();
     log(

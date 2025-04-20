@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:duoplay/models/connect_4/connect_4_fsm.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
-import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart'; // For logging with `log`
+import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class Connect4GameContainer {
   final Connect4FSM _fsm;
@@ -22,9 +22,9 @@ class Connect4GameContainer {
   Connect4GameState get gameState => _fsm.gameState;
   String get nextGameDifficulty => _fsm.nextGameDifficulty;
 
-  Connect4OutputContainer postInput(TurnBasedGameFsmInputBase inputs) {
+  TurnBasedGameOutputContainer postInput(TurnBasedGameFsmInputBase inputs) {
     final outputs = <TurnBasedGameFsmOutputBase>[];
-    final outputContainer = Connect4OutputContainer(outputs: outputs);
+    final outputContainer = TurnBasedGameOutputContainer(outputs: outputs);
     log('postInput(inputs: $inputs)');
     _fsm.update(inputs, outputContainer);
     for (var output in outputContainer.outputs) {

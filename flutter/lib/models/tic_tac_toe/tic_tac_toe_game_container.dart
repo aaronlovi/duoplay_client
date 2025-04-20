@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart'; // For logging with `log`
+import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class TTTGameContainer extends TurnBasedGameUtils {
   final TTTFsm _fsm;
@@ -22,9 +22,9 @@ class TTTGameContainer extends TurnBasedGameUtils {
   TicTacToeGameState get gameState => _fsm.gameState;
   String get nextGameDifficulty => _fsm.nextGameDifficulty;
 
-  TTTOutputContainer postInput(TurnBasedGameFsmInputBase inputs) {
+  TurnBasedGameOutputContainer postInput(TurnBasedGameFsmInputBase inputs) {
     final outputs = <TurnBasedGameFsmOutputBase>[];
-    final outputContainer = TTTOutputContainer(outputs: outputs);
+    final outputContainer = TurnBasedGameOutputContainer(outputs: outputs);
     log('postInput(inputs: $inputs)');
     _fsm.update(inputs, outputContainer);
     for (var output in outputContainer.outputs) {
