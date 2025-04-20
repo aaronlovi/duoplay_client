@@ -9,33 +9,20 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_update_context.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
-
-class _TTTFsmUpdateContext {
-  bool addStartGameOutput;
-  bool addDoEngineMoveOutput;
-
-  _TTTFsmUpdateContext()
-    : addStartGameOutput = false,
-      addDoEngineMoveOutput = false;
-
-  void clear() {
-    addStartGameOutput = false;
-    addDoEngineMoveOutput = false;
-  }
-}
 
 class TTTFsm {
   TicTacToeGameState gameState;
   final TTTOutputContainer _outputs;
-  final _TTTFsmUpdateContext _context;
+  final TurnBasedGameFsmUpdateContext _context;
   late TTTEngineContract _engine;
 
   TTTFsm(TurnBasedGameConfiguration configuration, TurnBasedGameLogic gameLogic)
     : gameState = TicTacToeGameState.initial(configuration, gameLogic),
       _outputs = TTTOutputContainer(outputs: <TurnBasedGameFsmOutputBase>[]),
-      _context = _TTTFsmUpdateContext() {
+      _context = TurnBasedGameFsmUpdateContext() {
     _engine = TTTEngineFactory.createEngine(configuration.difficulty);
   }
 

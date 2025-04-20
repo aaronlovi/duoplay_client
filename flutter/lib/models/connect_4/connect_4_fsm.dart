@@ -9,27 +9,14 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_update_context.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
-
-class _Connect4FsmUpdateContext {
-  bool addStartGameOutput;
-  bool addDoEngineMoveOutput;
-
-  _Connect4FsmUpdateContext()
-    : addStartGameOutput = false,
-      addDoEngineMoveOutput = false;
-
-  void clear() {
-    addStartGameOutput = false;
-    addDoEngineMoveOutput = false;
-  }
-}
 
 class Connect4FSM {
   Connect4GameState gameState;
   final Connect4OutputContainer _outputs;
-  final _Connect4FsmUpdateContext _context;
+  final TurnBasedGameFsmUpdateContext _context;
   late Connect4EngineContract _engine;
 
   Connect4FSM(
@@ -39,7 +26,7 @@ class Connect4FSM {
       _outputs = Connect4OutputContainer(
         outputs: <TurnBasedGameFsmOutputBase>[],
       ),
-      _context = _Connect4FsmUpdateContext() {
+      _context = TurnBasedGameFsmUpdateContext() {
     _engine = Connect4EngineFactory.createEngine(configuration.difficulty);
   }
 
