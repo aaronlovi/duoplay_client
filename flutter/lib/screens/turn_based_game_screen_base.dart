@@ -7,6 +7,7 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart'
 import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
+import 'package:duoplay/screens/turn_based_game_game_grid.dart';
 import 'package:duoplay/screens/turn_based_game_settings_button.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,12 +19,6 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
   TurnBasedGameEngineContract get engine;
   TurnBasedGameUtils get gameUtils;
   TurnBasedGameLogic get gameLogic => gameObject.gameState.gameLogic;
-
-  /// Abstract: must return the main game grid widget.
-  Widget buildGameGrid(BuildContext context);
-
-  /// Abstract: must return the status bar widget.
-  Widget buildStatusBar(BuildContext context);
 
   /// Abstract: must return the app bar title for the game screen.
   String get appBarTitle;
@@ -47,7 +42,7 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
             child: buildSettingsButton(context),
           ),
           Expanded(child: buildGameGrid(context)),
-          buildStatusBar(context),
+          buildStatusBar(),
         ],
       ),
     );
@@ -74,10 +69,13 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
             gameObject.gameState.configuration.betweenGamesWaitTime.inSeconds;
         final navigator = Navigator.of(context);
         final scaffoldMessenger = ScaffoldMessenger.of(context);
+
         await navigator.pushNamed(settingsRoute);
-        if (!mounted) return;
         final prefs = await SharedPreferences.getInstance();
         final newDifficulty = getNewDifficulty(prefs, prevDifficulty);
+
+        if (!mounted) return;
+        
         if (newDifficulty != prevDifficulty) {
           gameObject.postInput(
             TurnBasedGameSettingsChangeFsmInput(
@@ -112,6 +110,67 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
             (prefs, prevDifficulty) =>
                 prefs.getString(settingsDifficultyKey) ?? prevDifficulty,
       );
+
+  /// Default implementation for the status bar.
+  @protected
+  Widget buildStatusBar() {
+    final difficulty = gameObject.gameState.configuration.difficulty;
+    final player =
+        gameUtils.cellStateToShortString(gameObject.humanPlayer).toUpperCase();
+    return Container(
+      width: double.infinity,
+      color: Colors.grey[200],
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Text(
+        'Engine: $difficulty    You are: $player',
+        style: const TextStyle(fontSize: 16),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  /// Default implementation for handling cell taps.
+  @protected
+  void handleCellTap(int index) {
+    if (!gameObject.isHumanPlayerToMove) return;
+    final inp = TurnBasedGamePlayerMoveFsmInput(
+      index: index,
+      player: gameObject.humanPlayer,
+      nowUtc: DateTime.now().toUtc(),
+    );
+    TurnBasedGameOutputContainer outputs = gameObject.postInput(inp);
+    processOutputs(outputs);
+  }
+
+  @protected
+  Widget buildGameGrid(BuildContext context) => buildDefaultGameGrid(
+    cellBuilder: (context, index) {
+      return GestureDetector(
+        onTap: () => handleCellTap(index),
+        child: getCellContents(index),
+      );
+    },
+  );
+
+  /// Default implementation for the game grid.
+  /// Subclasses only need to provide a cellBuilder.
+  @protected
+  Widget buildDefaultGameGrid({
+    required Widget Function(BuildContext, int) cellBuilder,
+    double? aspectRatio,
+  }) {
+    final rows = gameLogic.rows;
+    final columns = gameLogic.columns;
+    final ratio = aspectRatio ?? (columns / rows);
+    return Center(
+      child: GameGrid(
+        rows: rows,
+        columns: columns,
+        aspectRatio: ratio,
+        cellBuilder: cellBuilder,
+      ),
+    );
+  }
 
   /// Shared FSM output processing logic.
   @protected
@@ -170,4 +229,7 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
       processOutputs(newOutputs);
     });
   }
+
+  @protected
+  Widget getCellContents(int index);
 }
