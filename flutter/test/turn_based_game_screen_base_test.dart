@@ -55,6 +55,7 @@ class AsyncSettingsScreen extends DummyGameScreen {
   @override
   DummyGameScreenState createState() => AsyncSettingsScreenState();
 }
+
 class AsyncSettingsScreenState extends DummyGameScreenState {
   bool setStateCalledAfterDispose = false;
   @override
@@ -75,9 +76,7 @@ class AsyncSettingsScreenState extends DummyGameScreenState {
     super.build(context);
     // Render the async settings button so the test can find and tap it
     return MaterialApp(
-      home: Scaffold(
-        body: Center(child: buildSettingsButton(context)),
-      ),
+      home: Scaffold(body: Center(child: buildSettingsButton(context))),
     );
   }
 }
@@ -141,7 +140,9 @@ void main() {
   );
 
   // This test verifies that setState/context is not called after dispose if the widget is unmounted during an async operation (e.g., settings button).
-  testWidgets('No setState/context after dispose in async settings button', (tester) async {
+  testWidgets('No setState/context after dispose in async settings button', (
+    tester,
+  ) async {
     await tester.pumpWidget(MaterialApp(home: AsyncSettingsScreen()));
     await tester.tap(find.text('Async Settings'));
     await tester.pump();
