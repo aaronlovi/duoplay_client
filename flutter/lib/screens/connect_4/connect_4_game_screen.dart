@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Connect4GameScreen extends StatefulWidget {
-  final Connect4GameContainer gameObject;
+  final TurnBasedGameContainer gameObject;
   final TurnBasedGameEngineContract engine;
   final TurnBasedGameUtils gameUtils;
   final TurnBasedGameLogic gameLogic;
@@ -30,7 +30,7 @@ class Connect4GameScreen extends StatefulWidget {
 }
 
 class Connect4GameScreenState extends State<Connect4GameScreen> {
-  Connect4GameContainer get _gameObject => widget.gameObject;
+  TurnBasedGameContainer get _gameObject => widget.gameObject;
   TurnBasedGameEngineContract get _engine => widget.engine;
   TurnBasedGameUtils get _gameUtils => widget.gameUtils;
   TurnBasedGameLogic get _gameLogic => widget.gameLogic;
