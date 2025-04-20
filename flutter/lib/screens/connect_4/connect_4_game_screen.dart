@@ -22,6 +22,10 @@ class Connect4GameScreen extends StatefulWidget {
 
 class Connect4GameScreenState
     extends TurnBasedGameScreenBase<Connect4GameScreen> {
+  final Color gridColor = const Color(
+    0xFFFFF9C4,
+  ); // Pale yellow background color
+
   @override
   TurnBasedGameContainer get gameObject => widget.gameObject;
   @override
@@ -34,6 +38,25 @@ class Connect4GameScreenState
   String get settingsRoute => '/connect-4/settings';
   @override
   String get settingsDifficultyKey => 'connect4_ai_difficulty';
+
+  @override
+  Widget buildGameGrid(BuildContext context) {
+    final rows = gameLogic.rows;
+    final columns = gameLogic.columns;
+
+    return Center(
+      child: Container(
+        color: gridColor, // Set the pale yellow grid background color
+        padding: const EdgeInsets.all(
+          8.0,
+        ), // Add padding to extend beyond cells
+        child: AspectRatio(
+          aspectRatio: columns / rows, // Maintain the grid's aspect ratio
+          child: super.buildGameGrid(context), // Call the base grid builder
+        ),
+      ),
+    );
+  }
 
   @override
   Widget getCellContents(int index) {

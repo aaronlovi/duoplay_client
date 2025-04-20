@@ -21,6 +21,8 @@ class TTTGameScreen extends StatefulWidget {
 }
 
 class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
+  final Color gridColor = Colors.grey[300]!; // Configurable grid color
+
   @override
   TurnBasedGameContainer get gameObject => widget.gameObject;
   @override
@@ -35,13 +37,35 @@ class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
   String get settingsDifficultyKey => 'ttt_ai_difficulty';
 
   @override
-  Container getCellContents(int index) => Container(
-    decoration: _getCellBorder(),
-    child: _getCellInnerContents(index),
-  );
+  Widget buildGameGrid(BuildContext context) {
+    final rows = gameLogic.rows;
+    final columns = gameLogic.columns;
 
-  BoxDecoration _getCellBorder() =>
-      BoxDecoration(border: Border.all(color: Colors.black));
+    return Center(
+      child: Container(
+        color: gridColor, // Set the grid background color
+        padding: const EdgeInsets.all(
+          8.0,
+        ), // Add padding to extend beyond cells
+        child: AspectRatio(
+          aspectRatio: columns / rows, // Maintain the grid's aspect ratio
+          child: super.buildGameGrid(context), // Call the base grid builder
+        ),
+      ),
+    );
+  }
+
+  @override
+  Container getCellContents(int index) => Container(
+    decoration: BoxDecoration(
+      color: Colors.white, // Set the cell background color
+      border: Border.all(
+        color: gridColor,
+        width: 2.0,
+      ), // Add border to create grid effect
+    ),
+    child: _getCellInnerContents(index), // Add cell content
+  );
 
   Widget _getCellInnerContents(int index) => Center(
     child: Text(
