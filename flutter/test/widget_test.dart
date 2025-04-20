@@ -10,7 +10,7 @@ void main() {
 
     test('validateMove detects invalid moves', () {
       final config = TurnBasedGameConfiguration.defaults();
-      final gameState = TicTacToeGameState.initial(config, gameLogic);
+      final gameState = TTTGameState.initial(config, gameLogic);
 
       // Test out-of-bounds move
       expect(gameState.validateMove(-1).isFailure, true);
@@ -27,7 +27,7 @@ void main() {
     test('Simultaneous win and draw conditions', () {
       final config = TurnBasedGameConfiguration.defaults();
 
-      final gameState = TicTacToeGameState.initial(config, gameLogic);
+      final gameState = TTTGameState.initial(config, gameLogic);
 
       // Set up a board state where the last move results in both a win and a full board
       // Create a potential diagonal win (0, 4, 8) when X plays at position 8

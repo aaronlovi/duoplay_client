@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/engines/connect_4/connect_4_engine_factory.dart';
+import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
@@ -11,13 +11,14 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart'
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_update_context.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class Connect4FSM {
-  Connect4GameState gameState;
+  TurnBasedGameState gameState;
   final TurnBasedGameOutputContainer _outputs;
   final TurnBasedGameFsmUpdateContext _context;
-  late Connect4EngineContract _engine;
+  late TurnBasedGameEngineContract _engine;
 
   Connect4FSM(
     TurnBasedGameConfiguration configuration,

@@ -1,10 +1,10 @@
-part of 'connect_4_engine_contract.dart';
+part of '../turn_based_game/turn_based_game_engine_contract.dart';
 
-class Connect4IntermediateEngine extends Connect4EngineContract {
+class Connect4IntermediateEngine extends TurnBasedGameEngineContract {
   Connect4IntermediateEngine(super.gameLogic);
 
   @override
-  GenericResult<int> getNextMove(Connect4GameState currentState) {
+  GenericResult<int> getNextMove(TurnBasedGameState currentState) {
     TurnBasedGameBoard board = currentState.board;
     TurnBasedGameCellState chipColor = currentState.currentPlayer;
 
@@ -58,7 +58,7 @@ class Connect4IntermediateEngine extends Connect4EngineContract {
     }
 
     return GenericResult<int>.success(
-      legalIndices[Random().nextInt(legalIndices.length)],
+      legalIndices[random.nextInt(legalIndices.length)],
     );
   }
 }

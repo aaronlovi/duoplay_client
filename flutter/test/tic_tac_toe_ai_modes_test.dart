@@ -1,4 +1,4 @@
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
+import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
@@ -24,7 +24,7 @@ void main() {
 ''';
       TurnBasedGameBoard board = gameLogic.parseBoard(boardString);
 
-      final state = TicTacToeGameState(
+      final state = TTTGameState(
         board,
         gameLogic,
         TurnBasedGameCellState.player1,
@@ -54,7 +54,7 @@ void main() {
 ''';
       TurnBasedGameBoard board = gameLogic.parseBoard(boardString);
 
-      final state = TicTacToeGameState(
+      final state = TTTGameState(
         board,
         gameLogic,
         TurnBasedGameCellState.player2,
@@ -79,7 +79,7 @@ void main() {
       final engine = TTTExpertEngine(gameLogic);
 
       // Empty board, X to move
-      final state = TicTacToeGameState(
+      final state = TTTGameState(
         TurnBasedGameBoard(gameLogic.rows, gameLogic.columns),
         gameLogic,
         TurnBasedGameCellState.player1,
@@ -113,7 +113,7 @@ void main() {
 ''';
         final board = gameLogic.parseBoard(boardString);
 
-        final state = TicTacToeGameState(
+        final state = TTTGameState(
           board,
           gameLogic,
           TurnBasedGameCellState.player2,

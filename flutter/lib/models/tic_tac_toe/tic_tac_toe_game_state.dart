@@ -5,9 +5,9 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
-class TicTacToeGameState extends TurnBasedGameState {
+class TTTGameState extends TurnBasedGameState {
   // Made the constructor public to allow external instantiation for simulation purposes
-  TicTacToeGameState(
+  TTTGameState(
     super.board,
     super.gameLogic,
     super.currentPlayer,
@@ -19,7 +19,7 @@ class TicTacToeGameState extends TurnBasedGameState {
     super.nextGameEngineDifficulty,
   );
 
-  TicTacToeGameState._(
+  TTTGameState._(
     super.board,
     super.gameLogic,
     super.currentPlayer,
@@ -31,11 +31,11 @@ class TicTacToeGameState extends TurnBasedGameState {
     super.nextGameEngineDifficulty,
   );
 
-  factory TicTacToeGameState.initial(
+  factory TTTGameState.initial(
     TurnBasedGameConfiguration cfg,
     TurnBasedGameLogic gameLogic, {
     DateTime? nowUtc,
-  }) => TicTacToeGameState._(
+  }) => TTTGameState._(
     TurnBasedGameBoard(gameLogic.rows, gameLogic.columns),
     gameLogic,
     TurnBasedGameCellState.player1,

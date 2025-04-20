@@ -1,8 +1,8 @@
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
+import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
 
 class TTTEngineFactory {
-  static TTTEngineContract createEngine(String difficulty) {
+  static TurnBasedGameEngineContract createEngine(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'beginner':
         return TTTBeginnerEngine(TTTGameLogic());

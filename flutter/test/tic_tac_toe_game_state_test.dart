@@ -17,7 +17,7 @@ void main() {
     });
 
     test('Invalid move: out of bounds', () {
-      final state = TicTacToeGameState.initial(config, gameLogic);
+      final state = TTTGameState.initial(config, gameLogic);
       final result = state.makeMove(-1, TurnBasedGameCellState.player1);
       expect(result.isFailure, true);
       final result2 = state.makeMove(9, TurnBasedGameCellState.player1);
@@ -25,7 +25,7 @@ void main() {
     });
 
     test('Invalid move: cell already occupied', () {
-      final state = TicTacToeGameState.initial(config, gameLogic);
+      final state = TTTGameState.initial(config, gameLogic);
       state.makeMove(0, TurnBasedGameCellState.player1);
       final result = state.makeMove(0, TurnBasedGameCellState.player2);
       expect(result.isFailure, true);
@@ -39,7 +39,7 @@ void main() {
 ''';
       final board = gameLogic.parseBoard(boardString);
 
-      final state = TicTacToeGameState(
+      final state = TTTGameState(
         board,
         gameLogic,
         TurnBasedGameCellState.player2,
@@ -63,7 +63,7 @@ void main() {
 ''';
       final board = gameLogic.parseBoard(boardString);
 
-      final state = TicTacToeGameState(
+      final state = TTTGameState(
         board,
         gameLogic,
         TurnBasedGameCellState.player1, // X's turn

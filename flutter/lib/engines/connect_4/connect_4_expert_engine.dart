@@ -1,10 +1,10 @@
-part of 'connect_4_engine_contract.dart';
+part of '../turn_based_game/turn_based_game_engine_contract.dart';
 
-class Connect4ExpertEngine extends Connect4EngineContract {
+class Connect4ExpertEngine extends TurnBasedGameEngineContract {
   Connect4ExpertEngine(super.gameLogic);
 
   @override
-  GenericResult<int> getNextMove(Connect4GameState currentState) {
+  GenericResult<int> getNextMove(TurnBasedGameState currentState) {
     TurnBasedGameBoard board = currentState.board;
     TurnBasedGameCellState chipColor = currentState.currentPlayer;
 

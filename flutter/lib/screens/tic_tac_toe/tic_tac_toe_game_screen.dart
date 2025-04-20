@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
+import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class TTTGameScreen extends StatefulWidget {
   final TTTGameContainer gameObject;
-  final TTTEngineContract engine;
+  final TurnBasedGameEngineContract engine;
   final TTTGameUtils gameUtils;
 
   const TTTGameScreen({
@@ -29,7 +29,7 @@ class TTTGameScreen extends StatefulWidget {
 
 class TTTGameScreenState extends State<TTTGameScreen> {
   TTTGameContainer get _gameObject => widget.gameObject;
-  TTTEngineContract get _engine => widget.engine;
+  TurnBasedGameEngineContract get _engine => widget.engine;
   TTTGameUtils get _gameUtils => widget.gameUtils;
   bool get isPlayerXEngine => _gameObject.isPlayerXEngine;
   bool get isPlayerOEngine => _gameObject.isPlayerOEngine;

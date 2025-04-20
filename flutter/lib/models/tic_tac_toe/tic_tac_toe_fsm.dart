@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
+import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
@@ -14,13 +14,13 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class TTTFsm {
-  TicTacToeGameState gameState;
+  TTTGameState gameState;
   final TurnBasedGameOutputContainer _outputs;
   final TurnBasedGameFsmUpdateContext _context;
-  late TTTEngineContract _engine;
+  late TurnBasedGameEngineContract _engine;
 
   TTTFsm(TurnBasedGameConfiguration configuration, TurnBasedGameLogic gameLogic)
-    : gameState = TicTacToeGameState.initial(configuration, gameLogic),
+    : gameState = TTTGameState.initial(configuration, gameLogic),
       _outputs = TurnBasedGameOutputContainer(
         outputs: <TurnBasedGameFsmOutputBase>[],
       ),

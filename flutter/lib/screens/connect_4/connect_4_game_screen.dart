@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
+import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/result.dart';
@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Connect4GameScreen extends StatefulWidget {
   final Connect4GameContainer gameObject;
-  final Connect4EngineContract engine;
+  final TurnBasedGameEngineContract engine;
   final Connect4GameUtils gameUtils;
   final TurnBasedGameLogic gameLogic;
 
@@ -32,7 +32,7 @@ class Connect4GameScreen extends StatefulWidget {
 
 class Connect4GameScreenState extends State<Connect4GameScreen> {
   Connect4GameContainer get _gameObject => widget.gameObject;
-  Connect4EngineContract get _engine => widget.engine;
+  TurnBasedGameEngineContract get _engine => widget.engine;
   Connect4GameUtils get _gameUtils => widget.gameUtils;
   TurnBasedGameLogic get _gameLogic => widget.gameLogic;
   bool get isPlayerRedTheEngine => _gameObject.isPlayerRedEngine;

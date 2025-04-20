@@ -1,10 +1,10 @@
-part of 'tic_tac_toe_engine_contract.dart';
+part of '../turn_based_game/turn_based_game_engine_contract.dart';
 
-class TTTIntermediateEngine extends TTTEngineContract {
+class TTTIntermediateEngine extends TurnBasedGameEngineContract {
   TTTIntermediateEngine(super.gameLogic);
 
   @override
-  GenericResult<int> getNextMove(TicTacToeGameState currentState) {
+  GenericResult<int> getNextMove(TurnBasedGameState currentState) {
     Result res = currentState.isLegalPositionReadyForMove();
     if (res.isFailure) {
       return GenericResult.failure(ResultErrorCode.invalidState);

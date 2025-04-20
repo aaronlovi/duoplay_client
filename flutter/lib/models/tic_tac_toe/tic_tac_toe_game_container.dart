@@ -19,7 +19,7 @@ class TTTGameContainer extends TurnBasedGameUtils {
   bool get isHumanPlayerToMove => _fsm.isHumanPlayerToMove;
   TurnBasedGameCellState get humanPlayer => _fsm.humanPlayer;
   TurnBasedGameCellState get enginePlayer => _fsm.enginePlayer;
-  TicTacToeGameState get gameState => _fsm.gameState;
+  TTTGameState get gameState => _fsm.gameState;
   String get nextGameDifficulty => _fsm.nextGameDifficulty;
 
   TurnBasedGameOutputContainer postInput(TurnBasedGameFsmInputBase inputs) {

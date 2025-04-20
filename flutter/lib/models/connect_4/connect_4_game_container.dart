@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:duoplay/models/connect_4/connect_4_fsm.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class Connect4GameContainer {
@@ -19,7 +19,7 @@ class Connect4GameContainer {
   bool get isHumanPlayerToMove => _fsm.isHumanPlayerToMove;
   TurnBasedGameCellState get humanPlayer => _fsm.humanPlayer;
   TurnBasedGameCellState get enginePlayer => _fsm.enginePlayer;
-  Connect4GameState get gameState => _fsm.gameState;
+  TurnBasedGameState get gameState => _fsm.gameState;
   String get nextGameDifficulty => _fsm.nextGameDifficulty;
 
   TurnBasedGameOutputContainer postInput(TurnBasedGameFsmInputBase inputs) {

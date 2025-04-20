@@ -1,10 +1,10 @@
-part of 'tic_tac_toe_engine_contract.dart';
+part of '../turn_based_game/turn_based_game_engine_contract.dart';
 
-class TTTExpertEngine extends TTTEngineContract {
+class TTTExpertEngine extends TurnBasedGameEngineContract {
   TTTExpertEngine(super.gameLogic);
 
   @override
-  GenericResult<int> getNextMove(TicTacToeGameState currentState) {
+  GenericResult<int> getNextMove(TurnBasedGameState currentState) {
     Result res = currentState.isLegalPositionReadyForMove();
     if (res.isFailure) {
       return GenericResult.failure(ResultErrorCode.invalidState);
@@ -27,7 +27,7 @@ class TTTExpertEngine extends TTTEngineContract {
   }
 
   MinimaxResult _minimax(
-    TicTacToeGameState state,
+    TurnBasedGameState state,
     TurnBasedGameCellState rootPlayer, // Always optimize for the engine player
     bool isMaximizing,
   ) {
@@ -66,14 +66,14 @@ class TTTExpertEngine extends TTTEngineContract {
     }
   }
 
-  TicTacToeGameState _simulateMove(
-    TicTacToeGameState state,
+  TurnBasedGameState _simulateMove(
+    TurnBasedGameState state,
     int index,
     TurnBasedGameCellState player,
   ) {
     final newBoard = TurnBasedGameBoard.copy(state.board);
     newBoard[index] = player;
-    return TicTacToeGameState(
+    return TTTGameState(
       newBoard,
       _gameLogic,
       player.getOpponent(),
