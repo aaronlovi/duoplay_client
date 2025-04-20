@@ -4,6 +4,7 @@ import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.
 import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +17,7 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
   TurnBasedGameContainer get gameObject;
   TurnBasedGameEngineContract get engine;
   TurnBasedGameUtils get gameUtils;
-
-  /// Abstract: must return the settings button widget.
-  Widget buildSettingsButton(BuildContext context);
+  TurnBasedGameLogic get gameLogic => gameObject.gameState.gameLogic;
 
   /// Abstract: must return the main game grid widget.
   Widget buildGameGrid(BuildContext context);
@@ -28,6 +27,12 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
 
   /// Abstract: must return the app bar title for the game screen.
   String get appBarTitle;
+
+  /// Abstract: must return the settings route for the game screen.
+  String get settingsRoute;
+
+  /// Abstract: must return the settings key for the game screen.
+  String get settingsDifficultyKey;
 
   /// Default build method for shared game screen layout.
   @mustCallSuper
@@ -95,6 +100,18 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
       label: label,
     );
   }
+
+  /// Default implementation for the settings button.
+  Widget buildSettingsButton(BuildContext context) =>
+      buildDefaultSettingsButton(
+        context: context,
+        settingsRoute: settingsRoute,
+        settingsKey: settingsDifficultyKey,
+        label: 'Settings',
+        getNewDifficulty:
+            (prefs, prevDifficulty) =>
+                prefs.getString(settingsDifficultyKey) ?? prevDifficulty,
+      );
 
   /// Shared FSM output processing logic.
   @protected

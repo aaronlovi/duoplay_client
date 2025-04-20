@@ -1,7 +1,6 @@
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:duoplay/screens/turn_based_game_game_grid.dart';
@@ -12,14 +11,12 @@ class Connect4GameScreen extends StatefulWidget {
   final TurnBasedGameContainer gameObject;
   final TurnBasedGameEngineContract engine;
   final TurnBasedGameUtils gameUtils;
-  final TurnBasedGameLogic gameLogic;
 
   const Connect4GameScreen({
     super.key,
     required this.gameObject,
     required this.engine,
     required this.gameUtils,
-    required this.gameLogic,
   });
 
   @override
@@ -34,21 +31,12 @@ class Connect4GameScreenState
   TurnBasedGameEngineContract get engine => widget.engine;
   @override
   TurnBasedGameUtils get gameUtils => widget.gameUtils;
-  TurnBasedGameLogic get gameLogic => widget.gameLogic;
   @override
   String get appBarTitle => 'Connect 4';
-
   @override
-  Widget buildSettingsButton(BuildContext context) =>
-      buildDefaultSettingsButton(
-        context: context,
-        settingsRoute: '/connect-4/settings',
-        settingsKey: 'connect4_ai_difficulty',
-        label: 'Settings',
-        getNewDifficulty:
-            (prefs, prevDifficulty) =>
-                prefs.getString('connect4_ai_difficulty') ?? prevDifficulty,
-      );
+  String get settingsRoute => '/connect-4/settings';
+  @override
+  String get settingsDifficultyKey => 'connect4_ai_difficulty';
 
   @override
   Widget buildGameGrid(BuildContext context) => Center(

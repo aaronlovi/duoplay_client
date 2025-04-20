@@ -66,7 +66,6 @@ void main() {
           gameObject: DummyContainer(),
           engine: DummyEngine(),
           gameUtils: DummyUtils(),
-          gameLogic: DummyLogic(),
         ),
       ),
     );
@@ -82,7 +81,6 @@ void main() {
           gameObject: DummyContainer(),
           engine: DummyEngine(),
           gameUtils: DummyUtils(),
-          gameLogic: DummyLogic(),
         ),
       ),
     );

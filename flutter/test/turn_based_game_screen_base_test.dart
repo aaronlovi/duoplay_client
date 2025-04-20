@@ -31,6 +31,10 @@ class DummyGameScreenState extends TurnBasedGameScreenBase<DummyGameScreen> {
   @override
   String get appBarTitle => 'Dummy';
   @override
+  String get settingsRoute => '/dummy/settings';
+  @override
+  String get settingsDifficultyKey => 'dummy_ai_difficulty';
+  @override
   Widget buildSettingsButton(BuildContext context) => const SizedBox();
   @override
   Widget buildGameGrid(BuildContext context) => const SizedBox();

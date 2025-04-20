@@ -1,10 +1,8 @@
 import 'package:duoplay/engines/connect_4/connect_4_engine_factory.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
 import 'package:duoplay/screens/connect_4/connect_4_game_screen.dart';
 import 'package:duoplay/screens/connect_4/connect_4_settings_loader.dart';
@@ -45,7 +43,6 @@ class MyApp extends StatelessWidget {
                     .difficulty,
               ),
               gameUtils: GetIt.I.get<TTTGameUtils>(),
-              gameLogic: TTTGameLogic(),
             ),
         '/tic-tac-toe/settings':
             (context) => TicTacToeSettingsLoader(
@@ -62,7 +59,6 @@ class MyApp extends StatelessWidget {
                     .difficulty,
               ),
               gameUtils: GetIt.I.get<Connect4GameUtils>(),
-              gameLogic: Connect4GameLogic(),
             ),
         '/connect-4/settings':
             (context) => Connect4SettingsLoader(
