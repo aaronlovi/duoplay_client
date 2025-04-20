@@ -1,14 +1,8 @@
-import 'dart:developer' as developer;
+part of 'connect_4_engine_contract.dart';
 
-import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
-import 'package:duoplay/models/mini_max_result.dart';
-import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
+class Connect4ExpertEngine extends Connect4EngineContract {
+  Connect4ExpertEngine(super.gameLogic);
 
-class Connect4ExpertEngine implements Connect4EngineContract {
   @override
   GenericResult<int> getNextMove(Connect4GameState currentState) {
     TurnBasedGameBoard board = currentState.board;
@@ -36,15 +30,15 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     TurnBasedGameBoard board,
     TurnBasedGameCellState chipColor,
   ) {
-    final centerColumn = Connect4GameLogic.columns ~/ 2;
+    final centerColumn = _gameLogic.columns ~/ 2;
     int score = 0;
 
-    for (int row = 0; row < Connect4GameLogic.rows; row++) {
-      for (int col = 0; col < Connect4GameLogic.columns; col++) {
-        int index = row * Connect4GameLogic.columns + col;
+    for (int row = 0; row < _gameLogic.rows; row++) {
+      for (int col = 0; col < _gameLogic.columns; col++) {
+        int index = row * _gameLogic.columns + col;
         if (board[index] == chipColor) {
           // Higher weight for chips closer to the center column
-          score += Connect4GameLogic.columns - (col - centerColumn).abs();
+          score += _gameLogic.columns - (col - centerColumn).abs();
         }
       }
     }
@@ -62,11 +56,11 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     // Helper function to count open sequences in a line
     int countOpenSequencesOnRow(TurnBasedGameBoard board, int rowIndex) {
       int count = 0;
-      for (int i = 0; i <= Connect4GameLogic.columns - 4; i++) {
-        int index0 = rowIndex * Connect4GameLogic.columns + i;
-        int index1 = rowIndex * Connect4GameLogic.columns + i + 1;
-        int index2 = rowIndex * Connect4GameLogic.columns + i + 2;
-        int index3 = rowIndex * Connect4GameLogic.columns + i + 3;
+      for (int i = 0; i <= _gameLogic.columns - 4; i++) {
+        int index0 = rowIndex * _gameLogic.columns + i;
+        int index1 = rowIndex * _gameLogic.columns + i + 1;
+        int index2 = rowIndex * _gameLogic.columns + i + 2;
+        int index3 = rowIndex * _gameLogic.columns + i + 3;
 
         int numCellsOfChipColor =
             (board[index0] == chipColor ? 1 : 0) +
@@ -85,11 +79,11 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
     int countOpenSequencesOnColumn(TurnBasedGameBoard board, int columnIndex) {
       int count = 0;
-      for (int i = 0; i <= Connect4GameLogic.rows - 4; i++) {
-        int index0 = i * Connect4GameLogic.columns + columnIndex;
-        int index1 = (i + 1) * Connect4GameLogic.columns + columnIndex;
-        int index2 = (i + 2) * Connect4GameLogic.columns + columnIndex;
-        int index3 = (i + 3) * Connect4GameLogic.columns + columnIndex;
+      for (int i = 0; i <= _gameLogic.rows - 4; i++) {
+        int index0 = i * _gameLogic.columns + columnIndex;
+        int index1 = (i + 1) * _gameLogic.columns + columnIndex;
+        int index2 = (i + 2) * _gameLogic.columns + columnIndex;
+        int index3 = (i + 3) * _gameLogic.columns + columnIndex;
         int numCellsOfChipColor =
             board[index0] == chipColor
                 ? 1
@@ -114,19 +108,15 @@ class Connect4ExpertEngine implements Connect4EngineContract {
       int count = 0;
       for (int i = 0; i <= 3; i++) {
         // Ensure indices are within bounds
-        if (rowIndex + i + 3 < Connect4GameLogic.rows &&
-            colIndex + i + 3 < Connect4GameLogic.columns) {
-          int index0 =
-              (rowIndex + i) * Connect4GameLogic.columns + (colIndex + i);
+        if (rowIndex + i + 3 < _gameLogic.rows &&
+            colIndex + i + 3 < _gameLogic.columns) {
+          int index0 = (rowIndex + i) * _gameLogic.columns + (colIndex + i);
           int index1 =
-              (rowIndex + i + 1) * Connect4GameLogic.columns +
-              (colIndex + i + 1);
+              (rowIndex + i + 1) * _gameLogic.columns + (colIndex + i + 1);
           int index2 =
-              (rowIndex + i + 2) * Connect4GameLogic.columns +
-              (colIndex + i + 2);
+              (rowIndex + i + 2) * _gameLogic.columns + (colIndex + i + 2);
           int index3 =
-              (rowIndex + i + 3) * Connect4GameLogic.columns +
-              (colIndex + i + 3);
+              (rowIndex + i + 3) * _gameLogic.columns + (colIndex + i + 3);
 
           int numCellsOfChipColor =
               (board[index0] == chipColor ? 1 : 0) +
@@ -152,19 +142,14 @@ class Connect4ExpertEngine implements Connect4EngineContract {
       int count = 0;
       for (int i = 0; i <= 3; i++) {
         // Ensure indices are within bounds
-        if (rowIndex - i - 3 >= 0 &&
-            colIndex + i + 3 < Connect4GameLogic.columns) {
-          int index0 =
-              (rowIndex - i) * Connect4GameLogic.columns + (colIndex + i);
+        if (rowIndex - i - 3 >= 0 && colIndex + i + 3 < _gameLogic.columns) {
+          int index0 = (rowIndex - i) * _gameLogic.columns + (colIndex + i);
           int index1 =
-              (rowIndex - i - 1) * Connect4GameLogic.columns +
-              (colIndex + i + 1);
+              (rowIndex - i - 1) * _gameLogic.columns + (colIndex + i + 1);
           int index2 =
-              (rowIndex - i - 2) * Connect4GameLogic.columns +
-              (colIndex + i + 2);
+              (rowIndex - i - 2) * _gameLogic.columns + (colIndex + i + 2);
           int index3 =
-              (rowIndex - i - 3) * Connect4GameLogic.columns +
-              (colIndex + i + 3);
+              (rowIndex - i - 3) * _gameLogic.columns + (colIndex + i + 3);
 
           int numCellsOfChipColor =
               (board[index0] == chipColor ? 1 : 0) +
@@ -183,18 +168,18 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     }
 
     // Check rows
-    for (int row = 0; row < Connect4GameLogic.rows; row++) {
+    for (int row = 0; row < _gameLogic.rows; row++) {
       score += countOpenSequencesOnRow(board, row);
     }
 
     // Check columns
-    for (int col = 0; col < Connect4GameLogic.columns; col++) {
+    for (int col = 0; col < _gameLogic.columns; col++) {
       score += countOpenSequencesOnColumn(board, col);
     }
 
     // Check diagonals (bottom-left to top-right)
-    for (int row = 0; row < Connect4GameLogic.rows - 3; row++) {
-      for (int col = 0; col < Connect4GameLogic.columns - 3; col++) {
+    for (int row = 0; row < _gameLogic.rows - 3; row++) {
+      for (int col = 0; col < _gameLogic.columns - 3; col++) {
         score += countOpenSequencesOnBottomLeftToTopRightDiagonal(
           board,
           row,
@@ -204,8 +189,8 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     }
 
     // Check diagonals (top-left to bottom-right)
-    for (int row = 3; row < Connect4GameLogic.rows; row++) {
-      for (int col = 0; col < Connect4GameLogic.columns - 3; col++) {
+    for (int row = 3; row < _gameLogic.rows; row++) {
+      for (int col = 0; col < _gameLogic.columns - 3; col++) {
         score += countOpenSequencesOnTopLeftToBottomRightDiagonal(
           board,
           row,
@@ -227,7 +212,7 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     int beta,
   ) {
     // Base case: check for terminal states (win, loss, draw) or depth limit
-    final winner = Connect4GameLogic.getWinner(board);
+    final winner = _gameLogic.getWinner(board);
     if (winner != TurnBasedGameCellState.empty) {
       if (winner == chipColor) {
         return MinimaxResult(
@@ -241,7 +226,7 @@ class Connect4ExpertEngine implements Connect4EngineContract {
         ); // High negative score for a loss
       }
     }
-    if (remainingDepth == 0 || Connect4GameLogic.isDraw(board)) {
+    if (remainingDepth == 0 || _gameLogic.isDraw(board)) {
       final score =
           evaluateCenterWeighting(board, chipColor) +
           evaluatePotentialConnections(board, chipColor); // Static evaluation
@@ -252,12 +237,12 @@ class Connect4ExpertEngine implements Connect4EngineContract {
     int? bestMove;
     final currentChipColor = isMaximizing ? chipColor : chipColor.getOpponent();
 
-    for (int col = 0; col < Connect4GameLogic.columns; col++) {
-      if (!Connect4GameLogic.isLegalMove(board, col)) continue;
+    for (int col = 0; col < _gameLogic.columns; col++) {
+      if (!_gameLogic.isLegalMove(board, col)) continue;
 
       // Simulate the move
       final simulatedBoard = TurnBasedGameBoard.copy(board);
-      Connect4GameLogic.applyMove(simulatedBoard, col, currentChipColor);
+      _gameLogic.applyMove(simulatedBoard, col, currentChipColor);
 
       // Recursive call with alpha-beta pruning
       final result = minimaxWithAlphaBeta(

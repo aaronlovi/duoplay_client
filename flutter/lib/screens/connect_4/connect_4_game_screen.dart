@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,12 +17,14 @@ class Connect4GameScreen extends StatefulWidget {
   final Connect4GameContainer gameObject;
   final Connect4EngineContract engine;
   final Connect4GameUtils gameUtils;
+  final TurnBasedGameLogic gameLogic;
 
   const Connect4GameScreen({
     super.key,
     required this.gameObject,
     required this.engine,
     required this.gameUtils,
+    required this.gameLogic,
   });
 
   @override
@@ -33,6 +35,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
   Connect4GameContainer get _gameObject => widget.gameObject;
   Connect4EngineContract get _engine => widget.engine;
   Connect4GameUtils get _gameUtils => widget.gameUtils;
+  TurnBasedGameLogic get _gameLogic => widget.gameLogic;
   bool get isPlayerRedTheEngine => _gameObject.isPlayerRedEngine;
   bool get isPlayerYellowTheEngine => _gameObject.isPlayerYellowEngine;
   bool get isHumanPlayerToMove => _gameObject.isHumanPlayerToMove;
@@ -45,7 +48,10 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
   @override
   Widget build(BuildContext context) {
     final difficulty = _gameObject.gameState.configuration.difficulty;
-    final playerColor = _gameUtils.cellStateToShortString(_gameObject.humanPlayer).toUpperCase();
+    final playerColor =
+        _gameUtils
+            .cellStateToShortString(_gameObject.humanPlayer)
+            .toUpperCase();
     return Scaffold(
       appBar: AppBar(title: const Text('Connect 4')),
       body: Column(
@@ -112,7 +118,9 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
 
   Widget _getBody() => Center(
     child: AspectRatio(
-      aspectRatio: Connect4GameLogic.columns / Connect4GameLogic.rows, // Use constants for aspect ratio
+      aspectRatio:
+          _gameLogic.columns /
+          _gameLogic.rows, // Use constants for aspect ratio
       child: _getGameGrid(),
     ),
   );
@@ -122,21 +130,29 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     padding: const EdgeInsets.all(8.0), // Add padding for the margin effect
     child: LayoutBuilder(
       builder: (context, constraints) {
-        final cellSize = (constraints.maxWidth - (Connect4GameLogic.columns - 1) * 4) / Connect4GameLogic.columns; // Calculate cell size
-        final gridHeight = cellSize * Connect4GameLogic.rows + (Connect4GameLogic.rows - 1) * 4; // Rows + spacing
+        final cellSize =
+            (constraints.maxWidth - (_gameLogic.columns - 1) * 4) /
+            _gameLogic.columns; // Calculate cell size
+        final gridHeight =
+            cellSize * _gameLogic.rows +
+            (_gameLogic.rows - 1) * 4; // Rows + spacing
 
         return SizedBox(
           height: gridHeight, // Constrain the height to the grid's content
           child: ScrollConfiguration(
-            behavior: const ScrollBehavior().copyWith(scrollbars: false), // Disable scrollbars
+            behavior: const ScrollBehavior().copyWith(
+              scrollbars: false,
+            ), // Disable scrollbars
             child: GridView.builder(
-              physics: const NeverScrollableScrollPhysics(), // Prevent scrolling
+              physics:
+                  const NeverScrollableScrollPhysics(), // Prevent scrolling
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: Connect4GameLogic.columns, // Columns for the Connect 4 board
+                crossAxisCount:
+                    _gameLogic.columns, // Columns for the Connect 4 board
                 crossAxisSpacing: 4, // Space between columns
                 mainAxisSpacing: 4, // Space between rows
               ),
-              itemCount: Connect4GameLogic.rows * Connect4GameLogic.columns, // Total cells
+              itemCount: _gameLogic.rows * _gameLogic.columns, // Total cells
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () => _handleCellTap(index),
@@ -155,7 +171,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     if (!_gameObject.isHumanPlayerToMove) return;
 
     // Calculate the column from the index
-    final column = index % Connect4GameLogic.columns;
+    final column = index % _gameLogic.columns;
 
     final inp = TurnBasedGamePlayerMoveFsmInput(
       index: column, // Use the calculated column
@@ -247,7 +263,9 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
       duration = Duration(seconds: 1);
     }
     Timer(duration, () {
-      final updateTimeInput = TurnBasedGameUpdateTimeFsmInput(nowUtc: DateTime.now().toUtc());
+      final updateTimeInput = TurnBasedGameUpdateTimeFsmInput(
+        nowUtc: DateTime.now().toUtc(),
+      );
       final newOutputs = _gameObject.postInput(updateTimeInput);
       _processOutputs(newOutputs); // Process the outputs from the timer
     });

@@ -1,22 +1,24 @@
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
 
-class Connect4GameLogic {
-  /// Number of columns in the Connect 4 board.
-  static const int columns = 7;
+class Connect4GameLogic extends TurnBasedGameLogic {
+  @override
+  int get columns => 7;
 
-  /// Number of rows in the Connect 4 board.
-  static const int rows = 6;
+  @override
+  int get rows => 6;
 
-  static const int numCells = columns * rows;
+  @override
+  int get numCells => columns * rows;
 
   /// A helper method to determine the target position for a chip in a given column.
   ///
   /// This method calculates the lowest available row in the specified column
   /// where a chip can be placed. It assumes a 2D list `board` representing the
   /// current state of the game, where `TurnBasedGameCellState.empty` indicates an empty slot.
-  static int? getTargetIndex(TurnBasedGameBoard board, int index) {
+  int? getTargetIndex(TurnBasedGameBoard board, int index) {
     final column = index % columns;
     final row = index ~/ columns;
     // Check if the column is within bounds
@@ -37,13 +39,13 @@ class Connect4GameLogic {
     return null; // Column is full
   }
 
-  /// Checks if a move is legal in the given column.
-  static bool isLegalMove(TurnBasedGameBoard board, int index) {
+  @override
+  bool isLegalMove(TurnBasedGameBoard board, int index) {
     return getTargetIndex(board, index) != null;
   }
 
-  /// Applies a move to the board by placing the chip in the lowest available row.
-  static void applyMove(
+  @override
+  void applyMove(
     TurnBasedGameBoard board,
     int index,
     TurnBasedGameCellState chipColor,
@@ -54,9 +56,8 @@ class Connect4GameLogic {
     }
   }
 
-  /// Checks if there is a winner on the board.
-  /// If no winner is found, it returns `TurnBasedGameCellState.empty`.
-  static TurnBasedGameCellState getWinner(TurnBasedGameBoard board) {
+  @override
+  TurnBasedGameCellState getWinner(TurnBasedGameBoard board) {
     // Check horizontal, vertical, and diagonal lines for a winner.
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < columns; col++) {
@@ -69,8 +70,8 @@ class Connect4GameLogic {
     return TurnBasedGameCellState.empty; // No winner found
   }
 
-  /// Checks if the board is completely filled and there is no winner, resulting in a draw.
-  static bool isDraw(TurnBasedGameBoard board) {
+  @override
+  bool isDraw(TurnBasedGameBoard board) {
     // Check if the board is completely filled
     if (!board.isFull) return false;
 
@@ -78,7 +79,8 @@ class Connect4GameLogic {
     return getWinner(board) == TurnBasedGameCellState.empty;
   }
 
-  static void debugPrintBoard(TurnBasedGameBoard board) {
+  @override
+  debugPrintBoard(TurnBasedGameBoard board) {
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < columns; col++) {
         final cell = board[row * columns + col];
@@ -93,8 +95,8 @@ class Connect4GameLogic {
     debugPrint('------------------');
   }
 
-  /// Converts a string representation of a board into a 2D list of TurnBasedGameCellState.
-  static TurnBasedGameBoard parseBoard(String boardString) =>
+  @override
+  TurnBasedGameBoard parseBoard(String boardString) =>
       TurnBasedGameBoard.fromList(
         boardString
             .trim()
@@ -118,7 +120,7 @@ class Connect4GameLogic {
 
   /// Helper method to check for a winner starting from a specific cell.
   /// If no winner is found, it returns `TurnBasedGameCellState.empty`.
-  static TurnBasedGameCellState _checkWinnerFromCell(
+  TurnBasedGameCellState _checkWinnerFromCell(
     TurnBasedGameBoard board,
     int row,
     int col,
@@ -147,7 +149,7 @@ class Connect4GameLogic {
 
   /// Helper method to check a specific direction for four consecutive chips.
   /// If no winner is found, it returns `TurnBasedGameCellState.empty`.
-  static TurnBasedGameCellState _checkDirection(
+  TurnBasedGameCellState _checkDirection(
     TurnBasedGameBoard board,
     int startRow,
     int startCol,

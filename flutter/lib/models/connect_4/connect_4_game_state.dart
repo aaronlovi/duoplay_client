@@ -1,12 +1,13 @@
 import 'package:duoplay/models/connect_4/connect_4_constants.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class Connect4GameState {
   final TurnBasedGameBoard board;
+  final TurnBasedGameLogic gameLogic;
   TurnBasedGameCellState currentPlayer;
   TurnBasedGameCellState winner;
   int numberOfRed;
@@ -19,6 +20,7 @@ class Connect4GameState {
 
   Connect4GameState(
     this.board,
+    this.gameLogic,
     this.currentPlayer,
     this.winner,
     this.numberOfRed,
@@ -30,6 +32,7 @@ class Connect4GameState {
 
   Connect4GameState._(
     this.board,
+    this.gameLogic,
     this.currentPlayer,
     this.winner,
     this.numberOfRed,
@@ -40,10 +43,12 @@ class Connect4GameState {
   );
 
   factory Connect4GameState.initial(
-    TurnBasedGameConfiguration cfg, {
+    TurnBasedGameConfiguration cfg,
+    TurnBasedGameLogic gameLogic, {
     DateTime? nowUtc,
   }) => Connect4GameState._(
-    TurnBasedGameBoard(Connect4GameLogic.rows, Connect4GameLogic.columns),
+    TurnBasedGameBoard(gameLogic.rows, gameLogic.columns),
+    gameLogic,
     TurnBasedGameCellState.player1,
     TurnBasedGameCellState.empty,
     0,
@@ -53,7 +58,7 @@ class Connect4GameState {
     cfg.difficulty,
   );
 
-  bool get isDraw => Connect4GameLogic.isDraw(board);
+  bool get isDraw => gameLogic.isDraw(board);
   bool get hasWinner => winner != TurnBasedGameCellState.empty;
   bool get isBetweenGames =>
       isGameOver || (numberOfRed == 0 && numberOfYellow == 0);
@@ -73,7 +78,7 @@ class Connect4GameState {
     }
 
     final newBoard = TurnBasedGameBoard.copy(board);
-    Connect4GameLogic.applyMove(newBoard, column, player);
+    gameLogic.applyMove(newBoard, column, player);
 
     final newNumberOfRed =
         player == TurnBasedGameCellState.player1
@@ -83,9 +88,7 @@ class Connect4GameState {
         player == TurnBasedGameCellState.player2
             ? numberOfYellow + 1
             : numberOfYellow;
-    final TurnBasedGameCellState newWinner = Connect4GameLogic.getWinner(
-      newBoard,
-    );
+    final TurnBasedGameCellState newWinner = gameLogic.getWinner(newBoard);
     final TurnBasedGameCellState nextPlayersTurn = _getNextPlayer(player);
 
     _updateGameState(
@@ -100,7 +103,7 @@ class Connect4GameState {
   }
 
   Result _validateMove(int column) {
-    if (column < 0 || column >= Connect4GameLogic.columns) {
+    if (column < 0 || column >= gameLogic.columns) {
       return Result.failure(ResultErrorCode.invalidMove);
     }
 
@@ -112,8 +115,8 @@ class Connect4GameState {
   }
 
   int _getAvailableRow(int column) {
-    for (int row = Connect4GameLogic.rows - 1; row >= 0; row--) {
-      int index = row * Connect4GameLogic.columns + column;
+    for (int row = gameLogic.rows - 1; row >= 0; row--) {
+      int index = row * gameLogic.columns + column;
       if (board[index] == TurnBasedGameCellState.empty) {
         return row;
       }
@@ -135,8 +138,7 @@ class Connect4GameState {
     TurnBasedGameCellState nextPlayersTurn,
   ) {
     bool newIsDraw =
-        newNumberOfRed + newNumberOfYellow ==
-            Connect4GameLogic.rows * Connect4GameLogic.columns &&
+        newNumberOfRed + newNumberOfYellow == gameLogic.numCells &&
         newWinner == TurnBasedGameCellState.empty;
     bool newHasWinner = newWinner != TurnBasedGameCellState.empty;
     bool newIsEnginesTurn =
@@ -164,9 +166,8 @@ class Connect4GameState {
     engineMoveTimeUtc = newEngineMoveTimeUtc;
   }
 
-  TurnBasedGameCellState getWinner(TurnBasedGameBoard board) {
-    return Connect4GameLogic.getWinner(board);
-  }
+  TurnBasedGameCellState getWinner(TurnBasedGameBoard board) =>
+      gameLogic.getWinner(board);
 
   /// Checks if the game is over, and if the board is set with the expected
   /// number of X's and O's

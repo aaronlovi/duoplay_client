@@ -1,5 +1,6 @@
 import 'package:duoplay/models/connect_4/connect_4_fsm.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
+import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
@@ -22,7 +23,7 @@ Future<void> setupLocator() async {
   final connect4GameDelay = prefs.getInt('connect4_game_delay') ?? 1;
   final connect4Difficulty =
       prefs.getString('connect4_ai_difficulty') ?? 'beginner';
-  
+
   getIt.registerLazySingleton<GameServiceContract>(() => MockGameService());
 
   getIt.registerSingleton<TTTGameUtils>(TTTGameUtils());
@@ -49,6 +50,7 @@ Future<void> setupLocator() async {
         engineMoveWaitTime: Duration(seconds: connect4MoveDelay),
         difficulty: connect4Difficulty,
       ),
+      Connect4GameLogic(),
     ),
   );
   getIt.registerLazySingleton<Connect4GameContainer>(

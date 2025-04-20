@@ -1,28 +1,22 @@
-import 'dart:developer' as developer;
+part of 'connect_4_engine_contract.dart';
 
-import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
-import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
-import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
-import 'package:duoplay/utils/random.dart';
+class Connect4BeginnerEngine extends Connect4EngineContract {
+  Connect4BeginnerEngine(super.gameLogic);
 
-class Connect4BeginnerEngine implements Connect4EngineContract {
   @override
   GenericResult<int> getNextMove(Connect4GameState currentState) {
     TurnBasedGameBoard board = currentState.board;
     TurnBasedGameCellState chipColor = currentState.currentPlayer;
 
     // Check for a winning move
-    for (int col = 0; col < Connect4GameLogic.columns; col++) {
-      if (Connect4GameLogic.isLegalMove(board, col)) {
+    for (int col = 0; col < _gameLogic.columns; col++) {
+      if (_gameLogic.isLegalMove(board, col)) {
         // Simulate the move
         final simulatedBoard = TurnBasedGameBoard.copy(board);
-        Connect4GameLogic.applyMove(simulatedBoard, col, chipColor);
+        _gameLogic.applyMove(simulatedBoard, col, chipColor);
 
         // Check if this move wins the game
-        if (Connect4GameLogic.getWinner(simulatedBoard) == chipColor) {
+        if (_gameLogic.getWinner(simulatedBoard) == chipColor) {
           return GenericResult<int>.success(col);
         }
       }
@@ -30,8 +24,8 @@ class Connect4BeginnerEngine implements Connect4EngineContract {
 
     // Otherwise, pick a random legal column
     final legalColumns = <int>[];
-    for (int col = 0; col < Connect4GameLogic.columns; col++) {
-      if (Connect4GameLogic.isLegalMove(board, col)) {
+    for (int col = 0; col < _gameLogic.columns; col++) {
+      if (_gameLogic.isLegalMove(board, col)) {
         legalColumns.add(col);
       }
     }

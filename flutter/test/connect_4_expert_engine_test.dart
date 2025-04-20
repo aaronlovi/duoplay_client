@@ -1,4 +1,4 @@
-import 'package:duoplay/engines/connect_4/connect_4_expert_engine.dart';
+import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
@@ -6,13 +6,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Connect4ExpertEngine - Static Board Evaluator', () {
-    final engine = Connect4ExpertEngine();
+    final gameLogic = Connect4GameLogic();
+    final engine = Connect4ExpertEngine(gameLogic);
 
     test('Center weighting metric prioritizes center columns', () {
-      final board = TurnBasedGameBoard(
-        Connect4GameLogic.rows,
-        Connect4GameLogic.columns,
-      );
+      final board = TurnBasedGameBoard(gameLogic.rows, gameLogic.columns);
       board[5 * 7 + 3] =
           TurnBasedGameCellState.player1; // Place a chip in the center
 
@@ -25,10 +23,7 @@ void main() {
     });
 
     test('Potential connections metric identifies open sequences', () {
-      final board = TurnBasedGameBoard(
-        Connect4GameLogic.rows,
-        Connect4GameLogic.columns,
-      );
+      final board = TurnBasedGameBoard(gameLogic.rows, gameLogic.columns);
       board[5 * 7 + 0] = TurnBasedGameCellState.player1;
       board[5 * 7 + 1] = TurnBasedGameCellState.player1;
       board[5 * 7 + 2] = TurnBasedGameCellState.empty;
@@ -47,13 +42,11 @@ void main() {
   });
 
   group('Connect4ExpertEngine - Minimax with Alpha-Beta Pruning', () {
-    final engine = Connect4ExpertEngine();
+    final gameLogic = Connect4GameLogic();
+    final engine = Connect4ExpertEngine(gameLogic);
 
     test('Alpha-beta pruning avoids unnecessary branches', () {
-      final board = TurnBasedGameBoard(
-        Connect4GameLogic.rows,
-        Connect4GameLogic.columns,
-      );
+      final board = TurnBasedGameBoard(gameLogic.rows, gameLogic.columns);
       board[5 * 7 + 0] = TurnBasedGameCellState.player1;
       board[5 * 7 + 1] = TurnBasedGameCellState.player1;
       board[5 * 7 + 2] = TurnBasedGameCellState.player1;
@@ -73,10 +66,7 @@ void main() {
     });
 
     test('Alpha-beta pruning blocks opponent win', () {
-      final board = TurnBasedGameBoard(
-        Connect4GameLogic.rows,
-        Connect4GameLogic.columns,
-      );
+      final board = TurnBasedGameBoard(gameLogic.rows, gameLogic.columns);
       board[5 * 7 + 0] = TurnBasedGameCellState.player2;
       board[5 * 7 + 1] = TurnBasedGameCellState.player2;
       board[5 * 7 + 2] = TurnBasedGameCellState.player2;
@@ -97,13 +87,11 @@ void main() {
   });
 
   group('Connect4ExpertEngine - Iterative Deepening', () {
-    final engine = Connect4ExpertEngine();
+    final gameLogic = Connect4GameLogic();
+    final engine = Connect4ExpertEngine(gameLogic);
 
     test('Iterative deepening respects time cap', () {
-      final board = TurnBasedGameBoard(
-        Connect4GameLogic.rows,
-        Connect4GameLogic.columns,
-      );
+      final board = TurnBasedGameBoard(gameLogic.rows, gameLogic.columns);
       board[5 * 7 + 0] = TurnBasedGameCellState.player1;
       board[5 * 7 + 1] = TurnBasedGameCellState.player1;
       board[5 * 7 + 2] = TurnBasedGameCellState.player1;
@@ -125,10 +113,7 @@ void main() {
     });
 
     test('Iterative deepening finds best move within time cap', () {
-      final board = TurnBasedGameBoard(
-        Connect4GameLogic.rows,
-        Connect4GameLogic.columns,
-      );
+      final board = TurnBasedGameBoard(gameLogic.rows, gameLogic.columns);
       board[5 * 7 + 0] = TurnBasedGameCellState.player2;
       board[5 * 7 + 1] = TurnBasedGameCellState.player2;
       board[5 * 7 + 2] = TurnBasedGameCellState.player2;
