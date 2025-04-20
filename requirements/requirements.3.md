@@ -77,13 +77,16 @@ When working on the requirements in this document, follow this workflow:
 3. **Begin Work on the Requirement**
    - Implement the necessary changes to fulfill the requirement.
 
-4. **Iterative Testing and Analysis**
-   - In a loop, until both `flutter analyze` and `flutter test` show no warnings/errors/test failures:
-     - Run `flutter analyze` to check for any static analysis issues and resolve them.
-     - Run `flutter test` to ensure all tests pass and fix any failures.
+4. **Iterative Analysis and Testing**
+   - **Run `flutter analyze` first.**
+     - If there are any errors or warnings, STOP and fix them before proceeding.
+     - Only continue when `flutter analyze` reports no issues.
+   - **Then run `flutter test`.**
+     - If any tests fail, STOP and fix the issues.
+     - Repeat running `flutter analyze` and `flutter test` after each fix until both pass with no errors or warnings.
 
 5. **Review and Finalize**
-   - Once the above steps are complete, stop and allow the human to review the changes.
+   - Once both analysis and tests pass, stop and allow the human to review the changes.
    - Ensure the human checks in the code to the git repository.
 
 | Requirement id | Description | Status |
