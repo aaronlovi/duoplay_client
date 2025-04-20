@@ -12,7 +12,7 @@ class Connect4GameContainer {
 
   Connect4GameContainer({required Connect4FSM fsm}) : _fsm = fsm;
 
-  List<List<TurnBasedGameCellState>> get board => _fsm.board;
+  List<TurnBasedGameCellState> get board => _fsm.board;
   bool get isPlayerRedEngine => _fsm.isPlayerRedEngine;
   bool get isPlayerYellowEngine => _fsm.isPlayerYellowEngine;
   bool get isHumanPlayerToMove => _fsm.isHumanPlayerToMove;

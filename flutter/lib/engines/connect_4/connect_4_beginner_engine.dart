@@ -10,15 +10,14 @@ import 'package:duoplay/utils/random.dart';
 class Connect4BeginnerEngine implements Connect4EngineContract {
   @override
   GenericResult<int> getNextMove(Connect4GameState currentState) {
-    List<List<TurnBasedGameCellState>> board = currentState.board;
+    List<TurnBasedGameCellState> board = currentState.board;
     TurnBasedGameCellState chipColor = currentState.currentPlayer;
 
     // Check for a winning move
     for (int col = 0; col < Connect4GameLogic.columns; col++) {
       if (Connect4GameLogic.isLegalMove(board, col)) {
         // Simulate the move
-        final simulatedBoard =
-            board.map((row) => List<TurnBasedGameCellState>.from(row)).toList();
+        final simulatedBoard = List<TurnBasedGameCellState>.from(board);
         Connect4GameLogic.applyMove(simulatedBoard, col, chipColor);
 
         // Check if this move wins the game

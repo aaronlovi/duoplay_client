@@ -4,12 +4,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Connect4GameLogic', () {
-    late List<List<TurnBasedGameCellState>> board;
+    late List<TurnBasedGameCellState> board;
 
     setUp(() {
-      board = List.generate(
-        Connect4GameLogic.rows,
-        (_) => List.filled(Connect4GameLogic.columns, TurnBasedGameCellState.empty),
+      board = List.filled(
+        Connect4GameLogic.rows * Connect4GameLogic.columns,
+        TurnBasedGameCellState.empty,
       );
     });
 
@@ -19,40 +19,40 @@ void main() {
 
     test('isLegalMove returns false for a full column', () {
       for (int row = 0; row < Connect4GameLogic.rows; row++) {
-        board[row][0] = TurnBasedGameCellState.player1;
+        board[row * Connect4GameLogic.columns + 0] = TurnBasedGameCellState.player1;
       }
       expect(Connect4GameLogic.isLegalMove(board, 0), isFalse);
     });
 
     test('applyMove places a chip in the lowest available row', () {
       Connect4GameLogic.applyMove(board, 0, TurnBasedGameCellState.player1);
-      expect(board[Connect4GameLogic.rows - 1][0], TurnBasedGameCellState.player1);
+      expect(board[(Connect4GameLogic.rows - 1) * Connect4GameLogic.columns + 0], TurnBasedGameCellState.player1);
     });
 
     test('getWinner detects a horizontal win', () {
       for (int col = 0; col < 4; col++) {
-        board[0][col] = TurnBasedGameCellState.player1;
+        board[0 * Connect4GameLogic.columns + col] = TurnBasedGameCellState.player1;
       }
       expect(Connect4GameLogic.getWinner(board), TurnBasedGameCellState.player1);
     });
 
     test('getWinner detects a vertical win', () {
       for (int row = 0; row < 4; row++) {
-        board[row][0] = TurnBasedGameCellState.player2;
+        board[row * Connect4GameLogic.columns + 0] = TurnBasedGameCellState.player2;
       }
       expect(Connect4GameLogic.getWinner(board), TurnBasedGameCellState.player2);
     });
 
     test('getWinner detects a diagonal win (down-right)', () {
       for (int i = 0; i < 4; i++) {
-        board[i][i] = TurnBasedGameCellState.player1;
+        board[i * Connect4GameLogic.columns + i] = TurnBasedGameCellState.player1;
       }
       expect(Connect4GameLogic.getWinner(board), TurnBasedGameCellState.player1);
     });
 
     test('getWinner detects a diagonal win (down-left)', () {
       for (int i = 0; i < 4; i++) {
-        board[i][3 - i] = TurnBasedGameCellState.player2;
+        board[i * Connect4GameLogic.columns + (3 - i)] = TurnBasedGameCellState.player2;
       }
       expect(Connect4GameLogic.getWinner(board), TurnBasedGameCellState.player2);
     });
@@ -73,7 +73,7 @@ void main() {
     });
 
     test('isDraw returns false for a non-full board', () {
-      board[0][0] = TurnBasedGameCellState.player1;
+      board[0 * Connect4GameLogic.columns + 0] = TurnBasedGameCellState.player1;
       expect(Connect4GameLogic.isDraw(board), isFalse);
     });
   });
@@ -81,13 +81,13 @@ void main() {
   group('Connect4GameLogic - Illegal Moves', () {
     test('Selecting a full column should be illegal', () {
       // Arrange: Create a board with a full column
-      final board = List.generate(
-        Connect4GameLogic.rows,
-        (_) => List.filled(Connect4GameLogic.columns, TurnBasedGameCellState.empty),
+      final board = List.filled(
+        Connect4GameLogic.rows * Connect4GameLogic.columns,
+        TurnBasedGameCellState.empty,
       );
       final columnToFill = 3;
       for (int row = 0; row < Connect4GameLogic.rows; row++) {
-        board[row][columnToFill] = TurnBasedGameCellState.player1;
+        board[row * Connect4GameLogic.columns + columnToFill] = TurnBasedGameCellState.player1;
       }
 
       // Act: Check if the move is legal
@@ -101,12 +101,12 @@ void main() {
   group('Connect4GameLogic - Win Conditions', () {
     test('Detect horizontal win', () {
       // Arrange: Create a board with a horizontal win
-      final board = List.generate(
-        Connect4GameLogic.rows,
-        (_) => List.filled(Connect4GameLogic.columns, TurnBasedGameCellState.empty),
+      final board = List.filled(
+        Connect4GameLogic.rows * Connect4GameLogic.columns,
+        TurnBasedGameCellState.empty,
       );
       for (int col = 0; col < 4; col++) {
-        board[0][col] = TurnBasedGameCellState.player1;
+        board[0 * Connect4GameLogic.columns + col] = TurnBasedGameCellState.player1;
       }
 
       // Act: Check for a winner
@@ -118,12 +118,12 @@ void main() {
 
     test('Detect vertical win', () {
       // Arrange: Create a board with a vertical win
-      final board = List.generate(
-        Connect4GameLogic.rows,
-        (_) => List.filled(Connect4GameLogic.columns, TurnBasedGameCellState.empty),
+      final board = List.filled(
+        Connect4GameLogic.rows * Connect4GameLogic.columns,
+        TurnBasedGameCellState.empty,
       );
       for (int row = 0; row < 4; row++) {
-        board[row][0] = TurnBasedGameCellState.player2;
+        board[row * Connect4GameLogic.columns + 0] = TurnBasedGameCellState.player2;
       }
 
       // Act: Check for a winner
@@ -135,12 +135,12 @@ void main() {
 
     test('Detect diagonal win (down-right)', () {
       // Arrange: Create a board with a diagonal win (down-right)
-      final board = List.generate(
-        Connect4GameLogic.rows,
-        (_) => List.filled(Connect4GameLogic.columns, TurnBasedGameCellState.empty),
+      final board = List.filled(
+        Connect4GameLogic.rows * Connect4GameLogic.columns,
+        TurnBasedGameCellState.empty,
       );
       for (int i = 0; i < 4; i++) {
-        board[i][i] = TurnBasedGameCellState.player1;
+        board[i * Connect4GameLogic.columns + i] = TurnBasedGameCellState.player1;
       }
 
       // Act: Check for a winner
@@ -152,12 +152,12 @@ void main() {
 
     test('Detect diagonal win (down-left)', () {
       // Arrange: Create a board with a diagonal win (down-left)
-      final board = List.generate(
-        Connect4GameLogic.rows,
-        (_) => List.filled(Connect4GameLogic.columns, TurnBasedGameCellState.empty),
+      final board = List.filled(
+        Connect4GameLogic.rows * Connect4GameLogic.columns,
+        TurnBasedGameCellState.empty,
       );
       for (int i = 0; i < 4; i++) {
-        board[i][3 - i] = TurnBasedGameCellState.player2;
+        board[i * Connect4GameLogic.columns + (3 - i)] = TurnBasedGameCellState.player2;
       }
 
       // Act: Check for a winner

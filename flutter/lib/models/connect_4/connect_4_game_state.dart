@@ -5,7 +5,7 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dar
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class Connect4GameState {
-  final List<List<TurnBasedGameCellState>> board;
+  final List<TurnBasedGameCellState> board;
   TurnBasedGameCellState currentPlayer;
   TurnBasedGameCellState winner;
   int numberOfRed;
@@ -42,11 +42,7 @@ class Connect4GameState {
     TurnBasedGameConfiguration cfg, {
     DateTime? nowUtc,
   }) => Connect4GameState._(
-    List.generate(
-      Connect4GameLogic.rows,
-      (_) =>
-          List.filled(Connect4GameLogic.columns, TurnBasedGameCellState.empty),
-    ),
+    List.filled(Connect4GameLogic.numCells, TurnBasedGameCellState.empty),
     TurnBasedGameCellState.player1,
     TurnBasedGameCellState.empty,
     0,
@@ -75,8 +71,7 @@ class Connect4GameState {
       return res;
     }
 
-    final newBoard =
-        board.map((row) => List<TurnBasedGameCellState>.from(row)).toList();
+    final newBoard = List<TurnBasedGameCellState>.from(board);
     Connect4GameLogic.applyMove(newBoard, column, player);
 
     final newNumberOfRed =
@@ -117,7 +112,8 @@ class Connect4GameState {
 
   int _getAvailableRow(int column) {
     for (int row = Connect4GameLogic.rows - 1; row >= 0; row--) {
-      if (board[row][column] == TurnBasedGameCellState.empty) {
+      int index = row * Connect4GameLogic.columns + column;
+      if (board[index] == TurnBasedGameCellState.empty) {
         return row;
       }
     }
@@ -131,7 +127,7 @@ class Connect4GameState {
   }
 
   void _updateGameState(
-    List<List<TurnBasedGameCellState>> newBoard,
+    List<TurnBasedGameCellState> newBoard,
     int newNumberOfRed,
     int newNumberOfYellow,
     TurnBasedGameCellState newWinner,
@@ -158,11 +154,7 @@ class Connect4GameState {
       );
     }
 
-    for (int row = 0; row < Connect4GameLogic.rows; row++) {
-      for (int col = 0; col < Connect4GameLogic.columns; col++) {
-        board[row][col] = newBoard[row][col];
-      }
-    }
+    board.setAll(0, newBoard);
     currentPlayer = nextPlayersTurn;
     winner = newWinner;
     numberOfRed = newNumberOfRed;
@@ -171,7 +163,7 @@ class Connect4GameState {
     engineMoveTimeUtc = newEngineMoveTimeUtc;
   }
 
-  TurnBasedGameCellState getWinner(List<List<TurnBasedGameCellState>> board) {
+  TurnBasedGameCellState getWinner(List<TurnBasedGameCellState> board) {
     return Connect4GameLogic.getWinner(board);
   }
 
@@ -219,13 +211,7 @@ class Connect4GameState {
             : null;
   }
 
-  void clearBoard() {
-    for (int row = 0; row < Connect4GameLogic.rows; row++) {
-      for (int col = 0; col < Connect4GameLogic.columns; col++) {
-        board[row][col] = TurnBasedGameCellState.empty;
-      }
-    }
-  }
+  void clearBoard() => board.fillRange(0, board.length, TurnBasedGameCellState.empty);
 
   @override
   String toString() {

@@ -10,7 +10,7 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 class Connect4ExpertEngine implements Connect4EngineContract {
   @override
   GenericResult<int> getNextMove(Connect4GameState currentState) {
-    List<List<TurnBasedGameCellState>> board = currentState.board;
+    List<TurnBasedGameCellState> board = currentState.board;
     TurnBasedGameCellState chipColor = currentState.currentPlayer;
 
     // Use iterative deepening as the primary decision-making mechanism
@@ -30,7 +30,7 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
   // Center weighting metric: prioritize moves closer to the center of the board
   int evaluateCenterWeighting(
-    List<List<TurnBasedGameCellState>> board,
+    List<TurnBasedGameCellState> board,
     TurnBasedGameCellState chipColor,
   ) {
     final centerColumn = Connect4GameLogic.columns ~/ 2;
@@ -38,7 +38,8 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
     for (int row = 0; row < Connect4GameLogic.rows; row++) {
       for (int col = 0; col < Connect4GameLogic.columns; col++) {
-        if (board[row][col] == chipColor) {
+        int index = row * Connect4GameLogic.columns + col;
+        if (board[index] == chipColor) {
           // Higher weight for chips closer to the center column
           score += Connect4GameLogic.columns - (col - centerColumn).abs();
         }
@@ -50,20 +51,95 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
   // Potential connections metric: evaluate open sequences of 2 or 3 chips
   int evaluatePotentialConnections(
-    List<List<TurnBasedGameCellState>> board,
+    List<TurnBasedGameCellState> board,
     TurnBasedGameCellState chipColor,
   ) {
     int score = 0;
 
     // Helper function to count open sequences in a line
-    int countOpenSequences(List<TurnBasedGameCellState> line) {
+    int countOpenSequencesOnRow(List<TurnBasedGameCellState> board, int rowIndex) {
       int count = 0;
-      for (int i = 0; i <= line.length - 4; i++) {
-        final window = line.sublist(i, i + 4);
-        if (window.where((cell) => cell == chipColor).length >= 2 &&
-            window.where((cell) => cell == TurnBasedGameCellState.empty).length ==
-                4 - window.where((cell) => cell == chipColor).length) {
+      for (int i = 0; i <= Connect4GameLogic.columns - 4; i++) {
+        int index0 = rowIndex * Connect4GameLogic.columns + i;
+        int index1 = rowIndex * Connect4GameLogic.columns + i + 1;
+        int index2 = rowIndex * Connect4GameLogic.columns + i + 2;
+        int index3 = rowIndex * Connect4GameLogic.columns + i + 3;
+
+        int numCellsOfChipColor = (board[index0] == chipColor ? 1 : 0) +
+            (board[index1] == chipColor ? 1 : 0) +
+            (board[index2] == chipColor ? 1 : 0) +
+            (board[index3] == chipColor ? 1 : 0);
+        int numEmptyCells = 4 - numCellsOfChipColor;
+
+        if (numCellsOfChipColor >= 2 && numEmptyCells == 4 - numCellsOfChipColor) {
           count++;
+        }
+      }
+      return count;
+    }
+
+    int countOpenSequencesOnColumn(List<TurnBasedGameCellState> board, int columnIndex) {
+      int count = 0;
+      for (int i = 0; i <= Connect4GameLogic.rows - 4; i++) {
+        int index0 = i * Connect4GameLogic.columns + columnIndex;
+        int index1 = (i + 1) * Connect4GameLogic.columns + columnIndex;
+        int index2 = (i + 2) * Connect4GameLogic.columns + columnIndex;
+        int index3 = (i + 3) * Connect4GameLogic.columns + columnIndex;
+        int numCellsOfChipColor = board[index0] == chipColor ? 1 : 0 +
+          (board[index1] == chipColor ? 1 : 0) +
+          (board[index2] == chipColor ? 1 : 0) +
+          (board[index3] == chipColor ? 1 : 0);
+        int numEmptyCells = 4 - numCellsOfChipColor;
+        if (numCellsOfChipColor >= 2 && numEmptyCells == 4 - numCellsOfChipColor) {
+          count++;
+        }
+      }
+      return count;
+    }
+
+    int countOpenSequencesOnBottomLeftToTopRightDiagonal(List<TurnBasedGameCellState> board, int rowIndex, int colIndex) {
+      int count = 0;
+      for (int i = 0; i <= 3; i++) {
+        // Ensure indices are within bounds
+        if (rowIndex + i + 3 < Connect4GameLogic.rows && colIndex + i + 3 < Connect4GameLogic.columns) {
+          int index0 = (rowIndex + i) * Connect4GameLogic.columns + (colIndex + i);
+          int index1 = (rowIndex + i + 1) * Connect4GameLogic.columns + (colIndex + i + 1);
+          int index2 = (rowIndex + i + 2) * Connect4GameLogic.columns + (colIndex + i + 2);
+          int index3 = (rowIndex + i + 3) * Connect4GameLogic.columns + (colIndex + i + 3);
+
+          int numCellsOfChipColor = (board[index0] == chipColor ? 1 : 0) +
+              (board[index1] == chipColor ? 1 : 0) +
+              (board[index2] == chipColor ? 1 : 0) +
+              (board[index3] == chipColor ? 1 : 0);
+          int numEmptyCells = 4 - numCellsOfChipColor;
+
+          if (numCellsOfChipColor >= 2 && numEmptyCells == 4 - numCellsOfChipColor) {
+            count++;
+          }
+        }
+      }
+      return count;
+    }
+
+    int countOpenSequencesOnTopLeftToBottomRightDiagonal(List<TurnBasedGameCellState> board, int rowIndex, int colIndex) {
+      int count = 0;
+      for (int i = 0; i <= 3; i++) {
+        // Ensure indices are within bounds
+        if (rowIndex - i - 3 >= 0 && colIndex + i + 3 < Connect4GameLogic.columns) {
+          int index0 = (rowIndex - i) * Connect4GameLogic.columns + (colIndex + i);
+          int index1 = (rowIndex - i - 1) * Connect4GameLogic.columns + (colIndex + i + 1);
+          int index2 = (rowIndex - i - 2) * Connect4GameLogic.columns + (colIndex + i + 2);
+          int index3 = (rowIndex - i - 3) * Connect4GameLogic.columns + (colIndex + i + 3);
+
+          int numCellsOfChipColor = (board[index0] == chipColor ? 1 : 0) +
+              (board[index1] == chipColor ? 1 : 0) +
+              (board[index2] == chipColor ? 1 : 0) +
+              (board[index3] == chipColor ? 1 : 0);
+          int numEmptyCells = 4 - numCellsOfChipColor;
+
+          if (numCellsOfChipColor >= 2 && numEmptyCells == 4 - numCellsOfChipColor) {
+            count++;
+          }
         }
       }
       return count;
@@ -71,40 +147,25 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
     // Check rows
     for (int row = 0; row < Connect4GameLogic.rows; row++) {
-      score += countOpenSequences(board[row]);
+      score += countOpenSequencesOnRow(board, row);
     }
 
     // Check columns
     for (int col = 0; col < Connect4GameLogic.columns; col++) {
-      final column = [
-        for (int row = 0; row < Connect4GameLogic.rows; row++) board[row][col],
-      ];
-      score += countOpenSequences(column);
+      score += countOpenSequencesOnColumn(board, col);
     }
 
     // Check diagonals (bottom-left to top-right)
     for (int row = 0; row < Connect4GameLogic.rows - 3; row++) {
       for (int col = 0; col < Connect4GameLogic.columns - 3; col++) {
-        final diagonal = [
-          board[row][col],
-          board[row + 1][col + 1],
-          board[row + 2][col + 2],
-          board[row + 3][col + 3],
-        ];
-        score += countOpenSequences(diagonal);
+        score += countOpenSequencesOnBottomLeftToTopRightDiagonal(board, row, col);
       }
     }
 
     // Check diagonals (top-left to bottom-right)
     for (int row = 3; row < Connect4GameLogic.rows; row++) {
       for (int col = 0; col < Connect4GameLogic.columns - 3; col++) {
-        final diagonal = [
-          board[row][col],
-          board[row - 1][col + 1],
-          board[row - 2][col + 2],
-          board[row - 3][col + 3],
-        ];
-        score += countOpenSequences(diagonal);
+        score += countOpenSequencesOnTopLeftToBottomRightDiagonal(board, row, col);
       }
     }
 
@@ -113,7 +174,7 @@ class Connect4ExpertEngine implements Connect4EngineContract {
 
   // Minimax algorithm with alpha-beta pruning
   MinimaxResult minimaxWithAlphaBeta(
-    List<List<TurnBasedGameCellState>> board,
+    List<TurnBasedGameCellState> board,
     int remainingDepth,
     bool isMaximizing,
     TurnBasedGameCellState chipColor,
@@ -150,8 +211,7 @@ class Connect4ExpertEngine implements Connect4EngineContract {
       if (!Connect4GameLogic.isLegalMove(board, col)) continue;
 
       // Simulate the move
-      final simulatedBoard =
-          board.map((row) => List<TurnBasedGameCellState>.from(row)).toList();
+      final simulatedBoard = List<TurnBasedGameCellState>.from(board);
       Connect4GameLogic.applyMove(simulatedBoard, col, currentChipColor);
 
       // Recursive call with alpha-beta pruning
@@ -186,7 +246,7 @@ class Connect4ExpertEngine implements Connect4EngineContract {
   }
 
   // Iterative deepening logic with a time cap
-  MinimaxResult iterativeDeepening(List<List<TurnBasedGameCellState>> board, TurnBasedGameCellState chipColor, int timeCapMs) {
+  MinimaxResult iterativeDeepening(List<TurnBasedGameCellState> board, TurnBasedGameCellState chipColor, int timeCapMs) {
     final stopwatch = Stopwatch()..start();
     MinimaxResult? bestResult;
 

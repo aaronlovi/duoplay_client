@@ -38,7 +38,7 @@ class Connect4FSM {
     _engine = Connect4EngineFactory.createEngine(configuration.difficulty);
   }
 
-  List<List<TurnBasedGameCellState>> get board => gameState.board;
+  List<TurnBasedGameCellState> get board => gameState.board;
   bool get isPlayerRedEngine =>
       gameState.configuration.enginePlayer == TurnBasedGameCellState.player1;
   bool get isPlayerYellowEngine =>

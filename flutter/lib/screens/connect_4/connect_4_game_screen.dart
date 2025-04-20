@@ -167,7 +167,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
   }
 
   Widget _getCellContents(int index) {
-    final cellState = _gameObject.board[index ~/ 7][index % 7];
+    final cellState = _gameObject.board[index];
     final color = _getCellColor(cellState);
 
     return Container(
