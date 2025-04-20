@@ -182,4 +182,47 @@ class Connect4GameLogic extends TurnBasedGameLogic {
 
     return initial; // Found a winner
   }
+
+  @override
+  List<int> getWinningIndices(TurnBasedGameBoard board) {
+    final directions = [
+      [0, 1], // Horizontal
+      [1, 0], // Vertical
+      [1, 1], // Diagonal down-right
+      [1, -1], // Diagonal down-left
+    ];
+
+    List<int> winningIndices = [];
+
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < columns; col++) {
+        for (final direction in directions) {
+          final rowDelta = direction[0];
+          final colDelta = direction[1];
+          if (_checkDirection(board, row, col, rowDelta, colDelta) ==
+              TurnBasedGameCellState.empty) {
+            continue;
+          }
+
+          // If we have a winner, add the indices to the list
+          for (int i = 0; i < 4; i++) {
+            final newRow = row + i * rowDelta;
+            final newCol = col + i * colDelta;
+            final newIndex = newRow * columns + newCol;
+
+            if (newRow >= 0 &&
+                newRow < rows &&
+                newCol >= 0 &&
+                newCol < columns) {
+              winningIndices.add(newIndex);
+            }
+          }
+
+          return winningIndices;
+        }
+      }
+    }
+
+    return winningIndices;
+  }
 }

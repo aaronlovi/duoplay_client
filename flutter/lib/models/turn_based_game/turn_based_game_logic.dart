@@ -16,4 +16,6 @@ abstract class TurnBasedGameLogic {
   bool isDraw(TurnBasedGameBoard board);
   void debugPrintBoard(TurnBasedGameBoard board);
   TurnBasedGameBoard parseBoard(String boardString);
+
+  List<int> getWinningIndices(TurnBasedGameBoard board);
 }

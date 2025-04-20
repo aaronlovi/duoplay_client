@@ -93,4 +93,22 @@ class TTTGameLogic extends TurnBasedGameLogic {
       index >= 0 &&
       index < numCells &&
       board[index] == TurnBasedGameCellState.empty;
+
+  @override
+  List<int> getWinningIndices(TurnBasedGameBoard board) {
+    for (var combination in TTTConstants.winningCombinations) {
+      final a = combination[0];
+      final b = combination[1];
+      final c = combination[2];
+
+      if (board[a] == TurnBasedGameCellState.empty) continue;
+
+      // If all three cells in the combination are the same and not empty, we have a winner
+      if (board[a] == board[b] && board[b] == board[c]) {
+        return [a, b, c]; // Return the winning indices
+      }
+    }
+
+    return []; // No winning indices found
+  }
 }

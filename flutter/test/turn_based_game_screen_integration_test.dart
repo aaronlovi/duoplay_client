@@ -65,6 +65,9 @@ class DummyLogic extends TurnBasedGameLogic {
   bool isLegalMove(board, index) => true;
   @override
   parseBoard(boardString) => TurnBasedGameBoard(0, 0);
+
+  @override
+  List<int> getWinningIndices(TurnBasedGameBoard board) => [];
 }
 
 void main() {

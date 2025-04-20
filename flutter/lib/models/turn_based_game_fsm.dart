@@ -130,6 +130,7 @@ class TurnBasedGameFsm {
         TurnBasedGameGameOverFsmOutput(
           winner: gameState.winner,
           isDraw: gameState.isDraw,
+          winningIndices: gameState.winningIndices,
         ),
       );
     }
@@ -179,6 +180,7 @@ class TurnBasedGameFsm {
         TurnBasedGameGameOverFsmOutput(
           winner: gameState.winner,
           isDraw: gameState.isDraw,
+          winningIndices: gameState.winningIndices,
         ),
       );
     }

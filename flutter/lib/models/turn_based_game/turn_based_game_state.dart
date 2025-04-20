@@ -40,6 +40,7 @@ abstract class TurnBasedGameState {
   TurnBasedGameCellState get humanPlayer =>
       configuration.enginePlayer.getOpponent();
   TurnBasedGameCellState get enginePlayer => configuration.enginePlayer;
+  List<int> get winningIndices => gameLogic.getWinningIndices(board);
 
   Result makeMove(int index, TurnBasedGameCellState player) {
     Result res = validateMove(index);

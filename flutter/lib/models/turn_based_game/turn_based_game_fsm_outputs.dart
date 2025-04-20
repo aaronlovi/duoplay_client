@@ -18,8 +18,13 @@ class TurnBasedGameStartGameFsmOutput implements TurnBasedGameFsmOutputBase {
 class TurnBasedGameGameOverFsmOutput implements TurnBasedGameFsmOutputBase {
   final TurnBasedGameCellState winner;
   final bool isDraw;
+  final List<int> winningIndices;
 
-  TurnBasedGameGameOverFsmOutput({required this.winner, required this.isDraw}) {
+  TurnBasedGameGameOverFsmOutput({
+    required this.winner,
+    required this.isDraw,
+    required this.winningIndices,
+  }) {
     if (winner == TurnBasedGameCellState.empty && !isDraw) {
       throw ArgumentError('Game has no winner and is not a draw');
     }
@@ -30,7 +35,7 @@ class TurnBasedGameGameOverFsmOutput implements TurnBasedGameFsmOutputBase {
 
   @override
   String toString() =>
-      'TurnBasedGameGameOverFsmOutput[winner: $winner, isDraw: $isDraw]';
+      'TurnBasedGameGameOverFsmOutput[winner: $winner, isDraw: $isDraw, win: $winningIndices]';
 }
 
 class TurnBasedGameDoEngineMoveFsmOutput implements TurnBasedGameFsmOutputBase {
