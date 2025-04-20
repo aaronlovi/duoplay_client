@@ -32,9 +32,8 @@ class Connect4GameLogic extends TurnBasedGameLogic {
   }
 
   @override
-  bool isLegalMove(TurnBasedGameBoard board, int index) {
-    return getTargetIndex(board, index) != null;
-  }
+  bool isLegalMove(TurnBasedGameBoard board, int index) =>
+      getTargetIndex(board, index) != null;
 
   @override
   void applyMove(
