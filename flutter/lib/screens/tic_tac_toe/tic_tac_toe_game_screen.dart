@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
@@ -14,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class TTTGameScreen extends StatefulWidget {
   final TTTGameContainer gameObject;
   final TurnBasedGameEngineContract engine;
-  final TTTGameUtils gameUtils;
+  final TurnBasedGameUtils gameUtils;
 
   const TTTGameScreen({
     super.key,
@@ -30,7 +29,7 @@ class TTTGameScreen extends StatefulWidget {
 class TTTGameScreenState extends State<TTTGameScreen> {
   TTTGameContainer get _gameObject => widget.gameObject;
   TurnBasedGameEngineContract get _engine => widget.engine;
-  TTTGameUtils get _gameUtils => widget.gameUtils;
+  TurnBasedGameUtils get _gameUtils => widget.gameUtils;
   bool get isPlayerXEngine => _gameObject.isPlayer1Engine;
   bool get isPlayerOEngine => _gameObject.isPlayer2Engine;
   bool get isHumanPlayerToMove => _gameObject.isHumanPlayerToMove;
