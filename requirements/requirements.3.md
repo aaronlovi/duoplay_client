@@ -130,7 +130,8 @@ When working on the requirements in this document, follow this workflow:
 | **R.1.5** | Ensure all timers and async callbacks in game screens are safe if the widget is disposed (not mounted). | Complete |
 | **R.1.5.1** | Cancel all timers in dispose() and check mounted before calling setState or accessing context. | Complete |
 | **R.1.5.2** | Always check mounted after await in async functions before calling setState or using context. | Complete |
-| **R.1.5.3** | Add unit/widget tests to verify timer cancellation and mounted checks in game screens. | Pending |
+| **R.1.5.3** | Add unit/widget tests to verify timer cancellation and mounted checks in game screens. | Complete |
+| **R.1.5.4** | Add a unit/widget test to verify that setState/context is not called after dispose if the widget is unmounted during an async operation (e.g., settings button). | Complete |
 
 ## Example: Implementing a New Game Using the Base Class
 

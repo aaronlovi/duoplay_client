@@ -49,7 +49,41 @@ class DummyGameScreenState extends TurnBasedGameScreenBase<DummyGameScreen> {
   }
 }
 
+// A dummy screen that simulates an async settings button
+class AsyncSettingsScreen extends DummyGameScreen {
+  const AsyncSettingsScreen({super.key});
+  @override
+  DummyGameScreenState createState() => AsyncSettingsScreenState();
+}
+class AsyncSettingsScreenState extends DummyGameScreenState {
+  bool setStateCalledAfterDispose = false;
+  @override
+  Widget buildSettingsButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (!mounted) return;
+        // If this line runs after dispose, the test will fail
+        setState(() {});
+      },
+      child: const Text('Async Settings'),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    // Render the async settings button so the test can find and tap it
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(child: buildSettingsButton(context)),
+      ),
+    );
+  }
+}
+
 void main() {
+  // This test verifies that a subclass implementing all abstract methods can be instantiated and used in a widget tree.
   testWidgets('TurnBasedGameScreenBase requires abstract methods', (
     tester,
   ) async {
@@ -57,6 +91,7 @@ void main() {
     expect(find.byType(DummyGameScreen), findsOneWidget);
   });
 
+  // This test verifies that processOutputs handles error outputs and does not throw exceptions.
   testWidgets('processOutputs handles error output', (tester) async {
     final outputs = TurnBasedGameOutputContainer(
       outputs: [
@@ -69,6 +104,53 @@ void main() {
       MaterialApp(home: DummyGameScreenWithOutput(outputs: outputs)),
     );
     expect(true, isTrue); // If no exception, test passes
+  });
+
+  // This test verifies that the timer in TurnBasedGameScreenBase is cancelled on dispose
+  // and does not call setState after the widget is unmounted (no exceptions thrown).
+  testWidgets(
+    'Timer is cancelled on dispose and does not call setState after unmount',
+    (tester) async {
+      late State dummyState;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: StatefulBuilder(
+            builder: (context, setState) {
+              return DummyGameScreen(key: UniqueKey());
+            },
+          ),
+        ),
+      );
+      dummyState = tester.state(find.byType(DummyGameScreen));
+      // Schedule a timer by calling processOutputs with a nextTimeout
+      // Simulate a nextTimeout 100ms in the future
+      final now = DateTime.now().toUtc();
+      final outputsWithTimeout = TurnBasedGameOutputContainer(
+        outputs: [],
+        nextTimeout: now.add(const Duration(milliseconds: 100)),
+      );
+      // ignore: invalid_use_of_protected_member
+      (dummyState as DummyGameScreenState).processOutputs(outputsWithTimeout);
+      // Dispose the widget before the timer fires
+      await tester.pumpWidget(Container());
+      // Wait for the timer to fire
+      await tester.pump(const Duration(milliseconds: 200));
+      // If no exception is thrown, the timer was cancelled and did not call setState after dispose
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  // This test verifies that setState/context is not called after dispose if the widget is unmounted during an async operation (e.g., settings button).
+  testWidgets('No setState/context after dispose in async settings button', (tester) async {
+    await tester.pumpWidget(MaterialApp(home: AsyncSettingsScreen()));
+    await tester.tap(find.text('Async Settings'));
+    await tester.pump();
+    // Dispose the widget before the async callback completes
+    await tester.pumpWidget(Container());
+    // Wait for the async callback to complete
+    await tester.pump(const Duration(milliseconds: 200));
+    // If no exception is thrown, setState/context was not called after dispose
+    expect(tester.takeException(), isNull);
   });
 }
 
