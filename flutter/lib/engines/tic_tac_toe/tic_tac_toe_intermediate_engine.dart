@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:duoplay/utils/random.dart';
 
@@ -17,7 +18,7 @@ class TTTIntermediateEngine implements TTTEngineContract {
     // Try to make an immediately winning move
     for (int i = 0; i < currentState.board.length; ++i) {
       if (currentState.board[i] == TurnBasedGameCellState.empty) {
-        final simulatedBoard = List<TurnBasedGameCellState>.from(currentState.board);
+        final simulatedBoard = TurnBasedGameBoard.copy(currentState.board);
         simulatedBoard[i] = currentState.currentPlayer;
         if (currentState.getWinner(simulatedBoard) ==
             currentState.currentPlayer) {
@@ -31,7 +32,7 @@ class TTTIntermediateEngine implements TTTEngineContract {
     final opponent = currentState.currentPlayer.getOpponent();
     for (int i = 0; i < currentState.board.length; ++i) {
       if (currentState.board[i] == TurnBasedGameCellState.empty) {
-        final simulatedBoard = List<TurnBasedGameCellState>.from(currentState.board);
+        final simulatedBoard = TurnBasedGameBoard.copy(currentState.board);
         simulatedBoard[i] = opponent;
         if (currentState.getWinner(simulatedBoard) == opponent) {
           developer.log('[AI][Intermediate] Blocking opponent win at $i');

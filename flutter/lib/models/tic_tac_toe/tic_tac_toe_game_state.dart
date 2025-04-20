@@ -1,12 +1,14 @@
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_constants.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class TicTacToeGameState {
   static final int numSquares = 9;
 
-  final List<TurnBasedGameCellState> board;
+  final TurnBasedGameBoard board;
   TurnBasedGameCellState currentPlayer;
   TurnBasedGameCellState winner;
   int numberOfX;
@@ -44,10 +46,7 @@ class TicTacToeGameState {
     TurnBasedGameConfiguration cfg, {
     DateTime? nowUtc,
   }) => TicTacToeGameState._(
-    List<TurnBasedGameCellState>.filled(
-      numSquares,
-      TurnBasedGameCellState.empty,
-    ),
+    TurnBasedGameBoard(TTTGameLogic.rows, TTTGameLogic.columns),
     TurnBasedGameCellState.player1,
     TurnBasedGameCellState.empty,
     0,
@@ -78,7 +77,7 @@ class TicTacToeGameState {
     }
 
     // Create a new board for winner detection
-    final newBoard = List<TurnBasedGameCellState>.from(board);
+    final newBoard = TurnBasedGameBoard.copy(board);
     newBoard[index] = player;
     final newNumberOfX =
         player == TurnBasedGameCellState.player1 ? numberOfX + 1 : numberOfX;
@@ -125,7 +124,7 @@ class TicTacToeGameState {
   }
 
   void _updateGameState(
-    List<TurnBasedGameCellState> newBoard,
+    TurnBasedGameBoard newBoard,
     int newNumberOfX,
     int newNumberOfO,
     TurnBasedGameCellState newWinner,
@@ -163,7 +162,7 @@ class TicTacToeGameState {
     engineMoveTimeUtc = newEngineMoveTimeUtc;
   }
 
-  TurnBasedGameCellState getWinner(List<TurnBasedGameCellState> board) {
+  TurnBasedGameCellState getWinner(TurnBasedGameBoard board) {
     // Cache the winning combinations to avoid redundant checks
     for (var combination in TTTConstants.winningCombinations) {
       final a = combination[0];
@@ -199,7 +198,10 @@ class TicTacToeGameState {
     return Result.success();
   }
 
-  void processNewGameConfiguration(TurnBasedGameConfiguration cfg, DateTime nowUtc) {
+  void processNewGameConfiguration(
+    TurnBasedGameConfiguration cfg,
+    DateTime nowUtc,
+  ) {
     configuration = cfg;
     this.nowUtc = nowUtc;
   }

@@ -1,3 +1,4 @@
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
@@ -29,21 +30,15 @@ void main() {
     });
 
     test('Draw: board full, no winner', () {
-      // X O X
-      // X O O
-      // O X X
+      final boardString = '''
+      X O X
+      X O O
+      O X X
+''';
+      final board = TTTGameLogic.parseBoard(boardString);
+
       final state = TicTacToeGameState(
-        [
-          TurnBasedGameCellState.player1,
-          TurnBasedGameCellState.player2,
-          TurnBasedGameCellState.player1,
-          TurnBasedGameCellState.player1,
-          TurnBasedGameCellState.player2,
-          TurnBasedGameCellState.player2,
-          TurnBasedGameCellState.player2,
-          TurnBasedGameCellState.player1,
-          TurnBasedGameCellState.player1,
-        ],
+        board,
         TurnBasedGameCellState.player2,
         TurnBasedGameCellState.empty,
         5,
@@ -57,22 +52,16 @@ void main() {
     });
 
     test('Simultaneous win/draw: last move wins', () {
-      // X O O
-      // X O O
-      // _ X X
       // X moves at index 6 to win (middle column)
+      final boardString = '''
+      X O O
+      X O O
+      _ X X
+''';
+      final board = TTTGameLogic.parseBoard(boardString);
+
       final state = TicTacToeGameState(
-        [
-          TurnBasedGameCellState.player1,
-          TurnBasedGameCellState.player2,
-          TurnBasedGameCellState.player2,
-          TurnBasedGameCellState.player1,
-          TurnBasedGameCellState.player2,
-          TurnBasedGameCellState.player2,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.player1,
-          TurnBasedGameCellState.player1,
-        ],
+        board,
         TurnBasedGameCellState.player1, // X's turn
         TurnBasedGameCellState.empty,
         4, // numberOfX

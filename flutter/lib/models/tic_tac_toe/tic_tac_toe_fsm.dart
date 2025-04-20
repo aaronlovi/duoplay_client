@@ -6,6 +6,7 @@ import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
@@ -38,7 +39,7 @@ class TTTFsm {
     _engine = TTTEngineFactory.createEngine(configuration.difficulty);
   }
 
-  List<TurnBasedGameCellState> get board => gameState.board;
+  TurnBasedGameBoard get board => gameState.board;
   bool get isPlayerXEngine =>
       gameState.configuration.enginePlayer == TurnBasedGameCellState.player1;
   bool get isPlayerOEngine =>
@@ -128,7 +129,10 @@ class TTTFsm {
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(
-        TurnBasedGameGameOverFsmOutput(winner: gameState.winner, isDraw: gameState.isDraw),
+        TurnBasedGameGameOverFsmOutput(
+          winner: gameState.winner,
+          isDraw: gameState.isDraw,
+        ),
       );
     }
   }
@@ -174,7 +178,10 @@ class TTTFsm {
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(
-        TurnBasedGameGameOverFsmOutput(winner: gameState.winner, isDraw: gameState.isDraw),
+        TurnBasedGameGameOverFsmOutput(
+          winner: gameState.winner,
+          isDraw: gameState.isDraw,
+        ),
       );
     }
   }
@@ -212,7 +219,9 @@ class TTTFsm {
       log(
         '[FSM] Transition: after setupNextGame, newState=${gameState.toString()}',
       );
-      _outputs.outputs.add(TurnBasedGameStartGameFsmOutput(gameState.configuration));
+      _outputs.outputs.add(
+        TurnBasedGameStartGameFsmOutput(gameState.configuration),
+      );
     }
 
     if (_context.addDoEngineMoveOutput) {
@@ -252,8 +261,9 @@ class TTTFsm {
     return soonestNextTimeout;
   }
 
-  void _appendErrorOutput(ResultErrorCode errorCode) =>
-      _outputs.outputs.add(TurnBasedGameErrorFsmOutput(results: Result.failure(errorCode)));
+  void _appendErrorOutput(ResultErrorCode errorCode) => _outputs.outputs.add(
+    TurnBasedGameErrorFsmOutput(results: Result.failure(errorCode)),
+  );
 
   void _appendErrorResult(Result res) =>
       _outputs.outputs.add(TurnBasedGameErrorFsmOutput(results: res));

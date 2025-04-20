@@ -4,6 +4,7 @@ import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/mini_max_result.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class TTTExpertEngine implements TTTEngineContract {
@@ -75,14 +76,18 @@ class TTTExpertEngine implements TTTEngineContract {
     int index,
     TurnBasedGameCellState player,
   ) {
-    final newBoard = List<TurnBasedGameCellState>.from(state.board);
+    final newBoard = TurnBasedGameBoard.copy(state.board);
     newBoard[index] = player;
     return TicTacToeGameState(
       newBoard,
       player.getOpponent(),
       state.getWinner(newBoard),
-      player == TurnBasedGameCellState.player1 ? state.numberOfX + 1 : state.numberOfX,
-      player == TurnBasedGameCellState.player2 ? state.numberOfO + 1 : state.numberOfO,
+      player == TurnBasedGameCellState.player1
+          ? state.numberOfX + 1
+          : state.numberOfX,
+      player == TurnBasedGameCellState.player2
+          ? state.numberOfO + 1
+          : state.numberOfO,
       state.nowUtc,
       state.configuration,
       state.configuration.difficulty,

@@ -1,7 +1,9 @@
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_beginner_engine.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_expert_engine.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_intermediate_engine.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,21 +17,15 @@ void main() {
         difficulty: 'beginner',
       );
       final engine = TTTBeginnerEngine();
-      // X _ X
-      // O O _
-      // _ _ _
+      final boardString = '''
+      X _ X
+      O O _
+      _ _ _
+''';
+      TurnBasedGameBoard board = TTTGameLogic.parseBoard(boardString);
+
       final state = TicTacToeGameState(
-        [
-          TurnBasedGameCellState.player1,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.player1,
-          TurnBasedGameCellState.player2,
-          TurnBasedGameCellState.player2,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-        ],
+        board,
         TurnBasedGameCellState.player1,
         TurnBasedGameCellState.empty,
         2,
@@ -50,21 +46,15 @@ void main() {
         difficulty: 'intermediate',
       );
       final engine = TTTIntermediateEngine();
-      // X X _
-      // O _ _
-      // _ _ _
+      final boardString = '''
+      X X _
+      O _ _
+      _ _ _
+''';
+      TurnBasedGameBoard board = TTTGameLogic.parseBoard(boardString);
+
       final state = TicTacToeGameState(
-        [
-          TurnBasedGameCellState.player1,
-          TurnBasedGameCellState.player1,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.player2,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-        ],
+        board,
         TurnBasedGameCellState.player2,
         TurnBasedGameCellState.empty,
         2,
@@ -85,19 +75,10 @@ void main() {
         difficulty: 'expert',
       );
       final engine = TTTExpertEngine();
+
       // Empty board, X to move
       final state = TicTacToeGameState(
-        [
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-          TurnBasedGameCellState.empty,
-        ],
+        TurnBasedGameBoard(TTTGameLogic.rows, TTTGameLogic.columns),
         TurnBasedGameCellState.player1,
         TurnBasedGameCellState.empty,
         0,
@@ -120,23 +101,17 @@ void main() {
           difficulty: 'expert',
         );
         final engine = TTTExpertEngine();
-        // Board setup:
-        // X _ _
-        // _ _ _
-        // _ _ _
+
         // O to move. The only non-losing moves are corners or edge (not center or edge-middle).
+        final boardString = '''
+        X _ _
+        _ _ _
+        _ _ _
+''';
+        final board = TTTGameLogic.parseBoard(boardString);
+
         final state = TicTacToeGameState(
-          [
-            TurnBasedGameCellState.player1,
-            TurnBasedGameCellState.empty,
-            TurnBasedGameCellState.empty,
-            TurnBasedGameCellState.empty,
-            TurnBasedGameCellState.empty,
-            TurnBasedGameCellState.empty,
-            TurnBasedGameCellState.empty,
-            TurnBasedGameCellState.empty,
-            TurnBasedGameCellState.empty,
-          ],
+          board,
           TurnBasedGameCellState.player2,
           TurnBasedGameCellState.empty,
           1,

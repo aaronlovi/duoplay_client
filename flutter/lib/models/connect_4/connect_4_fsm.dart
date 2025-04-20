@@ -6,6 +6,7 @@ import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
@@ -33,12 +34,14 @@ class Connect4FSM {
 
   Connect4FSM(TurnBasedGameConfiguration configuration)
     : gameState = Connect4GameState.initial(configuration),
-      _outputs = Connect4OutputContainer(outputs: <TurnBasedGameFsmOutputBase>[]),
+      _outputs = Connect4OutputContainer(
+        outputs: <TurnBasedGameFsmOutputBase>[],
+      ),
       _context = _Connect4FsmUpdateContext() {
     _engine = Connect4EngineFactory.createEngine(configuration.difficulty);
   }
 
-  List<TurnBasedGameCellState> get board => gameState.board;
+  TurnBasedGameBoard get board => gameState.board;
   bool get isPlayerRedEngine =>
       gameState.configuration.enginePlayer == TurnBasedGameCellState.player1;
   bool get isPlayerYellowEngine =>
@@ -48,7 +51,10 @@ class Connect4FSM {
   TurnBasedGameCellState get enginePlayer => gameState.enginePlayer;
   String get nextGameDifficulty => gameState.nextGameEngineDifficulty;
 
-  void update(TurnBasedGameFsmInputBase inputs, Connect4OutputContainer outputs) {
+  void update(
+    TurnBasedGameFsmInputBase inputs,
+    Connect4OutputContainer outputs,
+  ) {
     final prevState = gameState.toString();
     final inputType = inputs.runtimeType.toString();
     log(
@@ -219,7 +225,9 @@ class Connect4FSM {
       log(
         '[FSM] Transition: after setupNextGame, newState=${gameState.toString()}',
       );
-      _outputs.outputs.add(TurnBasedGameStartGameFsmOutput(gameState.configuration));
+      _outputs.outputs.add(
+        TurnBasedGameStartGameFsmOutput(gameState.configuration),
+      );
     }
 
     if (_context.addDoEngineMoveOutput) {

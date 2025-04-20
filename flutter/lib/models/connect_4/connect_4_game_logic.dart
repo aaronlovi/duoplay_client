@@ -1,3 +1,4 @@
+import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class Connect4GameLogic {
   /// This method calculates the lowest available row in the specified column
   /// where a chip can be placed. It assumes a 2D list `board` representing the
   /// current state of the game, where `TurnBasedGameCellState.empty` indicates an empty slot.
-  static int? getTargetIndex(List<TurnBasedGameCellState> board, int index) {
+  static int? getTargetIndex(TurnBasedGameBoard board, int index) {
     final column = index % columns;
     final row = index ~/ columns;
     // Check if the column is within bounds
@@ -37,13 +38,13 @@ class Connect4GameLogic {
   }
 
   /// Checks if a move is legal in the given column.
-  static bool isLegalMove(List<TurnBasedGameCellState> board, int index) {
+  static bool isLegalMove(TurnBasedGameBoard board, int index) {
     return getTargetIndex(board, index) != null;
   }
 
   /// Applies a move to the board by placing the chip in the lowest available row.
   static void applyMove(
-    List<TurnBasedGameCellState> board,
+    TurnBasedGameBoard board,
     int index,
     TurnBasedGameCellState chipColor,
   ) {
@@ -55,7 +56,7 @@ class Connect4GameLogic {
 
   /// Checks if there is a winner on the board.
   /// If no winner is found, it returns `TurnBasedGameCellState.empty`.
-  static TurnBasedGameCellState getWinner(List<TurnBasedGameCellState> board) {
+  static TurnBasedGameCellState getWinner(TurnBasedGameBoard board) {
     // Check horizontal, vertical, and diagonal lines for a winner.
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < columns; col++) {
@@ -69,17 +70,15 @@ class Connect4GameLogic {
   }
 
   /// Checks if the board is completely filled and there is no winner, resulting in a draw.
-  static bool isDraw(List<TurnBasedGameCellState> board) {
+  static bool isDraw(TurnBasedGameBoard board) {
     // Check if the board is completely filled
-    if (!board.every((cell) => cell != TurnBasedGameCellState.empty)) {
-      return false;
-    }
+    if (!board.isFull) return false;
 
     // Check if there is a winner
     return getWinner(board) == TurnBasedGameCellState.empty;
   }
 
-  static void debugPrintBoard(List<TurnBasedGameCellState> board) {
+  static void debugPrintBoard(TurnBasedGameBoard board) {
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < columns; col++) {
         final cell = board[row * columns + col];
@@ -95,30 +94,32 @@ class Connect4GameLogic {
   }
 
   /// Converts a string representation of a board into a 2D list of TurnBasedGameCellState.
-  static List<TurnBasedGameCellState> parseBoard(String boardString) =>
-      boardString
-          .trim()
-          .split('\n')
-          .expand(
-            (row) => row.trim().split(RegExp(r'\s+')).map((cell) {
-              switch (cell) {
-                case 'R':
-                case 'r':
-                  return TurnBasedGameCellState.player1;
-                case 'Y':
-                case 'y':
-                  return TurnBasedGameCellState.player2;
-                default:
-                  return TurnBasedGameCellState.empty;
-              }
-            }),
-          )
-          .toList();
+  static TurnBasedGameBoard parseBoard(String boardString) =>
+      TurnBasedGameBoard.fromList(
+        boardString
+            .trim()
+            .split('\n')
+            .expand(
+              (row) => row.trim().split(RegExp(r'\s+')).map((cell) {
+                switch (cell) {
+                  case 'R':
+                  case 'r':
+                    return TurnBasedGameCellState.player1;
+                  case 'Y':
+                  case 'y':
+                    return TurnBasedGameCellState.player2;
+                  default:
+                    return TurnBasedGameCellState.empty;
+                }
+              }),
+            )
+            .toList(),
+      );
 
   /// Helper method to check for a winner starting from a specific cell.
   /// If no winner is found, it returns `TurnBasedGameCellState.empty`.
   static TurnBasedGameCellState _checkWinnerFromCell(
-    List<TurnBasedGameCellState> board,
+    TurnBasedGameBoard board,
     int row,
     int col,
   ) {
@@ -147,7 +148,7 @@ class Connect4GameLogic {
   /// Helper method to check a specific direction for four consecutive chips.
   /// If no winner is found, it returns `TurnBasedGameCellState.empty`.
   static TurnBasedGameCellState _checkDirection(
-    List<TurnBasedGameCellState> board,
+    TurnBasedGameBoard board,
     int startRow,
     int startCol,
     int rowDelta,

@@ -1,11 +1,12 @@
 import 'package:duoplay/models/connect_4/connect_4_constants.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class Connect4GameState {
-  final List<TurnBasedGameCellState> board;
+  final TurnBasedGameBoard board;
   TurnBasedGameCellState currentPlayer;
   TurnBasedGameCellState winner;
   int numberOfRed;
@@ -42,7 +43,7 @@ class Connect4GameState {
     TurnBasedGameConfiguration cfg, {
     DateTime? nowUtc,
   }) => Connect4GameState._(
-    List.filled(Connect4GameLogic.numCells, TurnBasedGameCellState.empty),
+    TurnBasedGameBoard(Connect4GameLogic.rows, Connect4GameLogic.columns),
     TurnBasedGameCellState.player1,
     TurnBasedGameCellState.empty,
     0,
@@ -71,7 +72,7 @@ class Connect4GameState {
       return res;
     }
 
-    final newBoard = List<TurnBasedGameCellState>.from(board);
+    final newBoard = TurnBasedGameBoard.copy(board);
     Connect4GameLogic.applyMove(newBoard, column, player);
 
     final newNumberOfRed =
@@ -127,7 +128,7 @@ class Connect4GameState {
   }
 
   void _updateGameState(
-    List<TurnBasedGameCellState> newBoard,
+    TurnBasedGameBoard newBoard,
     int newNumberOfRed,
     int newNumberOfYellow,
     TurnBasedGameCellState newWinner,
@@ -154,7 +155,7 @@ class Connect4GameState {
       );
     }
 
-    board.setAll(0, newBoard);
+    board.setAll(newBoard);
     currentPlayer = nextPlayersTurn;
     winner = newWinner;
     numberOfRed = newNumberOfRed;
@@ -163,7 +164,7 @@ class Connect4GameState {
     engineMoveTimeUtc = newEngineMoveTimeUtc;
   }
 
-  TurnBasedGameCellState getWinner(List<TurnBasedGameCellState> board) {
+  TurnBasedGameCellState getWinner(TurnBasedGameBoard board) {
     return Connect4GameLogic.getWinner(board);
   }
 
@@ -211,7 +212,7 @@ class Connect4GameState {
             : null;
   }
 
-  void clearBoard() => board.fillRange(0, board.length, TurnBasedGameCellState.empty);
+  void clearBoard() => board.reset();
 
   @override
   String toString() {
