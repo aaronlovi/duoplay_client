@@ -5,15 +5,15 @@
 //
 // Note: This does not test actual game logic, but focuses on the shared base class contract and output handling.
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/material.dart';
-import 'package:duoplay/screens/turn_based_game_screen_base.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/result.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
+import 'package:duoplay/screens/turn_based_game_screen_base.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class DummyGameScreen extends StatefulWidget {
   const DummyGameScreen({super.key});
@@ -39,7 +39,9 @@ class DummyGameScreenState extends TurnBasedGameScreenBase<DummyGameScreen> {
   @override
   Widget buildGameGrid(BuildContext context) => const SizedBox();
   @override
-  Widget buildStatusBar(BuildContext context) => const SizedBox();
+  Widget buildStatusBar() => const SizedBox();
+  @override
+  Widget getCellContents(int index) => const SizedBox();
   @override
   Widget build(BuildContext context) {
     super.build(context);
