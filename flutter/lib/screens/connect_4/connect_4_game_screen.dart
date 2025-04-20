@@ -59,18 +59,76 @@ class Connect4GameScreenState
   }
 
   @override
+  int calculateAdjustedIndex(int index) {
+    final column =
+        index % gameLogic.columns; // Get the column from the tapped index
+    final rows = gameLogic.rows;
+
+    // Find the lowest available cell in the column
+    for (int row = rows - 1; row >= 0; row--) {
+      final adjustedIndex = row * gameLogic.columns + column;
+      if (gameObject.board[adjustedIndex] == TurnBasedGameCellState.empty) {
+        return adjustedIndex; // Return the lowest available index
+      }
+    }
+
+    return -1; // No available cell in the column
+  }
+
+  @override
   Widget getCellContents(int index) {
     final cellState = gameObject.board[index];
-    final color = _getCellColor(cellState);
-    return Container(
-      decoration: const BoxDecoration(
+    final isMostRecentMove = index == mostRecentMoveIndex;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300), // Animation duration
+      decoration: BoxDecoration(
+        gradient:
+            isMostRecentMove
+                ? RadialGradient(
+                  colors: [
+                    Colors.yellow.withValues(
+                      alpha: 0.3,
+                      red: 0.3,
+                      green: 0.3,
+                      blue: 0.3,
+                    ),
+                    Colors.transparent,
+                  ],
+                  center: Alignment.center,
+                  radius: 0.8,
+                )
+                : null,
+        color: Colors.white, // Cell background color
         shape: BoxShape.circle,
-        color: Colors.white,
+        border: Border.all(
+          color: gridColor,
+          width: 2.0, // Standard border width
+        ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Container(
-          decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final tokenSize =
+              constraints.biggest.shortestSide * 0.8; // Dynamic token size
+          return _getCellInnerContents(cellState, tokenSize);
+        },
+      ),
+    );
+  }
+
+  Widget _getCellInnerContents(
+    TurnBasedGameCellState cellState,
+    double tokenSize,
+  ) {
+    final color = _getCellColor(cellState);
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
+        width: tokenSize,
+        height: tokenSize,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color, // Token color
         ),
       ),
     );
@@ -79,11 +137,11 @@ class Connect4GameScreenState
   Color _getCellColor(TurnBasedGameCellState state) {
     switch (state) {
       case TurnBasedGameCellState.player1:
-        return Colors.red;
+        return Colors.red; // Player 1 token color
       case TurnBasedGameCellState.player2:
-        return Colors.yellow;
+        return Colors.yellow; // Player 2 token color
       default:
-        return Colors.transparent;
+        return Colors.transparent; // Empty cell
     }
   }
 }
