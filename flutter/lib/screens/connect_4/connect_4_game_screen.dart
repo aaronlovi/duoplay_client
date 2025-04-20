@@ -7,6 +7,7 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:duoplay/screens/turn_based_game_screen_base.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:duoplay/screens/turn_based_game_game_grid.dart';
 
 class Connect4GameScreen extends StatefulWidget {
   final TurnBasedGameContainer gameObject;
@@ -93,42 +94,16 @@ class Connect4GameScreenState
 
   @override
   Widget buildGameGrid(BuildContext context) => Center(
-    child: AspectRatio(
+    child: GameGrid(
+      rows: gameLogic.rows,
+      columns: gameLogic.columns,
       aspectRatio: gameLogic.columns / gameLogic.rows,
-      child: Container(
-        color: const Color(0xFFFFE082),
-        padding: const EdgeInsets.all(8.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final cellSize =
-                (constraints.maxWidth - (gameLogic.columns - 1) * 4) /
-                gameLogic.columns;
-            final gridHeight =
-                cellSize * gameLogic.rows + (gameLogic.rows - 1) * 4;
-            return SizedBox(
-              height: gridHeight,
-              child: ScrollConfiguration(
-                behavior: const ScrollBehavior().copyWith(scrollbars: false),
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: gameLogic.columns,
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
-                  ),
-                  itemCount: gameLogic.rows * gameLogic.columns,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () => _handleCellTap(index),
-                      child: _getCellContents(index),
-                    );
-                  },
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+      cellBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () => _handleCellTap(index),
+          child: _getCellContents(index),
+        );
+      },
     ),
   );
 

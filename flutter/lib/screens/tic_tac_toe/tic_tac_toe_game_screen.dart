@@ -3,6 +3,7 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
+import 'package:duoplay/screens/turn_based_game_game_grid.dart';
 import 'package:duoplay/screens/turn_based_game_screen_base.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -88,25 +89,19 @@ class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
 
   @override
   Widget buildGameGrid(BuildContext context) => Center(
-    child: AspectRatio(
+    child: GameGrid(
+      rows: 3,
+      columns: 3,
       aspectRatio: 1,
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 4,
-          mainAxisSpacing: 4,
-        ),
-        itemCount: 9,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () => _handleCellTap(index),
-            child: Container(
-              decoration: _getCellBorder(),
-              child: _getCellContents(index),
-            ),
-          );
-        },
-      ),
+      cellBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () => _handleCellTap(index),
+          child: Container(
+            decoration: _getCellBorder(),
+            child: _getCellContents(index),
+          ),
+        );
+      },
     ),
   );
 
