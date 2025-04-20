@@ -1,5 +1,7 @@
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:duoplay/screens/turn_based_game_screen_base.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +23,32 @@ class Connect4GameScreen extends StatefulWidget {
 }
 
 class Connect4GameScreenState
-    extends TurnBasedGameScreenBase<Connect4GameScreen> {
-  final Color gridColor = const Color(
-    0xFFFFF9C4,
-  ); // Pale yellow background color
+    extends TurnBasedGameScreenBase<Connect4GameScreen>
+    with TickerProviderStateMixin {
+  final Color gridColor = const Color(0xFFFFE082);
+  late AnimationController _pulsingController; // For infinite pulses (engine)
+  late AnimationController _humanPulseController; // For single pulse (human)
+
+  @override
+  void initState() {
+    super.initState();
+    _pulsingController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat(reverse: true); // Loop the animation
+
+    _humanPulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    ); // Single pulse animation
+  }
+
+  @override
+  void dispose() {
+    _pulsingController.dispose(); // Dispose of the infinite pulse controller
+    _humanPulseController.dispose(); // Dispose of the single pulse controller
+    super.dispose();
+  }
 
   @override
   TurnBasedGameContainer get gameObject => widget.gameObject;
@@ -78,27 +102,10 @@ class Connect4GameScreenState
   @override
   Widget getCellContents(int index) {
     final cellState = gameObject.board[index];
-    final isMostRecentMove = index == mostRecentMoveIndex;
+    final isMostRecentMove = index == mostRecentMoveIndex; // Compare directly
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300), // Animation duration
+    return Container(
       decoration: BoxDecoration(
-        gradient:
-            isMostRecentMove
-                ? RadialGradient(
-                  colors: [
-                    Colors.yellow.withValues(
-                      alpha: 0.3,
-                      red: 0.3,
-                      green: 0.3,
-                      blue: 0.3,
-                    ),
-                    Colors.transparent,
-                  ],
-                  center: Alignment.center,
-                  radius: 0.8,
-                )
-                : null,
         color: Colors.white, // Cell background color
         shape: BoxShape.circle,
         border: Border.all(
@@ -110,7 +117,14 @@ class Connect4GameScreenState
         builder: (BuildContext context, BoxConstraints constraints) {
           final tokenSize =
               constraints.biggest.shortestSide * 0.8; // Dynamic token size
-          return _getCellInnerContents(cellState, tokenSize);
+          if (isMostRecentMove) {
+            final isHumanMove = !gameObject.isHumanPlayerToMove;
+            return _buildPulsingToken(cellState, tokenSize, isHumanMove);
+          }
+          return _getCellInnerContents(
+            cellState,
+            tokenSize,
+          ); // Static token for other cells
         },
       ),
     );
@@ -134,6 +148,39 @@ class Connect4GameScreenState
     );
   }
 
+  Widget _buildPulsingToken(
+    TurnBasedGameCellState cellState,
+    double tokenSize,
+    bool isHumanMove,
+  ) {
+    final color = _getCellColor(cellState);
+
+    // Use the appropriate animation controller
+    final animation =
+        isHumanMove
+            ? Tween<double>(begin: 0.65, end: 0.92).animate(
+              CurvedAnimation(
+                parent: _humanPulseController,
+                curve: Curves.easeInOut,
+              ),
+            )
+            : Tween<double>(begin: 0.75, end: 0.95).animate(
+              CurvedAnimation(
+                parent: _pulsingController,
+                curve: Curves.easeInOut,
+              ),
+            );
+
+    return ScaleTransition(
+      scale: animation,
+      child: Container(
+        width: tokenSize,
+        height: tokenSize,
+        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+      ),
+    );
+  }
+
   Color _getCellColor(TurnBasedGameCellState state) {
     switch (state) {
       case TurnBasedGameCellState.player1:
@@ -143,5 +190,27 @@ class Connect4GameScreenState
       default:
         return Colors.transparent; // Empty cell
     }
+  }
+
+  @override
+  void handleCellTap(int index) {
+    if (!gameObject.isHumanPlayerToMove) return;
+
+    final adjustedIndex = calculateAdjustedIndex(index);
+    if (adjustedIndex == -1) return; // Invalid move
+
+    final inp = TurnBasedGamePlayerMoveFsmInput(
+      index: adjustedIndex,
+      player: gameObject.humanPlayer,
+      nowUtc: DateTime.now().toUtc(),
+    );
+    TurnBasedGameOutputContainer outputs = gameObject.postInput(inp);
+    setState(() {
+      mostRecentMoveIndex = adjustedIndex;
+      _humanPulseController.forward(
+        from: 0.0,
+      ); // Trigger single pulse animation
+      processOutputs(outputs);
+    });
   }
 }
