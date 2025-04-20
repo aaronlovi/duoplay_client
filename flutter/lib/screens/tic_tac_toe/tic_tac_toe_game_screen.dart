@@ -56,25 +56,29 @@ class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
   }
 
   @override
-  Container getCellContents(int index) {
+  Widget getCellContents(int index) {
     final cellState = gameObject.board[index];
-    return Container(
+    final isMostRecentMove = index == mostRecentMoveIndex;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300), // Animation duration
       decoration: BoxDecoration(
-        color: Colors.white, // Set the cell background color
+        color:
+            isMostRecentMove
+                ? Colors.yellow[100]
+                : Colors.white, // Highlight background
         border: Border.all(
-          color: gridColor,
-          width: 2.0,
-        ), // Add border to create grid effect
+          color: gridColor, // Highlight border
+          width:
+              isMostRecentMove
+                  ? 4.0
+                  : 2.0, // Thicker border for the most recent move
+        ),
       ),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final iconSize =
-              constraints.biggest.shortestSide *
-              0.6; // Calculate icon size dynamically
-          return _getCellInnerContents(
-            cellState,
-            iconSize,
-          ); // Pass the calculated size
+          final iconSize = constraints.biggest.shortestSide * 0.6;
+          return _getCellInnerContents(cellState, iconSize);
         },
       ),
     );

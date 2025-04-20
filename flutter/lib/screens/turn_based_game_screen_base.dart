@@ -31,6 +31,9 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
   /// Abstract: must return the settings key for the game screen.
   String get settingsDifficultyKey;
 
+  /// Most recent move index for the game.
+  int? mostRecentMoveIndex;
+
   @override
   void dispose() {
     _fsmTimer?.cancel();
@@ -141,13 +144,17 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
   @protected
   void handleCellTap(int index) {
     if (!gameObject.isHumanPlayerToMove) return;
+
     final inp = TurnBasedGamePlayerMoveFsmInput(
       index: index,
       player: gameObject.humanPlayer,
       nowUtc: DateTime.now().toUtc(),
     );
     TurnBasedGameOutputContainer outputs = gameObject.postInput(inp);
-    processOutputs(outputs);
+    setState(() {
+      mostRecentMoveIndex = index;
+      processOutputs(outputs);
+    });
   }
 
   @protected
@@ -239,6 +246,7 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
   /// Handles start game outputs.
   void _handleStartGameOutput() {
     // Show start game UI if needed
+    mostRecentMoveIndex = null;
   }
 
   /// Handles engine move outputs.
@@ -261,7 +269,11 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
         enginePlayer: gameObject.enginePlayer,
       ),
     );
-    processOutputs(newOutputs);
+
+    setState(() {
+      mostRecentMoveIndex = res.value;
+      processOutputs(newOutputs);
+    });
   }
 
   /// Handles errors during setState.
