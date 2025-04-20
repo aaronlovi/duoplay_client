@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
-import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
@@ -224,7 +223,7 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
           ).showSnackBar(SnackBar(content: Text(errorMessage)));
         } else if (item is TurnBasedGameStartGameFsmOutput) {
           // Show some start game stuff here
-        } else if (item is Connect4NewBoardOutput) {
+        } else if (item is TurnBasedGameNewBoardFsmOutput) {
           // Not much to do here. New state will redraw the screen
         } else if (item is TurnBasedGameGameOverFsmOutput) {
           // Show some game over stuff here

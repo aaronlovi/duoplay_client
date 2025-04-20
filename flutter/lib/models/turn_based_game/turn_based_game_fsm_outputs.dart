@@ -1,5 +1,6 @@
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 abstract class TurnBasedGameFsmOutputBase {}
@@ -10,7 +11,8 @@ class TurnBasedGameStartGameFsmOutput implements TurnBasedGameFsmOutputBase {
   TurnBasedGameStartGameFsmOutput(this.configuration);
 
   @override
-  String toString() => 'TurnBasedGameStartGameFsmOutput[configuration: $configuration]';
+  String toString() =>
+      'TurnBasedGameStartGameFsmOutput[configuration: $configuration]';
 }
 
 class TurnBasedGameGameOverFsmOutput implements TurnBasedGameFsmOutputBase {
@@ -27,7 +29,8 @@ class TurnBasedGameGameOverFsmOutput implements TurnBasedGameFsmOutputBase {
   }
 
   @override
-  String toString() => 'TurnBasedGameGameOverFsmOutput[winner: $winner, isDraw: $isDraw]';
+  String toString() =>
+      'TurnBasedGameGameOverFsmOutput[winner: $winner, isDraw: $isDraw]';
 }
 
 class TurnBasedGameDoEngineMoveFsmOutput implements TurnBasedGameFsmOutputBase {
@@ -46,4 +49,13 @@ class TurnBasedGameErrorFsmOutput implements TurnBasedGameFsmOutputBase {
 
   @override
   String toString() => 'TurnBasedGameErrorFsmOutput[results: $results]';
+}
+
+class TurnBasedGameNewBoardFsmOutput implements TurnBasedGameFsmOutputBase {
+  TurnBasedGameState gameState;
+
+  TurnBasedGameNewBoardFsmOutput({required this.gameState});
+
+  @override
+  String toString() => 'TTTNewBoardOutput[gameState: $gameState]';
 }

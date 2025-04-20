@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:duoplay/engines/connect_4/connect_4_engine_contract.dart';
 import 'package:duoplay/engines/connect_4/connect_4_engine_factory.dart';
-import 'package:duoplay/models/connect_4/connect_4_fsm_outputs.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/connect_4/connect_4_output_container.dart';
 import 'package:duoplay/models/result.dart';
@@ -134,7 +133,7 @@ class Connect4FSM {
     }
 
     log('Move successful: column=${inputs.index}, player=${inputs.player}');
-    _outputs.outputs.add(Connect4NewBoardOutput(gameState: gameState));
+    _outputs.outputs.add(TurnBasedGameNewBoardFsmOutput(gameState: gameState));
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(
@@ -183,7 +182,7 @@ class Connect4FSM {
     log(
       'Engine move successful: column=${aiMove.value}, enginePlayer=${inputs.enginePlayer}',
     );
-    _outputs.outputs.add(Connect4NewBoardOutput(gameState: gameState));
+    _outputs.outputs.add(TurnBasedGameNewBoardFsmOutput(gameState: gameState));
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
@@ -44,7 +43,10 @@ class TTTGameScreenState extends State<TTTGameScreen> {
   @override
   Widget build(BuildContext context) {
     final difficulty = _gameObject.gameState.configuration.difficulty;
-    final playerLetter = _gameUtils.cellStateToShortString(_gameObject.humanPlayer).toUpperCase();
+    final playerLetter =
+        _gameUtils
+            .cellStateToShortString(_gameObject.humanPlayer)
+            .toUpperCase();
     return Scaffold(
       appBar: AppBar(title: const Text('Tic-Tac-Toe')),
       body: Column(
@@ -169,7 +171,7 @@ class TTTGameScreenState extends State<TTTGameScreen> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(errorMessage)));
-        } else if (item is TTTNewBoardOutput) {
+        } else if (item is TurnBasedGameNewBoardFsmOutput) {
           // Not much to do here. New state will redraw the screen
         } else if (item is TurnBasedGameGameOverFsmOutput) {
           // Show some game over stuff here
@@ -207,7 +209,9 @@ class TTTGameScreenState extends State<TTTGameScreen> {
       duration = Duration(seconds: 1);
     }
     Timer(duration, () {
-      final updateTimeInput = TurnBasedGameUpdateTimeFsmInput(nowUtc: DateTime.now().toUtc());
+      final updateTimeInput = TurnBasedGameUpdateTimeFsmInput(
+        nowUtc: DateTime.now().toUtc(),
+      );
       final newOutputs = _gameObject.postInput(updateTimeInput);
       _processOutputs(newOutputs); // Process the outputs from the timer
     });

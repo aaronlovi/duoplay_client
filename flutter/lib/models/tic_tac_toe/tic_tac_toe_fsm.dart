@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
 import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm_outputs.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
@@ -126,7 +125,7 @@ class TTTFsm {
     }
 
     log('Move successful: index=${inputs.index}, player=${inputs.player}');
-    _outputs.outputs.add(TTTNewBoardOutput(gameState: gameState));
+    _outputs.outputs.add(TurnBasedGameNewBoardFsmOutput(gameState: gameState));
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(
@@ -175,7 +174,7 @@ class TTTFsm {
     log(
       'Engine move successful: index=${aiMove.value}, enginePlayer=${inputs.enginePlayer}',
     );
-    _outputs.outputs.add(TTTNewBoardOutput(gameState: gameState));
+    _outputs.outputs.add(TurnBasedGameNewBoardFsmOutput(gameState: gameState));
     if (gameState.isGameOver) {
       log('Game over: winner=${gameState.winner}, isDraw=${gameState.isDraw}');
       _outputs.outputs.add(
