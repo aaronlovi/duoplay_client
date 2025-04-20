@@ -120,10 +120,10 @@ When working on the requirements in this document, follow this workflow:
 | **R.1.4** | Ensure the refactored structure supports adding new games. | Complete |
 | **R.1.4.1** | Define clear interfaces for game-specific logic in the base class. | Complete |
 | **R.1.4.1.1** | Document the required methods and properties for new games. | Complete |
-| **R.1.4.1.2** | Provide examples of how to implement a new game using the base class. | Pending |
+| **R.1.4.1.2** | Provide examples of how to implement a new game using the base class. | Complete |
 | **R.1.4.2** | Test the refactored screens to ensure functionality is preserved. | Complete |
-| **R.1.4.2.1** | Write unit tests for the base class. | Pending |
-| **R.1.4.2.2** | Write integration tests for the refactored game screens. | Pending |
+| **R.1.4.2.1** | Write unit tests for the base class. | Complete |
+| **R.1.4.2.2** | Write integration tests for the refactored game screens. | Complete |
 
 ## Example: Implementing a New Game Using the Base Class
 
