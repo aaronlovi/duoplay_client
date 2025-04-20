@@ -2,16 +2,19 @@
 
 <!--
 Relevant Context Files:
-- flutter/lib/screens/tic_tac_toe/tic_tac_toe_game_screen.dart
-- flutter/lib/screens/connect_4/connect_4_game_screen.dart
-- flutter/lib/screens/tic_tac_toe/tic_tac_toe_settings_screen.dart
-- flutter/lib/screens/tic_tac_toe/tic_tac_toe_settings_loader.dart
-- flutter/lib/screens/connect_4/connect_4_settings_screen.dart
-- flutter/lib/screens/connect_4/connect_4_settings_loader.dart
-- flutter/lib/models/turn_based_game/turn_based_game_container.dart
-- flutter/lib/models/turn_based_game_fsm.dart
 - flutter/lib/models/connect_4/connect_4_game_container.dart
 - flutter/lib/models/tic_tac_toe/tic_tac_toe_game_container.dart
+- flutter/lib/screens/tic_tac_toe/tic_tac_toe_game_screen.dart
+- flutter/lib/screens/tic_tac_toe/tic_tac_toe_settings_screen.dart
+- flutter/lib/screens/tic_tac_toe/tic_tac_toe_settings_loader.dart
+- flutter/lib/screens/connect_4/connect_4_game_screen.dart
+- flutter/lib/screens/connect_4/connect_4_settings_screen.dart
+- flutter/lib/screens/connect_4/connect_4_settings_loader.dart
+- flutter/lib/screens/turn_based_game_game_grid.dart
+- flutter/lib/screens/turn_based_game_screen_base.dart
+- flutter/lib/screens/turn_based_game_settings_button.dart
+- flutter/lib/models/turn_based_game/turn_based_game_container.dart
+- flutter/lib/models/turn_based_game_fsm.dart
 - requirements/requirements.3.md
 
 These files contain the main UI, FSM, settings, and requirements context for both games and the shared refactoring effort.
@@ -124,6 +127,10 @@ When working on the requirements in this document, follow this workflow:
 | **R.1.4.2** | Test the refactored screens to ensure functionality is preserved. | Complete |
 | **R.1.4.2.1** | Write unit tests for the base class. | Complete |
 | **R.1.4.2.2** | Write integration tests for the refactored game screens. | Complete |
+| **R.1.5** | Ensure all timers and async callbacks in game screens are safe if the widget is disposed (not mounted). | Complete |
+| **R.1.5.1** | Cancel all timers in dispose() and check mounted before calling setState or accessing context. | Complete |
+| **R.1.5.2** | Always check mounted after await in async functions before calling setState or using context. | Complete |
+| **R.1.5.3** | Add unit/widget tests to verify timer cancellation and mounted checks in game screens. | Pending |
 
 ## Example: Implementing a New Game Using the Base Class
 

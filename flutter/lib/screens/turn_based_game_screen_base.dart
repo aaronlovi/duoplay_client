@@ -20,6 +20,8 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
   TurnBasedGameUtils get gameUtils;
   TurnBasedGameLogic get gameLogic => gameObject.gameState.gameLogic;
 
+  Timer? _fsmTimer;
+
   /// Abstract: must return the app bar title for the game screen.
   String get appBarTitle;
 
@@ -28,6 +30,12 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
 
   /// Abstract: must return the settings key for the game screen.
   String get settingsDifficultyKey;
+
+  @override
+  void dispose() {
+    _fsmTimer?.cancel();
+    super.dispose();
+  }
 
   /// Default build method for shared game screen layout.
   @mustCallSuper
@@ -75,7 +83,7 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
         final newDifficulty = getNewDifficulty(prefs, prevDifficulty);
 
         if (!mounted) return;
-        
+
         if (newDifficulty != prevDifficulty) {
           gameObject.postInput(
             TurnBasedGameSettingsChangeFsmInput(
@@ -215,13 +223,15 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
       }
     });
 
+    _fsmTimer?.cancel();
     if (outputs.nextTimeout == null) return;
     final now = DateTime.now().toUtc();
     Duration duration = outputs.nextTimeout!.difference(now);
     if (duration == Duration.zero || duration.isNegative) {
       duration = Duration(seconds: 1);
     }
-    Timer(duration, () {
+    _fsmTimer = Timer(duration, () {
+      if (!mounted) return;
       final updateTimeInput = TurnBasedGameUpdateTimeFsmInput(
         nowUtc: DateTime.now().toUtc(),
       );
