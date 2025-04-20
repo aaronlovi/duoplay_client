@@ -102,14 +102,14 @@ When working on the requirements in this document, follow this workflow:
 | **R.1.1.3** | Ensure the base class supports both human and AI players. | Complete |
 | **R.1.1.3.1** | Add methods to handle AI moves. | Complete |
 | **R.1.1.3.2** | Add methods to handle human moves. | Complete |
-| **R.1.2** | Extract shared widgets. | Partial |
+| **R.1.2** | Extract shared widgets. | Complete |
 | **R.1.2.1** | Create a reusable `GameGrid` widget. | Complete |
 | **R.1.2.1.1** | Define a generic grid layout. | Complete |
 | **R.1.2.1.2** | Add support for custom cell rendering via a callback. | Complete |
 | **R.1.2.1.3** | Ensure the widget is responsive and adaptable to different grid sizes. | Complete |
-| **R.1.2.2** | Create a reusable `SettingsButton` widget. | Pending |
-| **R.1.2.2.1** | Add navigation logic to the settings screen. | Pending |
-| **R.1.2.2.2** | Ensure the button supports customizable labels and styles. | Pending |
+| **R.1.2.2** | Create a reusable `SettingsButton` widget. | Complete |
+| **R.1.2.2.1** | Add navigation logic to the settings screen. | Complete |
+| **R.1.2.2.2** | Ensure the button supports customizable labels and styles. | Complete |
 | **R.1.3** | Refactor Tic-Tac-Toe and Connect 4 game screens. | Complete |
 | **R.1.3.1** | Update `TTTGameScreen` to extend `TurnBasedGameScreenBase`. | Complete |
 | **R.1.3.1.1** | Implement game-specific configurations (e.g., 3x3 grid, cell rendering). | Complete |

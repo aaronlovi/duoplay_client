@@ -5,6 +5,7 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:duoplay/screens/turn_based_game_game_grid.dart';
 import 'package:duoplay/screens/turn_based_game_screen_base.dart';
+import 'package:duoplay/screens/turn_based_game_settings_button.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -50,7 +51,7 @@ class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
   }
 
   @override
-  Widget buildSettingsButton(BuildContext context) => ElevatedButton(
+  Widget buildSettingsButton(BuildContext context) => SettingsButton(
     onPressed: () async {
       final prevDifficulty = gameObject.gameState.configuration.difficulty;
       final int prevBetweenMoveDelay =
@@ -84,7 +85,7 @@ class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
         setState(() => {});
       }
     },
-    child: const Text('Settings'),
+    label: 'Settings',
   );
 
   @override

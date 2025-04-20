@@ -4,10 +4,11 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
+import 'package:duoplay/screens/turn_based_game_game_grid.dart';
 import 'package:duoplay/screens/turn_based_game_screen_base.dart';
+import 'package:duoplay/screens/turn_based_game_settings_button.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:duoplay/screens/turn_based_game_game_grid.dart';
 
 class Connect4GameScreen extends StatefulWidget {
   final TurnBasedGameContainer gameObject;
@@ -55,7 +56,7 @@ class Connect4GameScreenState
   }
 
   @override
-  Widget buildSettingsButton(BuildContext context) => ElevatedButton(
+  Widget buildSettingsButton(BuildContext context) => SettingsButton(
     onPressed: () async {
       final prevDifficulty = gameObject.gameState.configuration.difficulty;
       final int prevBetweenMoveDelay =
@@ -89,7 +90,7 @@ class Connect4GameScreenState
         setState(() => {});
       }
     },
-    child: const Text('Settings'),
+    label: 'Settings',
   );
 
   @override
