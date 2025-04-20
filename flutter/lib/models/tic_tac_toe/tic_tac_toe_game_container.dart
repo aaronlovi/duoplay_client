@@ -1,25 +1,26 @@
 import 'dart:developer';
 
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_inputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
+import 'package:duoplay/models/turn_based_game_fsm.dart';
 
 class TTTGameContainer extends TurnBasedGameUtils {
-  final TTTFsm _fsm;
+  final TurnBasedGameFsm _fsm;
 
-  TTTGameContainer({required TTTFsm fsm}) : _fsm = fsm;
+  TTTGameContainer({required TurnBasedGameFsm fsm}) : _fsm = fsm;
 
   TurnBasedGameBoard get board => _fsm.board;
-  bool get isPlayerXEngine => _fsm.isPlayerXEngine;
-  bool get isPlayerOEngine => _fsm.isPlayerOEngine;
+  bool get isPlayerXEngine => _fsm.isPlayer1Engine;
+  bool get isPlayerOEngine => _fsm.isPlayer2Engine;
   bool get isHumanPlayerToMove => _fsm.isHumanPlayerToMove;
   TurnBasedGameCellState get humanPlayer => _fsm.humanPlayer;
   TurnBasedGameCellState get enginePlayer => _fsm.enginePlayer;
-  TTTGameState get gameState => _fsm.gameState;
+  TurnBasedGameState get gameState => _fsm.gameState;
   String get nextGameDifficulty => _fsm.nextGameDifficulty;
 
   TurnBasedGameOutputContainer postInput(TurnBasedGameFsmInputBase inputs) {
