@@ -15,7 +15,7 @@ class TTTIntermediateEngine extends TTTEngineContract {
       if (currentState.board[i] == TurnBasedGameCellState.empty) {
         final simulatedBoard = TurnBasedGameBoard.copy(currentState.board);
         simulatedBoard[i] = currentState.currentPlayer;
-        if (currentState.getWinner(simulatedBoard) ==
+        if (_gameLogic.getWinner(simulatedBoard) ==
             currentState.currentPlayer) {
           developer.log('[AI][Intermediate] Winning move found at $i');
           return GenericResult.success(i);
@@ -29,7 +29,7 @@ class TTTIntermediateEngine extends TTTEngineContract {
       if (currentState.board[i] == TurnBasedGameCellState.empty) {
         final simulatedBoard = TurnBasedGameBoard.copy(currentState.board);
         simulatedBoard[i] = opponent;
-        if (currentState.getWinner(simulatedBoard) == opponent) {
+        if (_gameLogic.getWinner(simulatedBoard) == opponent) {
           developer.log('[AI][Intermediate] Blocking opponent win at $i');
           return GenericResult.success(i);
         }

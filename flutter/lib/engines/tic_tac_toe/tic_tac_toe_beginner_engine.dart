@@ -15,7 +15,7 @@ class TTTBeginnerEngine extends TTTEngineContract {
       if (currentState.board[i] == TurnBasedGameCellState.empty) {
         final simulatedBoard = TurnBasedGameBoard.copy(currentState.board);
         simulatedBoard[i] = currentState.currentPlayer;
-        if (currentState.getWinner(simulatedBoard) ==
+        if (_gameLogic.getWinner(simulatedBoard) ==
             currentState.currentPlayer) {
           developer.log('[AI][Beginner] Winning move found at $i');
           return GenericResult.success(i);

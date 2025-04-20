@@ -77,13 +77,13 @@ class TTTExpertEngine extends TTTEngineContract {
       newBoard,
       _gameLogic,
       player.getOpponent(),
-      state.getWinner(newBoard),
+      _gameLogic.getWinner(newBoard),
       player == TurnBasedGameCellState.player1
-          ? state.numberOfX + 1
-          : state.numberOfX,
+          ? state.numberOfPlayer1 + 1
+          : state.numberOfPlayer1,
       player == TurnBasedGameCellState.player2
-          ? state.numberOfO + 1
-          : state.numberOfO,
+          ? state.numberOfPlayer2 + 1
+          : state.numberOfPlayer2,
       state.nowUtc,
       state.configuration,
       state.configuration.difficulty,

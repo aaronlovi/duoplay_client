@@ -9,5 +9,4 @@ abstract class TTTConstants {
     [0, 4, 8], // Diagonal top-left to bottom-right
     [2, 4, 6], // Diagonal top-right to bottom-left
   ];
-  static final Duration defaultEngineMoveWaitTime = Duration(seconds: 5);
 }

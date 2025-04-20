@@ -42,8 +42,8 @@ void main() {
       gameState.board[8] = TurnBasedGameCellState.empty;
 
       // Update the game state counts to match the board
-      gameState.numberOfX = 4;
-      gameState.numberOfO = 4;
+      gameState.numberOfPlayer1 = 4;
+      gameState.numberOfPlayer2 = 4;
 
       // Ensure the current player is set to X since we want X to make the move
       gameState.currentPlayer = TurnBasedGameCellState.player1;
@@ -76,8 +76,16 @@ void main() {
         true,
         reason: "Game should be marked as over",
       );
-      expect(gameState.numberOfX, 5, reason: "Should be 5 Xs on the board");
-      expect(gameState.numberOfO, 4, reason: "Should be 4 Os on the board");
+      expect(
+        gameState.numberOfPlayer1,
+        5,
+        reason: "Should be 5 Xs on the board",
+      );
+      expect(
+        gameState.numberOfPlayer2,
+        4,
+        reason: "Should be 4 Os on the board",
+      );
     });
   });
 }

@@ -170,11 +170,8 @@ class Connect4GameScreenState extends State<Connect4GameScreen> {
     // Handle the tap using the FSM
     if (!_gameObject.isHumanPlayerToMove) return;
 
-    // Calculate the column from the index
-    final column = index % _gameLogic.columns;
-
     final inp = TurnBasedGamePlayerMoveFsmInput(
-      index: column, // Use the calculated column
+      index: index, // Use the calculated column
       player: _gameObject.humanPlayer,
       nowUtc: DateTime.now().toUtc(),
     );

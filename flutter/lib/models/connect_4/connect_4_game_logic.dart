@@ -10,11 +10,6 @@ class Connect4GameLogic extends TurnBasedGameLogic {
   @override
   int get rows => 6;
 
-  /// A helper method to determine the target position for a chip in a given column.
-  ///
-  /// This method calculates the lowest available row in the specified column
-  /// where a chip can be placed. It assumes a 2D list `board` representing the
-  /// current state of the game, where `TurnBasedGameCellState.empty` indicates an empty slot.
   int? getTargetIndex(TurnBasedGameBoard board, int index) {
     final column = index % columns;
     final row = index ~/ columns;
