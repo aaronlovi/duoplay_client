@@ -281,9 +281,21 @@ class Connect4ExpertEngine extends TurnBasedGameEngineContract {
     TurnBasedGameCellState chipColor,
     int timeCapMs,
   ) {
+    if (board.isFull) {
+      // Early exit if the board is full (win or draw)
+      final winner = _gameLogic.getWinner(board);
+      if (winner != TurnBasedGameCellState.empty) {
+        // Return a high positive score for a win, negative for a loss
+        final score = (winner == chipColor) ? 1000 : -1000;
+        return MinimaxResult(move: null, score: score);
+      }
+      if (_gameLogic.isDraw(board)) {
+        return MinimaxResult(move: null, score: 0);
+      }
+    }
+
     final stopwatch = Stopwatch()..start();
     MinimaxResult? bestResult;
-
     for (int depth = 1; stopwatch.elapsedMilliseconds < timeCapMs; depth++) {
       final result = minimaxWithAlphaBeta(
         board,
@@ -294,28 +306,18 @@ class Connect4ExpertEngine extends TurnBasedGameEngineContract {
         10000,
       );
       bestResult = result;
-
       developer.log(
         '[AI][Expert] Iterative deepening depth $depth: move=${result.move}, score=${result.score}',
       );
-
       // Stop if a winning move is found
       if (result.score == 1000) {
         break;
       }
     }
-
     stopwatch.stop();
-
-    // Log the total time taken
     developer.log(
       '[AI][Expert] Iterative deepening completed in ${stopwatch.elapsedMilliseconds} ms',
     );
-
-    return bestResult ??
-        MinimaxResult(
-          move: null,
-          score: -10000,
-        ); // Return the best result found
+    return bestResult ?? MinimaxResult(move: null, score: -10000);
   }
 }
