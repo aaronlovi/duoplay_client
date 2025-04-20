@@ -1,5 +1,30 @@
 # Shared Game Screen Refactoring Requirements
 
+<!--
+Relevant Context Files:
+- flutter/lib/screens/tic_tac_toe/tic_tac_toe_game_screen.dart
+- flutter/lib/screens/connect_4/connect_4_game_screen.dart
+- flutter/lib/screens/tic_tac_toe/tic_tac_toe_settings_screen.dart
+- flutter/lib/screens/tic_tac_toe/tic_tac_toe_settings_loader.dart
+- flutter/lib/screens/connect_4/connect_4_settings_screen.dart
+- flutter/lib/screens/connect_4/connect_4_settings_loader.dart
+- flutter/lib/models/turn_based_game/turn_based_game_container.dart
+- flutter/lib/models/turn_based_game_fsm.dart
+- flutter/lib/models/connect_4/connect_4_game_container.dart
+- flutter/lib/models/tic_tac_toe/tic_tac_toe_game_container.dart
+- requirements/requirements.3.md
+
+These files contain the main UI, FSM, settings, and requirements context for both games and the shared refactoring effort.
+-->
+
+<!--
+Relevant Game Screen Files:
+- flutter/lib/screens/tic_tac_toe/tic_tac_toe_game_screen.dart (TTTGameScreen)
+- flutter/lib/screens/connect_4/connect_4_game_screen.dart (Connect4GameScreen)
+
+These files contain the duplicated logic and are the primary targets for refactoring into a shared base class and reusable widgets as described below.
+-->
+
 This document outlines the requirements for refactoring shared logic from the Connect 4 and Tic-Tac-Toe game screens into reusable components. The goal is to enable faster iteration and development of new games by leveraging shared code for game screens. The refactoring effort focuses on creating a base class for turn-based game screens, extracting shared widgets, and ensuring the structure supports adding new games efficiently.
 
 ## Project Overview
