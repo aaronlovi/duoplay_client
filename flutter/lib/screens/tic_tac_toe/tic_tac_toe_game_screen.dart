@@ -5,9 +5,7 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:duoplay/screens/turn_based_game_game_grid.dart';
 import 'package:duoplay/screens/turn_based_game_screen_base.dart';
-import 'package:duoplay/screens/turn_based_game_settings_button.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TTTGameScreen extends StatefulWidget {
   final TurnBasedGameContainer gameObject;
@@ -32,61 +30,20 @@ class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
   TurnBasedGameEngineContract get engine => widget.engine;
   @override
   TurnBasedGameUtils get gameUtils => widget.gameUtils;
+  @override
+  String get appBarTitle => 'Tic-Tac-Toe';
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Tic-Tac-Toe')),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: buildSettingsButton(context),
-          ),
-          Expanded(child: buildGameGrid(context)),
-          buildStatusBar(context),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget buildSettingsButton(BuildContext context) => SettingsButton(
-    onPressed: () async {
-      final prevDifficulty = gameObject.gameState.configuration.difficulty;
-      final int prevBetweenMoveDelay =
-          gameObject.gameState.configuration.engineMoveWaitTime?.inSeconds ?? 1;
-      final int prevBetweenGameDelay =
-          gameObject.gameState.configuration.betweenGamesWaitTime.inSeconds;
-
-      final navigator = Navigator.of(context);
-      final scaffoldMessenger = ScaffoldMessenger.of(context);
-      await navigator.pushNamed('/tic-tac-toe/settings');
-      if (!mounted) return;
-      final prefs = await SharedPreferences.getInstance();
-      final newDifficulty =
-          prefs.getString('ttt_ai_difficulty') ?? prevDifficulty;
-      if (newDifficulty != prevDifficulty) {
-        gameObject.postInput(
-          TurnBasedGameSettingsChangeFsmInput(
-            newDifficulty: newDifficulty,
-            betweenMoveDelaySeconds: prevBetweenMoveDelay,
-            betweenGameDelaySeconds: prevBetweenGameDelay,
-            nowUtc: DateTime.now().toUtc(),
-          ),
-        );
-        if (!gameObject.gameState.isGameOver) {
-          final current = prevDifficulty;
-          final next = newDifficulty;
-          final msg =
-              'Current engine: $current\nNext game: $next\nEngine will change at next game.';
-          scaffoldMessenger.showSnackBar(SnackBar(content: Text(msg)));
-        }
-        setState(() => {});
-      }
-    },
-    label: 'Settings',
-  );
+  Widget buildSettingsButton(BuildContext context) =>
+      buildDefaultSettingsButton(
+        context: context,
+        settingsRoute: '/tic-tac-toe/settings',
+        settingsKey: 'ttt_ai_difficulty',
+        label: 'Settings',
+        getNewDifficulty:
+            (prefs, prevDifficulty) =>
+                prefs.getString('ttt_ai_difficulty') ?? prevDifficulty,
+      );
 
   @override
   Widget buildGameGrid(BuildContext context) => Center(

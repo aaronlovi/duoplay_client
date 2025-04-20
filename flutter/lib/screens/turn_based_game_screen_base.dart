@@ -7,6 +7,8 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart'
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:duoplay/screens/turn_based_game_settings_button.dart';
 
 /// Abstract base class for turn-based game screens.
 abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
@@ -23,6 +25,76 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
 
   /// Abstract: must return the status bar widget.
   Widget buildStatusBar(BuildContext context);
+
+  /// Abstract: must return the app bar title for the game screen.
+  String get appBarTitle;
+
+  /// Default build method for shared game screen layout.
+  @mustCallSuper
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(appBarTitle)),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: buildSettingsButton(context),
+          ),
+          Expanded(child: buildGameGrid(context)),
+          buildStatusBar(context),
+        ],
+      ),
+    );
+  }
+
+  /// Shared logic for building a settings button.
+  /// Subclasses should call this with their own parameters.
+  @protected
+  Widget buildDefaultSettingsButton({
+    required BuildContext context,
+    required String settingsRoute,
+    required String settingsKey,
+    required String label,
+    required String Function(SharedPreferences prefs, String prevDifficulty)
+    getNewDifficulty,
+  }) {
+    return SettingsButton(
+      onPressed: () async {
+        final prevDifficulty = gameObject.gameState.configuration.difficulty;
+        final int prevBetweenMoveDelay =
+            gameObject.gameState.configuration.engineMoveWaitTime?.inSeconds ??
+            1;
+        final int prevBetweenGameDelay =
+            gameObject.gameState.configuration.betweenGamesWaitTime.inSeconds;
+        final navigator = Navigator.of(context);
+        final scaffoldMessenger = ScaffoldMessenger.of(context);
+        await navigator.pushNamed(settingsRoute);
+        if (!mounted) return;
+        final prefs = await SharedPreferences.getInstance();
+        final newDifficulty = getNewDifficulty(prefs, prevDifficulty);
+        if (newDifficulty != prevDifficulty) {
+          gameObject.postInput(
+            TurnBasedGameSettingsChangeFsmInput(
+              newDifficulty: newDifficulty,
+              betweenMoveDelaySeconds: prevBetweenMoveDelay,
+              betweenGameDelaySeconds: prevBetweenGameDelay,
+              nowUtc: DateTime.now().toUtc(),
+            ),
+          );
+          if (!gameObject.gameState.isGameOver) {
+            final current = prevDifficulty;
+            final next = newDifficulty;
+            final msg =
+                'Current engine: $current\nNext game: $next\nEngine will change at next game.';
+            scaffoldMessenger.showSnackBar(SnackBar(content: Text(msg)));
+          }
+          setState(() => {});
+        }
+      },
+      label: label,
+    );
+  }
 
   /// Shared FSM output processing logic.
   @protected

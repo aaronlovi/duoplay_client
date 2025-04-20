@@ -29,13 +29,18 @@ class DummyGameScreenState extends TurnBasedGameScreenBase<DummyGameScreen> {
   @override
   TurnBasedGameUtils get gameUtils => throw UnimplementedError();
   @override
+  String get appBarTitle => 'Dummy';
+  @override
   Widget buildSettingsButton(BuildContext context) => const SizedBox();
   @override
   Widget buildGameGrid(BuildContext context) => const SizedBox();
   @override
   Widget buildStatusBar(BuildContext context) => const SizedBox();
   @override
-  Widget build(BuildContext context) => const SizedBox();
+  Widget build(BuildContext context) {
+    super.build(context);
+    return const SizedBox();
+  }
 }
 
 void main() {
