@@ -1,13 +1,8 @@
-import 'dart:developer' as developer;
+part of 'tic_tac_toe_engine_contract.dart';
 
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
-import 'package:duoplay/models/mini_max_result.dart';
-import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
+class TTTExpertEngine extends TTTEngineContract {
+  TTTExpertEngine(super.gameLogic);
 
-class TTTExpertEngine implements TTTEngineContract {
   @override
   GenericResult<int> getNextMove(TicTacToeGameState currentState) {
     Result res = currentState.isLegalPositionReadyForMove();
@@ -80,6 +75,7 @@ class TTTExpertEngine implements TTTEngineContract {
     newBoard[index] = player;
     return TicTacToeGameState(
       newBoard,
+      _gameLogic,
       player.getOpponent(),
       state.getWinner(newBoard),
       player == TurnBasedGameCellState.player1

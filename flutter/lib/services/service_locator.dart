@@ -4,6 +4,7 @@ import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_utils.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_fsm.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_container.dart';
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
@@ -35,6 +36,7 @@ Future<void> setupLocator() async {
         engineMoveWaitTime: Duration(seconds: tttMoveDelay),
         difficulty: tttDifficulty,
       ),
+      TTTGameLogic(),
     ),
   );
   getIt.registerLazySingleton<TTTGameContainer>(

@@ -10,9 +10,6 @@ class Connect4GameLogic extends TurnBasedGameLogic {
   @override
   int get rows => 6;
 
-  @override
-  int get numCells => columns * rows;
-
   /// A helper method to determine the target position for a chip in a given column.
   ///
   /// This method calculates the lowest available row in the specified column

@@ -1,3 +1,4 @@
+import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
@@ -5,9 +6,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TicTacToeGameState', () {
+    final gameLogic = TTTGameLogic();
+
     test('validateMove detects invalid moves', () {
       final config = TurnBasedGameConfiguration.defaults();
-      final gameState = TicTacToeGameState.initial(config);
+      final gameState = TicTacToeGameState.initial(config, gameLogic);
 
       // Test out-of-bounds move
       expect(gameState.validateMove(-1).isFailure, true);
@@ -23,7 +26,8 @@ void main() {
 
     test('Simultaneous win and draw conditions', () {
       final config = TurnBasedGameConfiguration.defaults();
-      final gameState = TicTacToeGameState.initial(config);
+
+      final gameState = TicTacToeGameState.initial(config, gameLogic);
 
       // Set up a board state where the last move results in both a win and a full board
       // Create a potential diagonal win (0, 4, 8) when X plays at position 8
@@ -40,26 +44,38 @@ void main() {
       // Update the game state counts to match the board
       gameState.numberOfX = 4;
       gameState.numberOfO = 4;
-      
+
       // Ensure the current player is set to X since we want X to make the move
       gameState.currentPlayer = TurnBasedGameCellState.player1;
 
       // Make the final move
       final result = gameState.makeMove(8, TurnBasedGameCellState.player1);
-      
+
       // Verify the result and game state
       expect(result.isSuccess, true);
-      
+
       // Make sure we have a horizontal win in the top row (0,1,8)
       expect(gameState.board[0], TurnBasedGameCellState.player1);
       expect(gameState.board[4], TurnBasedGameCellState.player1);
       expect(gameState.board[8], TurnBasedGameCellState.player1);
-      
+
       // Check win-related properties
-      expect(gameState.winner, TurnBasedGameCellState.player1, reason: "X should be marked as the winner");
+      expect(
+        gameState.winner,
+        TurnBasedGameCellState.player1,
+        reason: "X should be marked as the winner",
+      );
       expect(gameState.hasWinner, true, reason: "hasWinner should be true");
-      expect(gameState.isDraw, false, reason: "isDraw should be false since we have a winner");
-      expect(gameState.isGameOver, true, reason: "Game should be marked as over");
+      expect(
+        gameState.isDraw,
+        false,
+        reason: "isDraw should be false since we have a winner",
+      );
+      expect(
+        gameState.isGameOver,
+        true,
+        reason: "Game should be marked as over",
+      );
       expect(gameState.numberOfX, 5, reason: "Should be 5 Xs on the board");
       expect(gameState.numberOfO, 4, reason: "Should be 4 Os on the board");
     });

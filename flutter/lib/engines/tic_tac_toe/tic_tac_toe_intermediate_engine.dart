@@ -1,13 +1,8 @@
-import 'dart:developer' as developer;
+part of 'tic_tac_toe_engine_contract.dart';
 
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
-import 'package:duoplay/models/result.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
-import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
-import 'package:duoplay/utils/random.dart';
+class TTTIntermediateEngine extends TTTEngineContract {
+  TTTIntermediateEngine(super.gameLogic);
 
-class TTTIntermediateEngine implements TTTEngineContract {
   @override
   GenericResult<int> getNextMove(TicTacToeGameState currentState) {
     Result res = currentState.isLegalPositionReadyForMove();

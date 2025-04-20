@@ -1,6 +1,4 @@
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_beginner_engine.dart';
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_expert_engine.dart';
-import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_intermediate_engine.dart';
+import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_contract.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
@@ -10,22 +8,25 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TicTacToe AI difficulty modes', () {
+    final gameLogic = TTTGameLogic();
+
     test('Beginner: makes winning move if available, otherwise random', () {
       final config = TurnBasedGameConfiguration(
         enginePlayer: TurnBasedGameCellState.player1,
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'beginner',
       );
-      final engine = TTTBeginnerEngine();
+      final engine = TTTBeginnerEngine(gameLogic);
       final boardString = '''
       X _ X
       O O _
       _ _ _
 ''';
-      TurnBasedGameBoard board = TTTGameLogic.parseBoard(boardString);
+      TurnBasedGameBoard board = gameLogic.parseBoard(boardString);
 
       final state = TicTacToeGameState(
         board,
+        gameLogic,
         TurnBasedGameCellState.player1,
         TurnBasedGameCellState.empty,
         2,
@@ -45,16 +46,17 @@ void main() {
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'intermediate',
       );
-      final engine = TTTIntermediateEngine();
+      final engine = TTTIntermediateEngine(gameLogic);
       final boardString = '''
       X X _
       O _ _
       _ _ _
 ''';
-      TurnBasedGameBoard board = TTTGameLogic.parseBoard(boardString);
+      TurnBasedGameBoard board = gameLogic.parseBoard(boardString);
 
       final state = TicTacToeGameState(
         board,
+        gameLogic,
         TurnBasedGameCellState.player2,
         TurnBasedGameCellState.empty,
         2,
@@ -74,11 +76,12 @@ void main() {
         betweenGamesWaitTime: Duration(seconds: 1),
         difficulty: 'expert',
       );
-      final engine = TTTExpertEngine();
+      final engine = TTTExpertEngine(gameLogic);
 
       // Empty board, X to move
       final state = TicTacToeGameState(
-        TurnBasedGameBoard(TTTGameLogic.rows, TTTGameLogic.columns),
+        TurnBasedGameBoard(gameLogic.rows, gameLogic.columns),
+        gameLogic,
         TurnBasedGameCellState.player1,
         TurnBasedGameCellState.empty,
         0,
@@ -100,7 +103,7 @@ void main() {
           betweenGamesWaitTime: Duration(seconds: 1),
           difficulty: 'expert',
         );
-        final engine = TTTExpertEngine();
+        final engine = TTTExpertEngine(gameLogic);
 
         // O to move. The only non-losing moves are corners or edge (not center or edge-middle).
         final boardString = '''
@@ -108,10 +111,11 @@ void main() {
         _ _ _
         _ _ _
 ''';
-        final board = TTTGameLogic.parseBoard(boardString);
+        final board = gameLogic.parseBoard(boardString);
 
         final state = TicTacToeGameState(
           board,
+          gameLogic,
           TurnBasedGameCellState.player2,
           TurnBasedGameCellState.empty,
           1,

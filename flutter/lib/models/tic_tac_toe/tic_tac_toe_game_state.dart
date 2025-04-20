@@ -1,14 +1,13 @@
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_constants.dart';
-import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 
 class TicTacToeGameState {
-  static final int numSquares = 9;
-
   final TurnBasedGameBoard board;
+  final TurnBasedGameLogic gameLogic;
   TurnBasedGameCellState currentPlayer;
   TurnBasedGameCellState winner;
   int numberOfX;
@@ -22,6 +21,7 @@ class TicTacToeGameState {
   // Made the constructor public to allow external instantiation for simulation purposes
   TicTacToeGameState(
     this.board,
+    this.gameLogic,
     this.currentPlayer,
     this.winner,
     this.numberOfX,
@@ -33,6 +33,7 @@ class TicTacToeGameState {
 
   TicTacToeGameState._(
     this.board,
+    this.gameLogic,
     this.currentPlayer,
     this.winner,
     this.numberOfX,
@@ -43,10 +44,12 @@ class TicTacToeGameState {
   );
 
   factory TicTacToeGameState.initial(
-    TurnBasedGameConfiguration cfg, {
+    TurnBasedGameConfiguration cfg,
+    TurnBasedGameLogic gameLogic, {
     DateTime? nowUtc,
   }) => TicTacToeGameState._(
-    TurnBasedGameBoard(TTTGameLogic.rows, TTTGameLogic.columns),
+    TurnBasedGameBoard(gameLogic.rows, gameLogic.columns),
+    gameLogic,
     TurnBasedGameCellState.player1,
     TurnBasedGameCellState.empty,
     0,
@@ -56,9 +59,7 @@ class TicTacToeGameState {
     cfg.difficulty,
   );
 
-  bool get isDraw =>
-      numberOfX + numberOfO == numSquares &&
-      winner == TurnBasedGameCellState.empty;
+  bool get isDraw => gameLogic.isDraw(board);
   bool get hasWinner => winner != TurnBasedGameCellState.empty;
   bool get isBetweenGames => isGameOver || (numberOfX == 0 && numberOfO == 0);
   bool get isGameOver => isDraw || hasWinner;
@@ -106,15 +107,9 @@ class TicTacToeGameState {
       );
     }
 
-    if (index < 0 || index >= TicTacToeGameState.numSquares) {
-      return Result.failure(ResultErrorCode.invalidMove);
-    }
-
-    if (board[index] != TurnBasedGameCellState.empty) {
-      return Result.failure(ResultErrorCode.invalidMove);
-    }
-
-    return Result.success();
+    return gameLogic.isLegalMove(board, index)
+        ? Result.success()
+        : Result.failure(ResultErrorCode.invalidMove);
   }
 
   TurnBasedGameCellState _getNextPlayer(TurnBasedGameCellState currentPlayer) {
@@ -131,7 +126,7 @@ class TicTacToeGameState {
     TurnBasedGameCellState nextPlayersTurn,
   ) {
     bool newIsDraw =
-        newNumberOfX + newNumberOfO == numSquares &&
+        newNumberOfX + newNumberOfO == gameLogic.numCells &&
         newWinner == TurnBasedGameCellState.empty;
     bool newHasWinner = newWinner != TurnBasedGameCellState.empty;
     bool newIsEnginesTurn =
@@ -162,23 +157,8 @@ class TicTacToeGameState {
     engineMoveTimeUtc = newEngineMoveTimeUtc;
   }
 
-  TurnBasedGameCellState getWinner(TurnBasedGameBoard board) {
-    // Cache the winning combinations to avoid redundant checks
-    for (var combination in TTTConstants.winningCombinations) {
-      final a = combination[0];
-      final b = combination[1];
-      final c = combination[2];
-
-      // If all three cells in the combination are the same and not empty, we have a winner
-      if (board[a] != TurnBasedGameCellState.empty &&
-          board[a] == board[b] &&
-          board[a] == board[c]) {
-        return board[a]; // Return the winner (TicTacToeCellState.x or TicTacToeCellState.o)
-      }
-    }
-
-    return TurnBasedGameCellState.empty;
-  }
+  TurnBasedGameCellState getWinner(TurnBasedGameBoard board) =>
+      gameLogic.getWinner(board);
 
   /// Checks if the game is over, and if the board is set with the expected
   /// number of X's and O's
@@ -224,22 +204,11 @@ class TicTacToeGameState {
             : null;
   }
 
-  void clearBoard() {
-    for (int i = 0; i < board.length; ++i) {
-      board[i] = TurnBasedGameCellState.empty;
-    }
-  }
-
-  // @override
-  // String toString() {
-  //   String currentPlayerStr = _gameUtils.cellStateToShortString(currentPlayer);
-  //   String winnerStr = _gameUtils.cellStateToShortString(winner);
-  //   return 'TTTGameState[curPlayer:$currentPlayerStr,winner:$winnerStr,numX:$numberOfX,numO:$numberOfO,nextDifficulty:$nextGameEngineDifficulty]';
-  // }
+  void clearBoard() => board.reset();
 
   // Add unit tests for invalid moves
   Result validateMove(int index) {
-    if (index < 0 || index >= numSquares) {
+    if (index < 0 || index >= gameLogic.numCells) {
       return Result.failure(ResultErrorCode.invalidMove);
     }
     if (board[index] != TurnBasedGameCellState.empty) {
