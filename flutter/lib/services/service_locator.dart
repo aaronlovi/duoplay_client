@@ -1,3 +1,5 @@
+import 'package:duoplay/engines/connect_4/connect_4_engine_factory.dart';
+import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
 import 'package:duoplay/models/connect_4/connect_4_fsm.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
@@ -37,6 +39,7 @@ Future<void> setupLocator() async {
         difficulty: tttDifficulty,
       ),
       TTTGameLogic(),
+      TTTEngineFactory(),
     ),
   );
   getIt.registerLazySingleton<TTTGameContainer>(
@@ -53,6 +56,7 @@ Future<void> setupLocator() async {
         difficulty: connect4Difficulty,
       ),
       Connect4GameLogic(),
+      Connect4EngineFactory(),
     ),
   );
   getIt.registerLazySingleton<Connect4GameContainer>(

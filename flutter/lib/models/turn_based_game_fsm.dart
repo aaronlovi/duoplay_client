@@ -1,6 +1,7 @@
 import 'dart:developer';
-import 'package:duoplay/engines/connect_4/connect_4_engine_factory.dart';
+
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
+import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_factory.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_state.dart';
 import 'package:duoplay/models/result.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
@@ -18,16 +19,18 @@ class TurnBasedGameFsm {
   final TurnBasedGameOutputContainer _outputs;
   final TurnBasedGameFsmUpdateContext _context;
   late TurnBasedGameEngineContract _engine;
+  final TurnBasedGameEngineFactory _engineFactory;
 
   TurnBasedGameFsm(
     TurnBasedGameConfiguration configuration,
     TurnBasedGameLogic gameLogic,
+    this._engineFactory,
   ) : gameState = Connect4GameState.initial(configuration, gameLogic),
       _outputs = TurnBasedGameOutputContainer(
         outputs: <TurnBasedGameFsmOutputBase>[],
       ),
       _context = TurnBasedGameFsmUpdateContext() {
-    _engine = Connect4EngineFactory.createEngine(configuration.difficulty);
+    _engine = _engineFactory.createEngine(configuration.difficulty);
   }
 
   TurnBasedGameBoard get board => gameState.board;
@@ -191,10 +194,6 @@ class TurnBasedGameFsm {
     if (gameState.nowUtc.isBefore(gameState.nextGameTimeUtc!)) return;
 
     _context.addStartGameOutput = true;
-
-    if (gameState.currentPlayer != gameState.enginePlayer) return;
-
-    _context.addDoEngineMoveOutput = true;
   }
 
   void _processEngineMoveNotification() {
@@ -210,6 +209,9 @@ class TurnBasedGameFsm {
         '[FSM] Transition: setupNextGame called, prevState=${gameState.toString()}',
       );
       gameState.setupNextGame();
+
+      _context.addDoEngineMoveOutput = isPlayer1Engine;
+
       _updateEngineDifficulty();
       log(
         '[FSM] Transition: after setupNextGame, newState=${gameState.toString()}',
@@ -236,9 +238,7 @@ class TurnBasedGameFsm {
       '[FSM] Updating engine difficulty from ${gameState.configuration.difficulty} to ${gameState.nextGameEngineDifficulty}',
     );
     gameState.configuration.difficulty = gameState.nextGameEngineDifficulty;
-    _engine = Connect4EngineFactory.createEngine(
-      gameState.configuration.difficulty,
-    );
+    _engine = _engineFactory.createEngine(gameState.configuration.difficulty);
   }
 
   DateTime? _getNextTimeout() {

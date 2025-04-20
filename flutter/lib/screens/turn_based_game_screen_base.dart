@@ -183,53 +183,118 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
   /// Shared FSM output processing logic.
   @protected
   void processOutputs(TurnBasedGameOutputContainer outputs) {
-    setState(() {
-      for (var item in outputs.outputs) {
-        if (item is TurnBasedGameErrorFsmOutput) {
-          String errorMessage = TurnBasedGameUtils.errorCodeToString(
-            item.results.errorCode,
-            item.results.errorParameters,
-          );
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(errorMessage)));
-        } else if (item is TurnBasedGameNewBoardFsmOutput) {
-          // New state will redraw the screen
-        } else if (item is TurnBasedGameGameOverFsmOutput) {
-          // Show game over UI if needed
-        } else if (item is TurnBasedGameStartGameFsmOutput) {
-          // Show start game UI if needed
-        } else if (item is TurnBasedGameDoEngineMoveFsmOutput) {
-          final res = engine.getNextMove(gameObject.gameState);
-          if (res.isFailure) {
-            String errorMessage = TurnBasedGameUtils.errorCodeToString(
-              res.errorCode,
-              res.errorParameters,
-            );
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(errorMessage)));
-            continue;
+    try {
+      setState(() {
+        try {
+          for (var item in outputs.outputs) {
+            _processOutputItem(item);
           }
-          final newOutputs = gameObject.postInput(
-            TurnBasedGameEngineMoveFsmInput(
-              nowUtc: DateTime.now().toUtc(),
-              index: res.value!,
-              enginePlayer: gameObject.enginePlayer,
-            ),
-          );
-          processOutputs(newOutputs);
+        } catch (e, stackTrace) {
+          _handleSetStateError(e, stackTrace);
         }
-      }
-    });
+      });
 
+      _scheduleNextTimeout(outputs);
+    } catch (e, stackTrace) {
+      _handleProcessOutputsError(e, stackTrace);
+    }
+  }
+
+  /// Processes a single FSM output item.
+  void _processOutputItem(TurnBasedGameFsmOutputBase item) {
+    if (item is TurnBasedGameErrorFsmOutput) {
+      _handleErrorOutput(item);
+    } else if (item is TurnBasedGameNewBoardFsmOutput) {
+      _handleNewBoardOutput();
+    } else if (item is TurnBasedGameGameOverFsmOutput) {
+      _handleGameOverOutput();
+    } else if (item is TurnBasedGameStartGameFsmOutput) {
+      _handleStartGameOutput();
+    } else if (item is TurnBasedGameDoEngineMoveFsmOutput) {
+      _handleEngineMoveOutput();
+    }
+  }
+
+  /// Handles error outputs.
+  void _handleErrorOutput(TurnBasedGameErrorFsmOutput item) {
+    String errorMessage = TurnBasedGameUtils.errorCodeToString(
+      item.results.errorCode,
+      item.results.errorParameters,
+    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(errorMessage)));
+  }
+
+  /// Handles new board outputs.
+  void _handleNewBoardOutput() {
+    // New state will redraw the screen
+  }
+
+  /// Handles game over outputs.
+  void _handleGameOverOutput() {
+    // Show game over UI if needed
+  }
+
+  /// Handles start game outputs.
+  void _handleStartGameOutput() {
+    // Show start game UI if needed
+  }
+
+  /// Handles engine move outputs.
+  void _handleEngineMoveOutput() {
+    final res = engine.getNextMove(gameObject.gameState);
+    if (res.isFailure) {
+      String errorMessage = TurnBasedGameUtils.errorCodeToString(
+        res.errorCode,
+        res.errorParameters,
+      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorMessage)));
+      return;
+    }
+    final newOutputs = gameObject.postInput(
+      TurnBasedGameEngineMoveFsmInput(
+        nowUtc: DateTime.now().toUtc(),
+        index: res.value!,
+        enginePlayer: gameObject.enginePlayer,
+      ),
+    );
+    processOutputs(newOutputs);
+  }
+
+  /// Handles errors during setState.
+  void _handleSetStateError(Object e, StackTrace stackTrace) {
+    debugPrint('Error during setState: $e\n$stackTrace');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('An error occurred while updating the game state.'),
+      ),
+    );
+  }
+
+  /// Handles errors during processOutputs.
+  void _handleProcessOutputsError(Object e, StackTrace stackTrace) {
+    debugPrint('Error in processOutputs: $e\n$stackTrace');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('An unexpected error occurred. Please try again.'),
+      ),
+    );
+  }
+
+  /// Schedules the next timeout for FSM processing.
+  void _scheduleNextTimeout(TurnBasedGameOutputContainer outputs) {
     _fsmTimer?.cancel();
     if (outputs.nextTimeout == null) return;
+
     final now = DateTime.now().toUtc();
     Duration duration = outputs.nextTimeout!.difference(now);
     if (duration == Duration.zero || duration.isNegative) {
       duration = Duration(seconds: 1);
     }
+
     _fsmTimer = Timer(duration, () {
       if (!mounted) return;
       final updateTimeInput = TurnBasedGameUpdateTimeFsmInput(

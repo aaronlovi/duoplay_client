@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         '/tic-tac-toe':
             (context) => TTTGameScreen(
               gameObject: GetIt.I.get<TTTGameContainer>(),
-              engine: TTTEngineFactory.createEngine(
+              engine: TTTEngineFactory().createEngine(
                 GetIt.I
                     .get<TTTGameContainer>()
                     .gameState
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
         '/connect-4':
             (context) => Connect4GameScreen(
               gameObject: GetIt.I.get<Connect4GameContainer>(),
-              engine: Connect4EngineFactory.createEngine(
+              engine: Connect4EngineFactory().createEngine(
                 GetIt.I
                     .get<Connect4GameContainer>()
                     .gameState

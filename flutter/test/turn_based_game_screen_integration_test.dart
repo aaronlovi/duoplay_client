@@ -3,6 +3,7 @@
 // and that their main UI elements (settings button, grid, status bar) are present.
 
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
+import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_factory.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_board.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
@@ -13,6 +14,13 @@ import 'package:duoplay/screens/connect_4/connect_4_game_screen.dart';
 import 'package:duoplay/screens/tic_tac_toe/tic_tac_toe_game_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+class DummyEngineFactory implements TurnBasedGameEngineFactory {
+  @override
+  TurnBasedGameEngineContract createEngine(String difficulty) {
+    return DummyEngine();
+  }
+}
 
 class DummyContainer extends TurnBasedGameContainer {
   DummyContainer()
@@ -25,6 +33,7 @@ class DummyContainer extends TurnBasedGameContainer {
             difficulty: 'beginner', // Use a valid difficulty
           ),
           DummyLogic(),
+          DummyEngineFactory(),
         ),
       );
 }

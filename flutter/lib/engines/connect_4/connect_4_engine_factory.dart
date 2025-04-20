@@ -1,8 +1,10 @@
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
+import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_factory.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_logic.dart';
 
-class Connect4EngineFactory {
-  static TurnBasedGameEngineContract createEngine(String difficulty) {
+class Connect4EngineFactory implements TurnBasedGameEngineFactory {
+  @override
+  TurnBasedGameEngineContract createEngine(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'beginner':
         return Connect4BeginnerEngine(Connect4GameLogic());
