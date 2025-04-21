@@ -5,7 +5,7 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_fsm_outputs.dart'
 import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_state.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
-import 'package:duoplay/models/turn_based_game_fsm.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm.dart';
 
 class TurnBasedGameContainer {
   final TurnBasedGameFsm _fsm;

@@ -9,7 +9,7 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dar
 import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_logic.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
-import 'package:duoplay/models/turn_based_game_fsm.dart';
+import 'package:duoplay/models/turn_based_game/turn_based_game_fsm.dart';
 import 'package:duoplay/screens/connect_4/connect_4_game_screen.dart';
 import 'package:duoplay/screens/tic_tac_toe/tic_tac_toe_game_screen.dart';
 import 'package:flutter/material.dart';

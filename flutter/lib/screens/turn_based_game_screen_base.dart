@@ -40,6 +40,9 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
   @override
   void dispose() {
     _fsmTimer?.cancel();
+    gameObject.postInput(
+      TurnBasedGameResetState(nowUtc: DateTime.now().toUtc()),
+    );
     super.dispose();
   }
 

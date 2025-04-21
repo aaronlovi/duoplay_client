@@ -10,10 +10,14 @@ abstract class TurnBasedGameFsmInputBase {
 class TurnBasedGameConfigFsmInput extends TurnBasedGameFsmInputBase {
   TurnBasedGameConfiguration configuration;
 
-  TurnBasedGameConfigFsmInput({required super.nowUtc, required this.configuration});
+  TurnBasedGameConfigFsmInput({
+    required super.nowUtc,
+    required this.configuration,
+  });
 
   @override
-  String toString() => "TurnBasedGameConfigFsmInput[now:$nowUtc,config:$configuration]";
+  String toString() =>
+      "TurnBasedGameConfigFsmInput[now:$nowUtc,config:$configuration]";
 }
 
 class TurnBasedGamePlayerMoveFsmInput extends TurnBasedGameFsmInputBase {
@@ -68,4 +72,11 @@ class TurnBasedGameSettingsChangeFsmInput extends TurnBasedGameFsmInputBase {
   @override
   String toString() =>
       'TTTSetEngineDifficultyInput[newDifficulty:$newDifficulty,betweenMoveDelaySeconds:$betweenMoveDelaySeconds,betweenGameDelaySeconds:$betweenGameDelaySeconds]';
+}
+
+class TurnBasedGameResetState extends TurnBasedGameFsmInputBase {
+  TurnBasedGameResetState({required super.nowUtc});
+
+  @override
+  String toString() => "TurnBasedGameResetState[now:$nowUtc]";
 }

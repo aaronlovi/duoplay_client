@@ -152,4 +152,16 @@ abstract class TurnBasedGameState {
   }
 
   void clearBoard() => board.reset();
+
+  void resetGame() {
+    board.reset();
+    currentPlayer = TurnBasedGameCellState.player1;
+    winner = TurnBasedGameCellState.empty;
+    numberOfPlayer1 = 0;
+    numberOfPlayer2 = 0;
+    nextGameTimeUtc = null;
+    engineMoveTimeUtc = null;
+    nextGameEngineDifficulty = configuration.difficulty;
+    configuration.enginePlayer = TurnBasedGameCellState.player2;
+  }
 }

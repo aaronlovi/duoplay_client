@@ -296,6 +296,10 @@ class Connect4ExpertEngine extends TurnBasedGameEngineContract {
 
     final stopwatch = Stopwatch()..start();
     MinimaxResult? bestResult;
+    int? previousBestMove;
+    int previousBestScore = -10000;
+    int noImprovementDepthCount = 0;
+
     for (int depth = 1; stopwatch.elapsedMilliseconds < timeCapMs; depth++) {
       final result = minimaxWithAlphaBeta(
         board,
@@ -305,12 +309,29 @@ class Connect4ExpertEngine extends TurnBasedGameEngineContract {
         -10000,
         10000,
       );
+
+      if (result.score > previousBestScore || result.move != previousBestMove) {
+        previousBestScore = result.score;
+        previousBestMove = result.move;
+        noImprovementDepthCount = 0; // Reset counter if improvement is found
+      } else {
+        noImprovementDepthCount++;
+      }
+
       bestResult = result;
       developer.log(
         '[AI][Expert] Iterative deepening depth $depth: move=${result.move}, score=${result.score}',
       );
       // Stop if a winning move is found
       if (result.score == 1000) {
+        break;
+      }
+
+      // Stop if no improvement is detected for multiple depths
+      if (noImprovementDepthCount >= 3) {
+        developer.log(
+          '[AI][Expert] Stopping iterative deepening early at depth $depth due to lack of improvement',
+        );
         break;
       }
     }

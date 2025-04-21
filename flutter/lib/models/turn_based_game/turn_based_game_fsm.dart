@@ -68,6 +68,8 @@ class TurnBasedGameFsm {
       _processEngineMove(inputs);
     } else if (inputs is TurnBasedGameUpdateTimeFsmInput) {
       // No action needed
+    } else if (inputs is TurnBasedGameResetState) {
+      _processResetState(inputs);
     }
 
     _processUpdateTime();
@@ -266,4 +268,7 @@ class TurnBasedGameFsm {
 
   void _appendErrorResult(Result res) =>
       _outputs.outputs.add(TurnBasedGameErrorFsmOutput(results: res));
+
+  void _processResetState(TurnBasedGameResetState inputs) =>
+      gameState.resetGame();
 }
