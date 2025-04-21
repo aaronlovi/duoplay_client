@@ -34,6 +34,9 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
   /// Most recent move index for the game.
   int? mostRecentMoveIndex;
 
+  /// List of winning indices for the game.
+  List<int> winningIndices = [];
+
   @override
   void dispose() {
     _fsmTimer?.cancel();
@@ -128,12 +131,17 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
     final difficulty = gameObject.gameState.configuration.difficulty;
     final player =
         gameUtils.cellStateToShortString(gameObject.humanPlayer).toUpperCase();
+    final winnerText =
+        winningIndices.isNotEmpty
+            ? '    Winner: ${gameUtils.cellStateToShortString(gameObject.gameState.currentPlayer)}'
+            : '';
+
     return Container(
       width: double.infinity,
       color: Colors.grey[200],
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Text(
-        'Engine: $difficulty    You are: $player',
+        'Engine: $difficulty    You are: $player$winnerText',
         style: const TextStyle(fontSize: 16),
         textAlign: TextAlign.center,
       ),
@@ -229,7 +237,7 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
     } else if (item is TurnBasedGameNewBoardFsmOutput) {
       _handleNewBoardOutput();
     } else if (item is TurnBasedGameGameOverFsmOutput) {
-      _handleGameOverOutput();
+      _handleGameOverOutput(item);
     } else if (item is TurnBasedGameStartGameFsmOutput) {
       _handleStartGameOutput();
     } else if (item is TurnBasedGameDoEngineMoveFsmOutput) {
@@ -254,14 +262,20 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
   }
 
   /// Handles game over outputs.
-  void _handleGameOverOutput() {
+  void _handleGameOverOutput(TurnBasedGameGameOverFsmOutput output) {
+    setState(() {
+      winningIndices = output.winningIndices;
+    });
     // Show game over UI if needed
   }
 
   /// Handles start game outputs.
   void _handleStartGameOutput() {
+    setState(() {
+      winningIndices = [];
+      mostRecentMoveIndex = null;
+    });
     // Show start game UI if needed
-    mostRecentMoveIndex = null;
   }
 
   /// Handles engine move outputs.

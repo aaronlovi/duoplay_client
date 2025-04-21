@@ -102,15 +102,19 @@ class Connect4GameScreenState
   @override
   Widget getCellContents(int index) {
     final cellState = gameObject.board[index];
-    final isMostRecentMove = index == mostRecentMoveIndex; // Compare directly
+    final isMostRecentMove = index == mostRecentMoveIndex;
+    final isWinningCell = winningIndices.contains(index);
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white, // Cell background color
+        color:
+            isWinningCell
+                ? Colors.greenAccent
+                : Colors.white, // Highlight winning cells
         shape: BoxShape.circle,
         border: Border.all(
           color: gridColor,
-          width: 2.0, // Standard border width
+          width: isWinningCell ? 4.0 : 2.0, // Thicker border for winning cells
         ),
       ),
       child: LayoutBuilder(
@@ -212,5 +216,26 @@ class Connect4GameScreenState
       ); // Trigger single pulse animation
       processOutputs(outputs);
     });
+  }
+
+  @override
+  Widget buildStatusBar() {
+    final winner =
+        winningIndices.isNotEmpty
+            ? gameUtils.cellStateToShortString(
+              gameObject.gameState.currentPlayer,
+            )
+            : 'None';
+
+    return Container(
+      width: double.infinity,
+      color: Colors.grey[200],
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Text(
+        'Winner: $winner    Winning Indices: ${winningIndices.join(", ")}',
+        style: const TextStyle(fontSize: 16),
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 }
