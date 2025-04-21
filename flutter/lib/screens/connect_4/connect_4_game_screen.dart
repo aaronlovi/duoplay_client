@@ -217,25 +217,4 @@ class Connect4GameScreenState
       processOutputs(outputs);
     });
   }
-
-  @override
-  Widget buildStatusBar() {
-    final winner =
-        winningIndices.isNotEmpty
-            ? gameUtils.cellStateToShortString(
-              gameObject.gameState.currentPlayer,
-            )
-            : 'None';
-
-    return Container(
-      width: double.infinity,
-      color: Colors.grey[200],
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Text(
-        'Winner: $winner    Winning Indices: ${winningIndices.join(", ")}',
-        style: const TextStyle(fontSize: 16),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
 }

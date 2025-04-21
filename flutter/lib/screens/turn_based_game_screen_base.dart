@@ -133,7 +133,7 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
         gameUtils.cellStateToShortString(gameObject.humanPlayer).toUpperCase();
     final winnerText =
         winningIndices.isNotEmpty
-            ? '    Winner: ${gameUtils.cellStateToShortString(gameObject.gameState.currentPlayer)}'
+            ? '    Winner: ${gameUtils.cellStateToShortString(gameObject.gameState.currentPlayer.getOpponent())}'
             : '';
 
     return Container(

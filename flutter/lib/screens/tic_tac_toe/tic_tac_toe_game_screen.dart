@@ -59,20 +59,18 @@ class TTTGameScreenState extends TurnBasedGameScreenBase<TTTGameScreen> {
   Widget getCellContents(int index) {
     final cellState = gameObject.board[index];
     final isMostRecentMove = index == mostRecentMoveIndex;
+    final isWinningCell = winningIndices.contains(index);
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300), // Animation duration
+      duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
         color:
-            isMostRecentMove
-                ? Colors.yellow[100]
-                : Colors.white, // Highlight background
+            isWinningCell
+                ? Colors.greenAccent
+                : (isMostRecentMove ? Colors.yellow[100] : Colors.white),
         border: Border.all(
-          color: gridColor, // Highlight border
-          width:
-              isMostRecentMove
-                  ? 4.0
-                  : 2.0, // Thicker border for the most recent move
+          color: gridColor,
+          width: isWinningCell ? 4.0 : (isMostRecentMove ? 4.0 : 2.0),
         ),
       ),
       child: LayoutBuilder(
