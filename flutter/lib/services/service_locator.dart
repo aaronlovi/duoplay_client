@@ -10,6 +10,8 @@ import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_logic.dart';
 import 'package:duoplay/models/tic_tac_toe/tic_tac_toe_game_utils.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_configuration.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
+import 'package:duoplay/services/auth_monitor_service.dart';
+import 'package:duoplay/services/auth_service.dart';
 import 'package:duoplay/services/game_service_contract.dart';
 import 'package:duoplay/services/mock_game_service.dart';
 import 'package:get_it/get_it.dart';
@@ -62,4 +64,7 @@ Future<void> setupLocator() async {
   getIt.registerLazySingleton<Connect4GameContainer>(
     () => Connect4GameContainer(fsm: getIt.get<Connect4Fsm>()),
   );
+
+  GetIt.I.registerSingleton<AuthService>(AuthService());
+  GetIt.I.registerSingleton<AuthMonitorService>(AuthMonitorService());
 }

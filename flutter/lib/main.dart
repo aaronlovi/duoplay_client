@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:duoplay/engines/connect_4/connect_4_engine_factory.dart';
 import 'package:duoplay/engines/tic_tac_toe/tic_tac_toe_engine_factory.dart';
 import 'package:duoplay/models/connect_4/connect_4_game_container.dart';
@@ -10,10 +12,16 @@ import 'package:duoplay/screens/game_list_screen.dart';
 import 'package:duoplay/screens/tic_tac_toe/tic_tac_toe_game_screen.dart';
 import 'package:duoplay/screens/tic_tac_toe/tic_tac_toe_settings_loader.dart';
 import 'package:duoplay/services/service_locator.dart';
+import 'package:duoplay/utils/development_http_overrides.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 Future<void> main() async {
+  if (!kReleaseMode) {
+    // Override SSL verification
+    HttpOverrides.global = DevelopmentHttpOverrides();
+  }
   WidgetsFlutterBinding.ensureInitialized();
   await setupLocator();
   runApp(const MyApp());
