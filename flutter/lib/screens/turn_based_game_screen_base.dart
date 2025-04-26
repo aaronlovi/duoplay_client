@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:duoplay/engines/turn_based_game/turn_based_game_engine_contract.dart';
 import 'package:duoplay/models/turn_based_game/turn_based_game_container.dart';
@@ -9,6 +10,7 @@ import 'package:duoplay/models/turn_based_game/turn_based_game_output_container.
 import 'package:duoplay/models/turn_based_game/turn_based_game_utils.dart';
 import 'package:duoplay/screens/turn_based_game_game_grid.dart';
 import 'package:duoplay/screens/turn_based_game_settings_button.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -169,6 +171,9 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
     if (!gameObject.isHumanPlayerToMove) return;
 
     final adjustedIndex = calculateAdjustedIndex(index);
+
+    _debugLog('Tapped cell: $index. Adjusted index: $adjustedIndex');
+
     if (adjustedIndex == -1) return; // Invalid move
 
     final inp = TurnBasedGamePlayerMoveFsmInput(
@@ -354,4 +359,9 @@ abstract class TurnBasedGameScreenBase<T extends StatefulWidget>
 
   @protected
   Widget getCellContents(int index);
+
+  @protected
+  void _debugLog(String message) {
+    log(message, name: T.toString());
+  }
 }
