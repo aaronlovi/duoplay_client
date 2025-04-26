@@ -1,3 +1,4 @@
+import 'package:duoplay/screens/views/sign_in_button.dart';
 import 'package:duoplay/services/game_service_contract.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -16,6 +17,9 @@ class GameListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Two-Player Games'),
+        actions: const [
+          Padding(padding: EdgeInsets.only(right: 12.0), child: SignInButton()),
+        ],
         // Removed settings icon button (G.1.9.1)
       ),
       body: ListView.builder(
